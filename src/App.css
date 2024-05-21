@@ -1,0 +1,48 @@
+#root {
+  margin: 0 auto;
+  /* padding: 2rem; */
+  text-align: center;
+
+}
+
+*{
+  word-break: break-all;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.signup-form {
+  border: 3px #525252 solid;
+  border-radius: 10px;
+  text-align: start;
+}
+
+button {
+  border: none;
+  outline: none;
+}
+
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
