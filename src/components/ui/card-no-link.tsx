@@ -22,12 +22,7 @@ export const HoverEffect = ({
   return (
     <div className={cn("w-full", className)}>
       {items.map((item, idx) => (
-        <Link
-          to={
-            page == "subquiz"
-              ? "/admin/quiz/" + item?.id
-              : "/admin/quiz/sub/" + item?.id
-          }
+        <div
           key={idx}
           className="relative group  block p-2 h-full w-full"
           onMouseEnter={() => setHoveredIndex(idx)}
@@ -78,7 +73,7 @@ export const HoverEffect = ({
               </div>
             </div>
           </Card>
-        </Link>
+        </div>
       ))}
     </div>
   );

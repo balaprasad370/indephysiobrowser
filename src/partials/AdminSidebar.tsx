@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, Outlet } from "react-router-dom";
 import nouser from "../assets/nouser.jpg";
+import { GrChapterAdd } from "react-icons/gr";
 
 import useAuth from "../hooks/useAuth";
 
@@ -10,7 +11,7 @@ const AdminSidebar = () => {
   return (
     <>
       <div className="flex flex-row min-h-screen ">
-        <div className="flex flex-col min-h-screen p-3 w-1/5 dark:bg-slate-900 dark:text-gray-800 justify-between fixed ">
+        <div className="flex flex-col min-h-screen p-3 w-1/5 dark:bg-slate-900 dark:text-gray-800 justify-between fixed sidebar">
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <h2 className="text-black dark:text-white">Indephysio</h2>
@@ -66,6 +67,18 @@ const AdminSidebar = () => {
                     <span>Home</span>
                   </Link>
                 </li>
+
+                <li className="rounded-sm hover:dark:bg-slate-700 hover:dark:text-gray-900">
+                  <Link
+                    rel="noopener noreferrer"
+                    to="/admin/chapters"
+                    className="flex items-center p-2 space-x-3 rounded-md"
+                  >
+                    <GrChapterAdd className="fill-current dark:text-gray-600 w-5"/>
+                    <span>Chapters</span>
+                  </Link>
+                </li>
+
                 <li className="rounded-sm hover:dark:bg-slate-700 hover:dark:text-gray-900">
                   <Link
                     rel="noopener noreferrer"
@@ -83,6 +96,7 @@ const AdminSidebar = () => {
                     <span>Quiz</span>
                   </Link>
                 </li>
+           
                 <li className="rounded-sm hover:dark:bg-slate-700 hover:dark:text-gray-900">
                   <Link
                     rel="noopener noreferrer"

@@ -16,14 +16,6 @@ import {
 } from "../../ui/sheet.tsx";
 
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from "../../ui/select.tsx";
-
-import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -35,18 +27,16 @@ import {
   AlertDialogTrigger
 } from "../../ui/alert.tsx";
 import { Button } from "../../ui/button";
+import { HoverEffect } from "./../../ui/card-no-link";
 
-const Quiz = () => {
+const Chapters = () => {
   const [quizzes, setquizzes] = useState([]);
   const [moduleName, setmoduleName] = useState("");
-  const [moduleChapterId, setmoduleChapterId] = useState("");
   const [moduleDescription, setmoduleDescription] = useState("");
   const [moduleEditName, setmoduleEditName] = useState("");
   const [moduleEditDescription, setmoduleEditDescription] = useState("");
-  const [moduleEditChapterId, setmoduleEditChapterId] = useState("");
   const [moduleEditId, setmoduleEditId] = useState("");
   const [open, setOpen] = useState(false);
-  const [chapters, setchapters] = useState([]);
 
   const [openDelete, setOpenDelete] = useState(false);
 
@@ -56,28 +46,15 @@ const Quiz = () => {
 
   useEffect(() => {
     fetchQuizzes();
-    fetchChapters();
   }, []);
 
   const fetchQuizzes = async () => {
     try {
       const response = await axios({
         method: "get",
-        url: "https://server.indephysio.com/chapters"
-      });
-      console.log(response.data);
-      setquizzes(response.data);
-    } catch (error) {}
-  };
-
-  const fetchChapters = async () => {
-    try {
-      const response = await axios({
-        method: "get",
         url: "https://server.indephysio.com/chapters/all/all"
       });
-
-      setchapters(response.data);
+      setquizzes(response.data);
     } catch (error) {}
   };
 
@@ -90,9 +67,9 @@ const Quiz = () => {
     try {
       const res = await axios({
         method: "post",
-        url: "https://server.indephysio.com/chapters/delete",
+        url: "https://server.indephysio.com/chapters/all/delete",
         data: {
-          parent_id: chapterId
+            chapter_id: chapterId
         }
       });
     } catch (error) {
@@ -111,13 +88,12 @@ const Quiz = () => {
 
     let response = await axios({
       method: "get",
-      url: "https://server.indephysio.com/chapters/" + id
+      url: "https://server.indephysio.com/chapters/all/" + id
     });
 
     console.log(response.data);
     setmoduleEditId(response.data.id);
     setmoduleEditName(response.data.name);
-    setmoduleEditChapterId(response.data.chapter_id);
     setmoduleEditDescription(response.data.description);
 
     setOpen(true);
@@ -126,43 +102,36 @@ const Quiz = () => {
   const handleModule = async () => {
     // console.log(moduleName, moduleDescription);
 
-    try {
-      const obj = {
-        parentmoduleName: moduleName,
-        parentmoduleDescription: moduleDescription,
-        client_id: tokenData.client_id,
-        chapter_id: moduleChapterId
-      };
-
-      const res = await axios({
-        method: "post",
-        url: "https://server.indephysio.com/chapters/add",
-        data: obj
-      });
-
-      fetchQuizzes();
-
-      setmoduleName("");
-      setmoduleDescription("");
-    } catch (error) {
-      console.log(error);
-    }
-    // console.log(res.data);
-  };
-
-  const handleEditModuleUpdate = async () => {
-    // console.log(moduleEditId, moduleEditName, moduleEditDescription);
-
     const obj = {
-      module_id: moduleEditId,
-      module_name: moduleEditName,
-      module_description: moduleEditDescription,
-      chapter_id: moduleEditChapterId
+      chapter_name: moduleName,
+      chapter_description: moduleDescription,
+      client_id: tokenData.client_id
     };
 
     const res = await axios({
       method: "post",
-      url: "https://server.indephysio.com/chapters/update",
+      url: "https://server.indephysio.com/chapters/all/add",
+      data: obj
+    });
+
+    fetchQuizzes();
+
+    setmoduleName("");
+    setmoduleDescription("");
+    console.log(res.data);
+  };
+
+  const handleEditModuleUpdate = async () => {
+    console.log(moduleEditId, moduleEditName, moduleEditDescription);
+    const obj = {
+      chapter_id: moduleEditId,
+      chapter_name: moduleEditName,
+      chapter_description: moduleEditDescription
+    };
+
+    const res = await axios({
+      method: "post",
+      url: "https://server.indephysio.com/chapters/all/update",
       data: obj
     });
 
@@ -248,49 +217,6 @@ const Quiz = () => {
                   }}
                 />
               </div>
-
-              <div className="grid grid-cols-4 items-center gap-4">
-                <label htmlFor="describe" className="text-right">
-                  Link chapter
-                </label>
-                <div className="!col-span-3 border-grey border rounded-md">
-                  <Select
-                    className="text-black bg-white w-full flex border  ring-offset-background"
-                    value={moduleEditChapterId}
-                    onValueChange={(value) => {
-                      // console.log(value);
-                      setmoduleEditChapterId(value);
-                    }}
-                  >
-                    <SelectTrigger className="w-full text-black bg-white">
-                      <SelectValue placeholder="Link Chapter" />
-                    </SelectTrigger>
-                    <SelectContent className="text-black bg-white">
-                      {chapters.length > 0 ? (
-                        chapters.map((ele, index) => {
-                          return (
-                            <SelectItem
-                              key={index}
-                              value={ele.id}
-                              className="hover:bg-slate-200"
-                            >
-                              {ele.name}
-                            </SelectItem>
-                          );
-                        })
-                      ) : (
-                        <SelectItem
-                          value="0"
-                          disabled
-                          className="hover:bg-slate-200"
-                        >
-                          No Chapters found
-                        </SelectItem>
-                      )}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
             </div>
             <SheetFooter>
               <SheetClose asChild>
@@ -309,7 +235,7 @@ const Quiz = () => {
       <div className="w-full py-4 my-4 flex items-start px-3 justify-center">
         <div className="w-4/5 py-4 my-4 flex items-center px-3 justify-between">
           <div>
-            <h1 className="text-black dark:text-white">Quizzes</h1>
+            <h1 className="text-black dark:text-white">Chapters</h1>
           </div>
 
           <div>
@@ -353,47 +279,6 @@ const Quiz = () => {
                       }}
                     />
                   </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <label htmlFor="describe" className="text-right">
-                      Link chapter
-                    </label>
-                    <div className="!col-span-3 border-grey border rounded-md">
-                      <Select
-                        className="text-black bg-white w-full flex border  ring-offset-background"
-                        onValueChange={(value) => {
-                          // console.log(value);
-                          setmoduleChapterId(value);
-                        }}
-                      >
-                        <SelectTrigger className="w-full text-black bg-white">
-                          <SelectValue placeholder="Link Chapter" />
-                        </SelectTrigger>
-                        <SelectContent className="text-black bg-white">
-                          {chapters.length > 0 ? (
-                            chapters.map((ele, index) => {
-                              return (
-                                <SelectItem
-                                  key={index}
-                                  value={ele.id}
-                                  className="hover:bg-slate-200"
-                                >
-                                  {ele.name}
-                                </SelectItem>
-                              );
-                            })
-                          ) : (
-                            <SelectItem
-                              value="0"
-                              disabled
-                              className="hover:bg-slate-200"
-                            >
-                              No Chapters found
-                            </SelectItem>
-                          )}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
                 </div>
                 <SheetFooter>
                   <SheetClose asChild>
@@ -423,4 +308,4 @@ const Quiz = () => {
   );
 };
 
-export default Quiz;
+export default Chapters;

@@ -24,7 +24,9 @@ import Quizdetails from "./components/pages/admin/Quizdetails";
 import Assessment from "./components/pages/admin/Assessment";
 import Students from "./components/pages/admin/Students";
 import Settings from "./components/pages/admin/Settings";
-import Subquizzes from './components/pages/admin/Subquizzes';
+import Subquizzes from "./components/pages/admin/Subquizzes";
+import Subassessments from "./components/pages/admin/Subassessments";
+import Chapters from './components/pages/admin/Chapters';
 
 function App() {
   // window.ipcRenderer.on("main-process-message", (messgae, data) => {
@@ -42,12 +44,16 @@ function App() {
 
         <Route path="/admin" element={<AdminSidebar />}>
           <Route index path="dashboard" element={<Admindashboard />} />
+          <Route path="chapters" element={<Chapters />} />
           <Route path="quiz" element={<Quiz />} />
           <Route path="quiz/sub/:id" element={<Subquizzes />} />
           <Route path="quiz/:id" element={<Quizdetails />} />
           <Route path="students" element={<Students />} />
           <Route path="settings" element={<Settings />} />
-          <Route path="assessment" element={<Assessment />} />
+          <Route path="assessment">
+            <Route index element={<Assessment />} />
+            <Route path="sub/:id" element={<Subassessments />} />
+          </Route>
         </Route>
 
         <Route path="/student" element={<StudentSidebar />}>
