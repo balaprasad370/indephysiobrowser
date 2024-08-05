@@ -54,6 +54,8 @@ const Quiz = () => {
 
   const tokenData = Auth();
 
+  // console.log(tokenData)
+
   useEffect(() => {
     fetchQuizzes();
     fetchChapters();
@@ -63,7 +65,9 @@ const Quiz = () => {
     try {
       const response = await axios({
         method: "get",
-        url: "https://server.indephysio.com/chapters"
+        url:
+          "https://server.indephysio.com/chapters/userbased/" +
+          tokenData.client_id
       });
       console.log(response.data);
       setquizzes(response.data);
@@ -214,7 +218,7 @@ const Quiz = () => {
         <Sheet key={side} open={open} onOpenChange={setOpen}>
           <SheetContent side={side}>
             <SheetHeader>
-              <SheetTitle>Update Chapter</SheetTitle>
+              <SheetTitle>Update Module</SheetTitle>
               <SheetDescription>
                 Name and describe your module to create a module.
               </SheetDescription>
@@ -222,11 +226,11 @@ const Quiz = () => {
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
                 <label htmlFor="name" className="text-right">
-                  Name your Chapter
+                  Name your Module
                 </label>
                 <input
                   id="name"
-                  placeholder="Name your Chapter"
+                  placeholder="Name your Module"
                   value={moduleEditName}
                   className="col-span-3 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   onChange={(e) => {
@@ -240,7 +244,7 @@ const Quiz = () => {
                 </label>
                 <input
                   id="describe"
-                  placeholder="Describe the Chapter"
+                  placeholder="Describe the Module"
                   value={moduleEditDescription}
                   className="col-span-3 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   onChange={(e) => {
@@ -296,9 +300,9 @@ const Quiz = () => {
               <SheetClose asChild>
                 <Button
                   onClick={handleEditModuleUpdate}
-                  className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#18181b] text-white hover:bg-primary/90 h-10 px-4 py-2"
+                  className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#18181b] text-white hover:bg-primary/90 h-10 px-4 py-2 "
                 >
-                  Update Chapter
+                  Update Module
                 </Button>
               </SheetClose>
             </SheetFooter>
@@ -315,11 +319,11 @@ const Quiz = () => {
           <div>
             <Sheet key={side}>
               <SheetTrigger asChild>
-                <Button variant="outline">Create Chapter</Button>
+                <Button variant="outline">Create Module</Button>
               </SheetTrigger>
               <SheetContent side={side}>
                 <SheetHeader>
-                  <SheetTitle>Create Chapter</SheetTitle>
+                  <SheetTitle>Create Module</SheetTitle>
                   <SheetDescription>
                     Name and describe your module to create a module.
                   </SheetDescription>
@@ -327,11 +331,11 @@ const Quiz = () => {
                 <div className="grid gap-4 py-4">
                   <div className="grid grid-cols-4 items-center gap-4">
                     <label htmlFor="name" className="text-right">
-                      Name your Chapter
+                      Name your Module
                     </label>
                     <input
                       id="name"
-                      placeholder="Name your Chapter"
+                      placeholder="Name your Module"
                       value={moduleName}
                       className="col-span-3 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                       onChange={(e) => {
@@ -345,7 +349,7 @@ const Quiz = () => {
                     </label>
                     <input
                       id="describe"
-                      placeholder="Describe the Chapter"
+                      placeholder="Describe the Module"
                       value={moduleDescription}
                       className="col-span-3 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                       onChange={(e) => {
@@ -399,7 +403,7 @@ const Quiz = () => {
                   <SheetClose asChild>
                     <Button
                       onClick={handleModule}
-                      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#18181b] text-white hover:bg-primary/90 h-10 px-4 py-2"
+                      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#18181b] !text-white hover:bg-primary/90 h-10 px-4 py-2 "
                     >
                       Create Chapter
                     </Button>

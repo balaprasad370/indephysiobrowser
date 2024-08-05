@@ -43,6 +43,9 @@ const Chapters = () => {
   const [chapterId, setchapterId] = useState("");
 
   const tokenData = Auth();
+  console.log("====================================");
+  console.log(tokenData);
+  console.log("====================================");
 
   useEffect(() => {
     fetchQuizzes();
@@ -52,7 +55,7 @@ const Chapters = () => {
     try {
       const response = await axios({
         method: "get",
-        url: "https://server.indephysio.com/chapters/all/all"
+        url: "https://server.indephysio.com/chapters/all/all/"
       });
       setquizzes(response.data);
     } catch (error) {}
@@ -69,7 +72,7 @@ const Chapters = () => {
         method: "post",
         url: "https://server.indephysio.com/chapters/all/delete",
         data: {
-            chapter_id: chapterId
+          chapter_id: chapterId
         }
       });
     } catch (error) {

@@ -5,7 +5,7 @@ const StudentSidebar = () => {
   return (
     <>
       <div className="flex flex-row min-h-screen ">
-        <div className="flex flex-col min-h-screen p-3 w-60 dark:bg-slate-900 dark:text-gray-800 justify-between">
+        <div className="flex flex-col min-h-screen p-3 w-1/5 dark:bg-slate-900 dark:text-gray-800 justify-between sidebar">
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <h2 className="text-black dark:text-white">Indephysio</h2>
@@ -185,7 +185,7 @@ const StudentSidebar = () => {
             </div>
           </div>
         </div>
-        <div>
+        <div className="w-full lg:mx-4 md:mx-1 mx-1 overflow-auto">
           <Outlet />
         </div>
       </div>

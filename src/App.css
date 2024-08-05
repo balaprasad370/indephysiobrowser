@@ -5,7 +5,7 @@
 
 }
 
-*{
+* {
   word-break: break-all;
   word-wrap: break-word;
   overflow-wrap: break-word;
@@ -46,4 +46,22 @@ button {
 
 .read-the-docs {
   color: #888;
+}
+
+.block {
+  margin: 0.5rem 1rem;
+}
+
+input {
+  border: 1px solid #00000040;
+  /* color: #000 !important; */
+}
+
+.quiz-details button {
+  border:none !important;
+  /* background-color: red !important; */
+}
+
+button {
+  border: 1px solid #00000040 !important;
 }

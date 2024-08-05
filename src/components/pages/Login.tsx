@@ -46,7 +46,7 @@ const LabelInputContainer = ({
 const Login = () => {
   const navigate = useNavigate();
 
-  const [usertype, setusertype] = useState("student");
+  const [usertype, setusertype] = useState("admin");
   const [username, setusername] = useState("");
   const [password, setpassword] = useState("");
 
@@ -112,14 +112,14 @@ const Login = () => {
 
   return (
     <>
-      <div className="flex items-center justify-center flex-col min-h-screen">
+      <div className="flex items-center justify-center flex-col min-h-screen ">
         <Toaster richColors position="top-right" />
         <div className="w-[480px] signup-form px-10 py-10">
           <div className="py-2 flex flex-row items-center justify-between">
             <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
               Login
             </h2>
-            <Link to="/">Home</Link>
+            <Link to="/" className="text-blue-600">Home</Link>
           </div>
 
           <LabelInputContainer className="flex flex-row items-center justify-between">
@@ -131,14 +131,11 @@ const Login = () => {
               }}
             >
               <SelectTrigger className="w-[180px] text-black bg-white">
-                <SelectValue placeholder="Student" />
+                <SelectValue placeholder="Admin" />
               </SelectTrigger>
               <SelectContent className="text-black bg-white">
                 <SelectItem value="admin" className="hover:bg-slate-200">
                   Admin
-                </SelectItem>
-                <SelectItem value="student" className="hover:bg-slate-200">
-                  Student
                 </SelectItem>
                 <SelectItem value="referral" className="hover:bg-slate-200">
                   Referral
@@ -153,6 +150,7 @@ const Login = () => {
               id="firstname"
               placeholder="username"
               type="text"
+              className="text-black dark:text-white"
               onChange={(e) => {
                 setusername(e.target.value);
                 setusernameError("");

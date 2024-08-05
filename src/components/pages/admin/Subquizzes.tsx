@@ -186,9 +186,9 @@ const Subquizzes = () => {
         <Sheet key={side} open={open} onOpenChange={setOpen}>
           <SheetContent side={side}>
             <SheetHeader>
-              <SheetTitle>Update Module</SheetTitle>
+              <SheetTitle>Update Quiz</SheetTitle>
               <SheetDescription>
-                Name and describe your module to create a module.
+                Name and describe your module to create a quiz.
               </SheetDescription>
             </SheetHeader>
             <div className="grid gap-4 py-4">
@@ -198,7 +198,7 @@ const Subquizzes = () => {
                 </label>
                 <input
                   id="name"
-                  placeholder="Name your module"
+                  placeholder="Name your quiz"
                   value={moduleEditName}
                   className="col-span-3 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   onChange={(e) => {
@@ -227,7 +227,7 @@ const Subquizzes = () => {
                   onClick={handleEditModuleUpdate}
                   className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#18181b] text-white hover:bg-primary/90 h-10 px-4 py-2"
                 >
-                  Update Module
+                  Update Quiz
                 </Button>
               </SheetClose>
             </SheetFooter>
@@ -245,11 +245,11 @@ const Subquizzes = () => {
           <div>
             <Sheet key={side}>
               <SheetTrigger asChild>
-                <Button variant="outline">Create Module</Button>
+                <Button variant="outline">Create Quiz</Button>
               </SheetTrigger>
               <SheetContent side={side}>
                 <SheetHeader>
-                  <SheetTitle>Create Module</SheetTitle>
+                  <SheetTitle>Create Quiz</SheetTitle>
                   <SheetDescription>
                     Name and describe your module to create a module.
                   </SheetDescription>
@@ -261,7 +261,7 @@ const Subquizzes = () => {
                     </label>
                     <input
                       id="name"
-                      placeholder="Name your module"
+                      placeholder="Name your quiz"
                       value={moduleName}
                       className="col-span-3 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                       onChange={(e) => {
@@ -290,7 +290,7 @@ const Subquizzes = () => {
                       onClick={handleModule}
                       className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#18181b] text-white hover:bg-primary/90 h-10 px-4 py-2"
                     >
-                      Create Module
+                      Create Quiz
                     </Button>
                   </SheetClose>
                 </SheetFooter>

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { cn } from "./../../../utils/cn";
-import { HoverEffect } from "./../../ui/card-hover-effect";
 import { Button } from "./../../ui/button";
 import Auth from "./../../../hooks/useAuth";
+import { HoverEffectLink } from "./../../ui/card-links";
 import {
   Sheet,
   SheetContent,
@@ -14,6 +14,14 @@ import {
   SheetFooter,
   SheetClose
 } from "../../ui/sheet.tsx";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "../../ui/select.tsx";
 
 import {
   AlertDialog,
@@ -28,16 +36,17 @@ import {
 } from "../../ui/alert.tsx";
 import { Button } from "../../ui/button";
 
-
-
 const Assessment = () => {
   const [quizzes, setquizzes] = useState([]);
   const [moduleName, setmoduleName] = useState("");
   const [moduleDescription, setmoduleDescription] = useState("");
+  const [moduleChapterId, setmoduleChapterId] = useState("");
   const [moduleEditName, setmoduleEditName] = useState("");
   const [moduleEditDescription, setmoduleEditDescription] = useState("");
   const [moduleEditId, setmoduleEditId] = useState("");
+  const [moduleEditChapterId, setmoduleEditChapterId] = useState("");
   const [open, setOpen] = useState(false);
+  const [chapters, setchapters] = useState([]);
 
   const [openDelete, setOpenDelete] = useState(false);
 
@@ -47,15 +56,34 @@ const Assessment = () => {
 
   useEffect(() => {
     fetchQuizzes();
+    fetchChapters();
   }, []);
 
   const fetchQuizzes = async () => {
     try {
       const response = await axios({
         method: "get",
-        url: "https://server.indephysio.com/assessments/all"
+        url:
+          "https://server.indephysio.com/assessments/all/userbased/" +
+          tokenData.client_id
       });
       setquizzes(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.log("====================================");
+      console.log(error);
+      console.log("====================================");
+    }
+  };
+
+  const fetchChapters = async () => {
+    try {
+      const response = await axios({
+        method: "get",
+        url: "https://server.indephysio.com/chapters/all/all"
+      });
+
+      setchapters(response.data);
     } catch (error) {}
   };
 
@@ -70,11 +98,10 @@ const Assessment = () => {
         method: "post",
         url: "https://server.indephysio.com/assessments/delete",
         data: {
-            assessment_id: chapterId
+          assessment_id: chapterId
         }
       });
       console.log(res.data);
-      
     } catch (error) {
       console.log("====================================");
       console.log(error);
@@ -94,9 +121,10 @@ const Assessment = () => {
       url: "https://server.indephysio.com/assessments/" + id
     });
 
-    console.log(response.data);
+    console.log("response", response.data);
     setmoduleEditId(response.data.id);
     setmoduleEditName(response.data.name);
+    setmoduleEditChapterId(response.data.chapter_id);
     setmoduleEditDescription(response.data.description);
 
     setOpen(true);
@@ -106,9 +134,10 @@ const Assessment = () => {
     // console.log(moduleName, moduleDescription);
 
     const obj = {
-        assessment_name: moduleName,
-        assessment_description: moduleDescription,
-      client_id: tokenData.client_id
+      assessment_name: moduleName,
+      assessment_description: moduleDescription,
+      client_id: tokenData.client_id,
+      chapter_id: moduleChapterId
     };
 
     const res = await axios({
@@ -128,9 +157,10 @@ const Assessment = () => {
     console.log(moduleEditId, moduleEditName, moduleEditDescription);
 
     const obj = {
-        assessment_id: moduleEditId,
-        assessment_name: moduleEditName,
-        assessment_description: moduleEditDescription
+      assessment_id: moduleEditId,
+      assessment_name: moduleEditName,
+      assessment_description: moduleEditDescription,
+      chapter_id: moduleEditChapterId
     };
 
     const res = await axios({
@@ -138,7 +168,6 @@ const Assessment = () => {
       url: "https://server.indephysio.com/assessments/update",
       data: obj
     });
-
 
     fetchQuizzes();
   };
@@ -222,6 +251,48 @@ const Assessment = () => {
                   }}
                 />
               </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <label htmlFor="describe" className="text-right">
+                  Link chapter
+                </label>
+                <div className="!col-span-3 border-grey border rounded-md">
+                  <Select
+                    className="text-black bg-white w-full flex border  ring-offset-background"
+                    value={moduleEditChapterId}
+                    onValueChange={(value) => {
+                      // console.log(value);
+                      setmoduleEditChapterId(value);
+                    }}
+                  >
+                    <SelectTrigger className="w-full text-black bg-white">
+                      <SelectValue placeholder="Link Chapter" />
+                    </SelectTrigger>
+                    <SelectContent className="text-black bg-white">
+                      {chapters.length > 0 ? (
+                        chapters.map((ele, index) => {
+                          return (
+                            <SelectItem
+                              key={index}
+                              value={ele.id}
+                              className="hover:bg-slate-200"
+                            >
+                              {ele.name}
+                            </SelectItem>
+                          );
+                        })
+                      ) : (
+                        <SelectItem
+                          value="0"
+                          disabled
+                          className="hover:bg-slate-200"
+                        >
+                          No Chapters found
+                        </SelectItem>
+                      )}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
             </div>
             <SheetFooter>
               <SheetClose asChild>
@@ -302,7 +373,7 @@ const Assessment = () => {
       </div>
       <div className="w-full flex items-center justify-center">
         <div className="w-4/5">
-          <HoverEffect
+          <HoverEffectLink
             items={quizzes}
             handleDeleteModule={handleDeleteModule}
             handleEditModule={handleEditModule}
