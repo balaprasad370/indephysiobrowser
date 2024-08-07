@@ -39,7 +39,7 @@ const LanguageLevel = () => {
     handleGetLevels(getToken);
   }, []);
 
-  const { lang_code, lang_level } = useParams();
+  const { lang_code, lang_level, package_id } = useParams();
   const navigate = useNavigate();
   const side = "bottom";
 
@@ -67,7 +67,8 @@ const LanguageLevel = () => {
       name: levelName,
       description: levelDescription,
       lang_code: lang_code,
-      lang_level: lang_level
+      lang_level: lang_level,
+      package_id: package_id
     };
 
     const res = await axios({
@@ -89,7 +90,9 @@ const LanguageLevel = () => {
         "https://server.indephysio.com/chapters/v1/" +
         lang_code +
         "/" +
-        lang_level,
+        lang_level +
+        "/" +
+        package_id,
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + getToken
@@ -195,8 +198,8 @@ const LanguageLevel = () => {
             ))}
           </div>
         ) : (
-          <div className="my-3 w-full ">
-            <h1>No Chpaters found</h1>
+          <div className="my-3 w-full text-black dark:text-white">
+            <h1>No Chapters found</h1>
           </div>
         )}
       </div>

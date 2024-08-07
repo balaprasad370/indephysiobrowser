@@ -12,6 +12,7 @@ const GridCard = ({
   description,
   header,
   link,
+  image,
   handleEdit,
   handleDelete
 }: {
@@ -30,7 +31,11 @@ const GridCard = ({
           )}
         >
           <div className="relative flex flex-1 w-full h-full min-h-[6rem] max-h-[10rem] rounded-xl bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100 flex items-center justify-center text-neutral-600 dark:text-neutral-200">
-            {header}
+            {image != null && (
+              <div>
+                <img src={image} />
+              </div>
+            )}
 
             <div className="absolute top-0 w-full">
               <div className="flex justify-between items-center w- p-3">
@@ -53,6 +58,7 @@ const GridCard = ({
               </div>
             </div>
           </div>
+
           <div className="group-hover/bento:translate-x-2 transition duration-200">
             {TbClipboardCopy}
             <div className="font-sans font-bold text-neutral-600 dark:text-neutral-200 mb-2 mt-2">

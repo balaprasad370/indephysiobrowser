@@ -360,7 +360,7 @@ const LanguageLevelChapterContent = () => {
                                           <ContentList item={ele} />
                                         </div>
                                         <div
-                                          className="w-2/12 flex justify-center items-center h-full w-full "
+                                          className="w-2/12 flex justify-center items-center h-full"
                                           {...provided.dragHandleProps}
                                         >
                                           <RiDragMove2Fill />
@@ -445,7 +445,7 @@ const LanguageLevelChapterContent = () => {
                           );
                         })
                       ) : (
-                        <div className="w-full font-bold  min-h-[10rem] flex justify-center items-center">
+                        <div className="w-full font-bold  min-h-[10rem] flex justify-center items-center text-black dark:text-white">
                           <h2>No Items found</h2>
                         </div>
                       )}

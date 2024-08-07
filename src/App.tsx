@@ -36,6 +36,7 @@ import ReadingMaterial from "./components/pages/admin/readingmaterial/ReadingMat
 import LanguageLevel from "./components/pages/admin/languages/LanguageLevel";
 import LanguageLevelContent from './components/pages/admin/languages/LanguageLevelContent';
 import LanguageLevelChapterContent from './components/pages/admin/languages/LanguageLevelChapterContent';
+import LanguageLevelPackage from './components/pages/admin/languages/LanguageLevelPackage';
 
 function App() {
   // window.ipcRenderer.on("main-process-message", (messgae, data) => {
@@ -91,11 +92,20 @@ function App() {
 
           <Route path="language" element={<Navigate to="/" />} />
           <Route exact  path="language/:lang_code" element={<LanguageLevel />} />
+
           <Route path="language/:lang_code/level" element={<Navigate to="/admin/language/" /> }/>
-          <Route path="language/:lang_code/level/:lang_level" element={<LanguageLevelContent />} />
-          <Route path="language/:lang_code/level/:lang_level/chapter" element={<LanguageLevelContent />} />
-          <Route path="language/:lang_code/level/:lang_level/chapter/:chapter_id" element={<LanguageLevelChapterContent />} />
-          {/* laguages  */}
+          <Route path="language/:lang_code/level/:lang_level" element={<LanguageLevelPackage />} />
+
+
+          {/* packages  */}
+          <Route path="language/:lang_code/level/:lang_level/package" element={<LanguageLevelContent />} />
+          <Route path="language/:lang_code/level/:lang_level/package/:package_id" element={<LanguageLevelContent />} />
+          {/* packages  */}
+
+
+          <Route path="language/:lang_code/level/:lang_level/package/:package_id/chapter" element={<LanguageLevelContent />} />
+          <Route path="language/:lang_code/level/:lang_level/package/:package_id/chapter/:chapter_id" element={<LanguageLevelChapterContent />} />
+          {/* languages  */}
 
           {/* schedule  */}
           <Route path="schedule" element={<Schedule />} />
