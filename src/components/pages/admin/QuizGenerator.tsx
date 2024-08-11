@@ -9,6 +9,7 @@ import IframeQuiz from "../../pages/iframes/IframeQuiz";
 import QuizOETReading from "./admincomponents/QuizOETReading";
 import QuizOETReadingB from "./admincomponents/QuizOETReadingB";
 import QuizOETReadingC from "./admincomponents/QuizOETReadingC";
+import QuizOETWriting from './admincomponents/oettest/QuizOETWriting';
 
 import {
   Select,
@@ -29,7 +30,8 @@ const QuizGenerator = () => {
       Jumbled: false,
       OETReadingA: true,
       OETReadingB: true,
-      OETReadingC: true
+      OETReadingC: true,
+      OETWriting:true
     }
   ]);
 
@@ -552,6 +554,17 @@ const QuizGenerator = () => {
             {currentType == "oetreadingc" && (
               <div className="flex flex-col lg:w-3/12 items-start justify-start md:w-full sm:w-full xs:full w-full text-sm">
                 <QuizOETReadingC
+                  moduleId={moduleId}
+                  setmoduleId={setmoduleId}
+                  disableStatus={disableStatus}
+                  setgeneratedOutput={setgeneratedOutput}
+                  setdisableStatus={setdisableStatus}
+                />
+              </div>
+            )}
+            {currentType == "oetwriting" && (
+              <div className="flex flex-col lg:w-3/12 items-start justify-start md:w-full sm:w-full xs:full w-full text-sm">
+                <QuizOETWriting
                   moduleId={moduleId}
                   setmoduleId={setmoduleId}
                   disableStatus={disableStatus}

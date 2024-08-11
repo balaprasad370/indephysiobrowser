@@ -55,7 +55,6 @@ const Login = () => {
 
   const tokenData = useAuth();
 
-  
   const handleLogin = async () => {
     if (username == "") {
       setusernameError("Username cannot be empty");
@@ -101,6 +100,7 @@ const Login = () => {
         }, 2000);
       } else {
         toast.error(response.data.error);
+        console.log(response);
       }
     } catch (error) {
       // console.log("====================================");
@@ -119,7 +119,9 @@ const Login = () => {
             <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
               Login
             </h2>
-            <Link to="/" className="text-blue-600">Home</Link>
+            <Link to="/" className="text-blue-600">
+              Home
+            </Link>
           </div>
 
           <LabelInputContainer className="flex flex-row items-center justify-between">

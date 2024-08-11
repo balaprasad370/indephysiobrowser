@@ -177,10 +177,6 @@ const LanguageLevel = () => {
 
   return (
     <>
-      {/* <Link to={`/admin/language/${lang_code}/level/a1`}>
-        <div>{lang_code}</div>
-      </Link> */}
-
       <div>
         <div className="w-full flex items-center justify-center">
           <div className="lg:w-3/5 md:w-full sm:w-full flex items-center justify-between">
@@ -388,9 +384,6 @@ const LanguageLevel = () => {
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Are you sure ?</AlertDialogTitle>
-              {/* <AlertDialogDescription>
-              
-              </AlertDialogDescription> */}
               <div>
                 This action cannot be undone. This will permanently delete this
                 module. <br />

@@ -20,11 +20,11 @@
 
 a {
   font-weight: 500;
-  color:inherit;
+  color: inherit;
   text-decoration: inherit;
 }
 
-.sidebar a{
+.sidebar a {
   color: white;
 }
 
@@ -39,6 +39,7 @@ body {
   width: 100%;
   /* background-color: #000000; */
 }
+
 .react-pdf__Page__canvas {
   margin: 0 auto;
   width: 80% !important;
@@ -48,6 +49,25 @@ body {
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+}
+
+div.fr-wrapper>div>a {
+  /* display: none !important; */
+  /* position: fixed; */
+  /* z-index: -99999 !important; */
+  font-size: 0px !important;
+  padding: 0px !important;
+  height: 0px !important;
+}
+
+.fr-second-toolbar a {
+  /* display: none !important; */
+  /* position: fixed; */
+  /* z-index: -99999 !important; */
+  font-size: 0px !important;
+  padding: 0px !important;
+  height: 0px !important;
+  display: none;
 }
 
 button {
@@ -103,7 +123,7 @@ button:focus-visible {
 
 
 @media only screen and (max-width: 600px) {
- .sidebar{
-  display: none;
- }
+  .sidebar {
+    display: none;
+  }
 }

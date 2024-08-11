@@ -45,29 +45,39 @@ const LanguageLevel = () => {
 
   const [levelName, setlevelName] = useState("");
   const [levelDescription, setlevelDescription] = useState("");
+  const [levelFile, setlevelFile] = useState("");
 
   const [levelNameUpdate, setlevelNameUpdate] = useState("");
   const [levelDescriptionUpdate, setlevelDescriptionUpdate] = useState("");
+  const [levelFileUpdate, setlevelFileUpdate] = useState("");
+  const [levelUpdateColor, setlevelUpdateColor] = useState("");
   const [levelIdUpdate, setlevelIdUpdate] = useState("");
 
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
 
+  const [isdisableddelete, setisdisableddelete] = useState(true);
+
   useLayoutEffect(() => {
     if (lang_code == null) {
       navigate("/");
     }
-    console.log(lang_code);
-    console.log(lang_level);
+
   }, []);
 
   const handleCreateLevel = async () => {
+    let filePath = "";
+    if (levelFile != "") {
+      filePath = await uploadFile(levelFile);
+    }
+
     const obj = {
       name: levelName,
       description: levelDescription,
       lang_code: lang_code,
-      lang_level: lang_level
+      lang_level: lang_level,
+      filepath: filePath
     };
 
     const res = await axios({
@@ -79,6 +89,7 @@ const LanguageLevel = () => {
         Authorization: "Bearer " + token
       }
     });
+    setlevelFile("");
     handleGetLevels(token);
   };
 
@@ -86,7 +97,10 @@ const LanguageLevel = () => {
     const res = await axios({
       method: "get",
       url:
-        "https://server.indephysio.com/packages/"+ lang_code + "/" + lang_level,
+        "https://server.indephysio.com/packages/" +
+        lang_code +
+        "/" +
+        lang_level,
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + getToken
@@ -100,21 +114,31 @@ const LanguageLevel = () => {
   const handleEdit = (data) => {
     setlevelNameUpdate(data.title);
     setlevelDescriptionUpdate(data.description);
+    setlevelUpdateColor(data.bgColor);
     setlevelIdUpdate(data.id);
+
     setOpenEdit(true);
   };
 
   const handleDelete = (id) => {
     // alert("this is delete module");
     setlevelIdUpdate(id);
+    setisdisableddelete(true);
     setOpenDelete(true);
   };
 
   const handleUpdateLevel = async () => {
+    let filePath = "";
+    if (levelFileUpdate != "") {
+      filePath = await uploadFile(levelFileUpdate);
+    }
+
     const obj = {
       name: levelNameUpdate,
       description: levelDescriptionUpdate,
-      package_id: levelIdUpdate
+      package_id: levelIdUpdate,
+      filepath: filePath,
+      color: levelUpdateColor
     };
 
     const res = await axios({
@@ -126,12 +150,30 @@ const LanguageLevel = () => {
         Authorization: "Bearer " + token
       }
     });
-
+    setlevelFileUpdate("");
+    setlevelUpdateColor("");
     handleGetLevels(token);
   };
 
+  const uploadFile = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await axios.post(
+      "https://server.indephysio.com/upload/image",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      }
+    );
+
+    // console.log(response.data);
+    return response.data.filepath;
+  };
+
   const handleDeleteConfirm = async () => {
- 
     const res = await axios({
       method: "delete",
       url: "https://server.indephysio.com/packages/v1/" + levelIdUpdate,
@@ -146,10 +188,7 @@ const LanguageLevel = () => {
 
   return (
     <>
-      {/* <Link to={`/admin/language/${lang_code}/level/a1`}>
-        <div>{lang_code}</div>
-      </Link> */}
-
+     
       <div>
         <div className="w-full flex items-center justify-center">
           <div className="lg:w-3/5 md:w-full sm:w-full flex items-center justify-between">
@@ -186,6 +225,8 @@ const LanguageLevel = () => {
                 header={item.package_name}
                 link={item.link}
                 handleDelete={handleDelete}
+                bgColor={item.package_color}
+                image={"https://server.indephysio.com/" + item.package_img}
                 handleEdit={handleEdit}
                 id={item.package_id}
                 //   className={i === 3 || i === 6 ? "md:col-span-2" : ""}
@@ -235,6 +276,21 @@ const LanguageLevel = () => {
                   className="col-span-3 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   onChange={(e) => {
                     setlevelDescription(e.target.value);
+                  }}
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <label htmlFor="upload-img1" className="text-right">
+                  Upload Image
+                </label>
+                <input
+                  id="upload-img1"
+                  type="file"
+                  accept="image/*"
+                  placeholder="Upload the file"
+                  className="col-span-3 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  onChange={(e) => {
+                    setlevelFile(e.target.files[0]);
                   }}
                 />
               </div>
@@ -293,6 +349,37 @@ const LanguageLevel = () => {
                   }}
                 />
               </div>
+
+              <div className="grid grid-cols-4 items-center gap-4">
+                <label htmlFor="upload-img" className="text-right">
+                  Upload Image
+                </label>
+                <input
+                  id="upload-img"
+                  type="file"
+                  accept="image/*"
+                  placeholder="Upload the file"
+                  className="col-span-3 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  onChange={(e) => {
+                    setlevelFileUpdate(e.target.files[0]);
+                  }}
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <label htmlFor="upload-color" className="text-right">
+                  Update color
+                </label>
+                <input
+                  id="upload-color"
+                  type="color"
+                  value={levelUpdateColor}
+                  placeholder="Upload the file"
+                  className="col-span-3 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  onChange={(e) => {
+                    setlevelUpdateColor(e.target.value);
+                  }}
+                />
+              </div>
             </div>
             <SheetFooter>
               <SheetClose asChild>
@@ -325,14 +412,37 @@ const LanguageLevel = () => {
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Are you sure ?</AlertDialogTitle>
-              <AlertDialogDescription>
+              <div>
                 This action cannot be undone. This will permanently delete this
-                module.
-              </AlertDialogDescription>
+                module. <br />
+                Type{" "}
+                <strong>
+                  {" "}
+                  <em>permanently delete</em>
+                </strong>
+                <div className="my-4">
+                  <input
+                    id="delete"
+                    autoComplete="off"
+                    autoCapitalize="off"
+                    placeholder="Type permanently delete"
+                    className="col-span-3 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    onChange={(e) => {
+                      if (e.target.value == "permanently delete") {
+                        setisdisableddelete(false);
+                      } else {
+                        setisdisableddelete(true);
+                      }
+                    }}
+                  />
+                </div>
+              </div>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
+                className="bg-red-600 text-white"
+                disabled={isdisableddelete}
                 onClick={() => {
                   handleDeleteConfirm();
                 }}

@@ -586,7 +586,8 @@ const Quizdetails = ({ id, disableStatus }) => {
                   item.type.toLowerCase() != "multiquestionsaudio" &&
                   item.type.toLowerCase() != "textnormal" &&
                   item.type.toLowerCase() != "textimage" &&
-                  item.type.toLowerCase() != "textaudio" && (
+                  item.type.toLowerCase() != "textaudio" &&
+                  item.type.toLowerCase() != "evaluate" && (
                     <div className="absolute right-2 bottom-1 z-50">
                       <LabelInputContainer className="flex flex-row items-center justify-between">
                         {/* <Label htmlFor="firstname">Login as </Label> */}
@@ -837,6 +838,24 @@ const Quizdetails = ({ id, disableStatus }) => {
 
                         {/* Text start  */}
 
+                        {item.type.toLowerCase() == "evaluate" && (
+                          <div className="w-full flex justify-start items-center flex-row text-black dark:text-white pl-4">
+                            <div className="flex justify-start items-center w-full">
+                              <textarea
+                                type="text"
+                                disabled={true}
+                                className="col-span-3 flex h-10 w-full rounded-md min-h-[10rem]
+                                        border border-input bg-background px-3 py-2 text-sm
+                                        ring-offset-background file:border-0 file:bg-transparent
+                                        file:text-sm file:font-medium placeholder:text-muted-foreground
+                                        focus-visible:outline-none focus-visible:ring-2
+                                        focus-visible:ring-ring focus-visible:ring-offset-2
+                                        disabled:cursor-not-allowed disabled:opacity-50 text-black "
+                                placeholder="Candidate write the answer"
+                              ></textarea>
+                            </div>
+                          </div>
+                        )}
                         {item.type.toLowerCase() == "textnormal" && (
                           <div className="w-full flex justify-start items-center flex-row text-black dark:text-white pl-4">
                             <div className="flex justify-start items-center ">
@@ -2187,7 +2206,8 @@ const Quizdetails = ({ id, disableStatus }) => {
 
                                 {ele.type.toLowerCase() != "textnormal" &&
                                   ele.type.toLowerCase() != "textimage" &&
-                                  ele.type.toLowerCase() != "textaudio" && (
+                                  ele.type.toLowerCase() != "textaudio" &&
+                                  ele.type.toLowerCase() != "evaluate" && (
                                     <div className="absolute right-2 bottom-1 z-50">
                                       <LabelInputContainer className="flex flex-row items-center justify-between">
                                         {/* <Label htmlFor="firstname">Login as </Label> */}
@@ -2475,6 +2495,25 @@ const Quizdetails = ({ id, disableStatus }) => {
                                             handleUpdateData(d.name, d.value);
                                           }}
                                         />
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {ele.type.toLowerCase() == "evaluate" && (
+                                    <div className="w-full flex justify-start items-center flex-row text-black dark:text-white pl-4">
+                                      <div className="flex justify-start items-center w-full">
+                                        <textarea
+                                          type="text"
+                                          disabled={true}
+                                          className="col-span-3 flex h-10 w-full rounded-md min-h-[10rem]
+                                        border border-input bg-background px-3 py-2 text-sm
+                                        ring-offset-background file:border-0 file:bg-transparent
+                                        file:text-sm file:font-medium placeholder:text-muted-foreground
+                                        focus-visible:outline-none focus-visible:ring-2
+                                        focus-visible:ring-ring focus-visible:ring-offset-2
+                                        disabled:cursor-not-allowed disabled:opacity-50 text-black "
+                                          placeholder="Candidate write the answer"
+                                        ></textarea>
                                       </div>
                                     </div>
                                   )}

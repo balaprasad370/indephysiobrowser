@@ -197,15 +197,13 @@ const LanguageLevelChapterContent = () => {
     if (open) document.body.style.pointerEvents = "all";
     if (DeleteContentalert) document.body.style.pointerEvents = "all";
 
-    const frWrapper = document.querySelector('.fr-wrapper');
+    const frWrapper = document.querySelector(".fr-wrapper");
 
     // Check if the element exists and has at least one child
     if (frWrapper && frWrapper.firstChild) {
       // Remove the first child
       frWrapper.removeChild(frWrapper.firstChild);
     }
-
-    
   }, [open, DeleteContentalert]);
 
   const handleDeleteList = async () => {
@@ -293,9 +291,9 @@ const LanguageLevelChapterContent = () => {
                 <SelectItem value="quiz" className="hover:bg-slate-200">
                   Quiz
                 </SelectItem>
-                <SelectItem value="schedule" className="hover:bg-slate-200">
+                {/* <SelectItem value="schedule" className="hover:bg-slate-200">
                   Live class
-                </SelectItem>
+                </SelectItem> */}
               </SelectContent>
             </Select>
           </div>

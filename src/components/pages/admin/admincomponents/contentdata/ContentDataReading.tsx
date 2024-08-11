@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import axios from "axios";
 import FroalaEditor from "react-froala-wysiwyg";
 import "froala-editor/css/froala_editor.pkgd.min.css";
@@ -16,11 +16,16 @@ import {
   SheetClose
 } from "../../../../ui/sheet.tsx";
 import { Button } from "../../../../ui/button";
+import { debounce } from "./../../../../../utils/debounce";
 
 const ContentDataReading = ({ id }) => {
   const [readingText, setReadingText] = useState("");
   const [title, setTitle] = useState("");
+
+  const [readingId, setreadingId] = useState("");
   const editorRef = useRef(null);
+  const idRef = useRef(null);
+
   const [token, settoken] = useState(localStorage.getItem("token"));
 
   const [textContent, settextContent] = useState("");
@@ -28,44 +33,39 @@ const ContentDataReading = ({ id }) => {
   const [prompt, setprompt] = useState("");
   const side = "left";
 
+  const [firstRender, setfirstRender] = useState(true);
+
   const [loading, setloading] = useState(false);
 
   useEffect(() => {
     const getToken = localStorage.getItem("token");
     getReadingMaterial(getToken);
-  }, []);
+  }, [id]);
 
-  useEffect(() => {
-    removeEditorWarning();
-  }, []);
+  // const removeEditorWarning = () => {
+  //   setTimeout(() => {
+  //     try {
+  //       const fr = document.querySelector(".fr-wrapper");
+  //       if (fr && fr.firstChild && fr.firstChild.children[0].tagName == "A") {
+  //         fr.firstChild.remove();
+  //       }
 
-  const removeEditorWarning = () => {
-    setTimeout(() => {
-      try {
-        const fr = document.querySelector(".fr-wrapper");
-        if (
-          fr &&
-          fr.firstChild &&
-          fr.firstChild.children[0].tagName == "A"
-        ) {
-          fr.firstChild.remove();
-        }
-
-        const frSecond = document.querySelector(".fr-second-toolbar");
-        if (
-          frSecond &&
-          frSecond.firstChild &&
-          frSecond.firstChild.tagName === "A"
-        ) {
-          frSecond.firstChild.remove();
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }, 100); // Adjust the delay as needed
-  };
+  //       const frSecond = document.querySelector(".fr-second-toolbar");
+  //       if (
+  //         frSecond &&
+  //         frSecond.firstChild &&
+  //         frSecond.firstChild.tagName === "A"
+  //       ) {
+  //         frSecond.firstChild.remove();
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   }, 50); // Adjust the delay as needed
+  // };
 
   const getReadingMaterial = async (getToken) => {
+    setloading(true);
     try {
       const res = await axios({
         method: "post",
@@ -78,14 +78,24 @@ const ContentDataReading = ({ id }) => {
       });
 
       setTitle(res.data.title);
+      // console.log(id);
+      // setTimeout(() => {
+      //   if (editorRef.current) {
+      //     const editor = editorRef.current.editor;
+      //     editor.html.set(res.data.reading_text);
+      //   }
+      // }, 0);
       handleModelChange(res.data.reading_text);
+      setloading(false);
     } catch (error) {
       console.log(error);
+      setloading(false);
     }
   };
 
   const handleModelChange = (model) => {
     setReadingText(model);
+    idRef.current = id;
   };
 
   const handleImageUpload = async (files) => {
@@ -171,14 +181,16 @@ const ContentDataReading = ({ id }) => {
     }
   };
 
-  const handleUpdateContent = async () => {
+  const handleUpdateContent = async (textToUpdate) => {
+    console.log(idRef.current, " ", textToUpdate);
+
     const obj = {
-      read_id: id,
-      text: editorRef.current && editorRef.current.editor.html.get()
+      read_id: idRef.current,
+      text: textToUpdate
     };
 
     try {
-      const res = await axios({
+      const res = axios({
         method: "post",
         data: obj,
         url: "https://server.indephysio.com/reading/update",
@@ -187,7 +199,7 @@ const ContentDataReading = ({ id }) => {
           Authorization: "Bearer " + token
         }
       });
-      console.log("updated", res.data);
+      // console.log("updated", res.data);
     } catch (error) {
       console.log(error);
     }
@@ -217,16 +229,18 @@ const ContentDataReading = ({ id }) => {
     }
     setloading(false);
 
-    handleUpdateContent();
+    // handleUpdateContent();
     setOpen(false);
     console.log(res.data);
   };
 
   return (
     <div className="w-full p-2">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center my-2">
         <div className="text-start">
-          <h1 className="text-black dark:text-white">{title}</h1>
+          <h1 className="text-black dark:text-white">
+            {title}
+          </h1>
         </div>
         <div>
           <button onClick={setOpen} className="p-2 bg-teal-600 text-white">
@@ -234,82 +248,92 @@ const ContentDataReading = ({ id }) => {
           </button>
         </div>
       </div>
-      <FroalaEditor
-        ref={editorRef}
-        tag="textarea"
-        config={{
-          attribution: false,
-          toolbarSticky: true,
-          imageUploadRemoteUrls: false,
-          language: "es",
-          videoInsertButtons: [
-            "videoBack",
-            "|",
-            "videoUpload",
-            "videoByURL",
-            "videoEmbed"
-          ],
-          imageInsertButtons: ["imageBack", "|", "imageUpload", "imageByURL"],
-          toolbarButtons: [
-            "bold",
-            "italic",
-            "undo",
-            "html",
-            "redo",
-            "textColor",
-            "backgroundColor",
-            "underline",
-            "strikeThrough",
-            "subscript",
-            "superscript",
-            "fontFamily",
-            "fontSize",
-            "color",
-            "inlineStyle",
-            "paragraphStyle",
-            "paragraphFormat",
-            "align",
-            "formatOL",
-            "formatUL",
-            "outdent",
-            "indent",
-            "quote",
-            "insertLink",
-            "insertImage",
-            "insertVideo",
-            "insertFile",
-            "insertTable",
-            "emoticons",
-            "specialCharacters",
-            "insertHR",
-            "selectAll",
-            "clearFormatting",
-            "print"
-          ],
-          events: {
-            "image.beforeUpload": (files) => {
-              const link = handleImageUpload(files);
+      {!loading && (
+        <FroalaEditor
+          ref={editorRef}
+          tag="textarea"
+          config={{
+            attribution: false,
+            toolbarSticky: true,
+            imageUploadRemoteUrls: false,
+            immediateReactModelUpdate: true,
+            language: "es",
+            videoInsertButtons: [
+              "videoBack",
+              "|",
+              "videoUpload",
+              "videoByURL",
+              "videoEmbed"
+            ],
+            imageInsertButtons: ["imageBack", "|", "imageUpload", "imageByURL"],
+            toolbarButtons: [
+              "bold",
+              "italic",
+              "undo",
+              "html",
+              "redo",
+              "textColor",
+              "backgroundColor",
+              "underline",
+              "strikeThrough",
+              "subscript",
+              "superscript",
+              "fontFamily",
+              "fontSize",
+              "color",
+              "inlineStyle",
+              "paragraphStyle",
+              "paragraphFormat",
+              "align",
+              "formatOL",
+              "formatUL",
+              "outdent",
+              "indent",
+              "quote",
+              "insertLink",
+              "insertImage",
+              "insertVideo",
+              "insertFile",
+              "insertTable",
+              "emoticons",
+              "specialCharacters",
+              "insertHR",
+              "selectAll",
+              "clearFormatting",
+              "print"
+            ],
+            events: {
+              initialized: function (e, editor) {
+                // editor.edit.off();
+                console.log(loading);
 
-              return false; // Prevent default behavior
-            },
-            "video.beforeUpload": (files) => {
-              const link = handleVideoUpload(files);
+                if (loading) this.edit.off();
+                // else this.edit.on();
+              },
+              "image.beforeUpload": (files) => {
+                const link = handleImageUpload(files);
 
-              return false; // Prevent defaul t behavior
-            },
-            "file.beforeUpload": function (files) {
-              const link = handleFileUpload(files);
-              return false;
-            },
-            contentChanged: () => {
-              handleUpdateContent();
-              removeEditorWarning();
+                return false; // Prevent default behavior
+              },
+              "video.beforeUpload": (files) => {
+                const link = handleVideoUpload(files);
+
+                return false; // Prevent defaul t behavior
+              },
+              "file.beforeUpload": function (files) {
+                const link = handleFileUpload(files);
+                return false;
+              },
+              contentChanged: function (data) {
+                const content = this.html.get();
+                handleUpdateContent(content);
+              }
             }
-          }
-        }}
-        model={readingText}
-        onModelChange={handleModelChange}
-      />
+          }}
+          model={readingText}
+          onModelChange={handleModelChange}
+        />
+      )}
 
       <div>
         <div>
