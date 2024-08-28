@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import axios from "axios";
 import { cn } from "./../../../utils/cn";
 import { HoverEffect } from "./../../ui/card-hover-effect";
@@ -35,8 +35,15 @@ import {
   AlertDialogTrigger
 } from "../../ui/alert.tsx";
 import { Button } from "../../ui/button";
+import { useNavigate } from "react-router-dom";
 
 const Quiz = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigate("/");
+  }, []);
+
   const [quizzes, setquizzes] = useState([]);
   const [moduleName, setmoduleName] = useState("");
   const [moduleChapterId, setmoduleChapterId] = useState("");
@@ -57,8 +64,8 @@ const Quiz = () => {
   // console.log(tokenData)
 
   useEffect(() => {
-    fetchQuizzes();
-    fetchChapters();
+    // fetchQuizzes();
+    // fetchChapters();
   }, []);
 
   const fetchQuizzes = async () => {

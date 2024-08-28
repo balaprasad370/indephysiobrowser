@@ -1,9 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import axios from "axios";
-import FroalaEditor from "react-froala-wysiwyg";
-import "froala-editor/css/froala_editor.pkgd.min.css";
-import "froala-editor/css/froala_style.min.css";
-import "froala-editor/js/plugins.pkgd.min.js";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 import {
   Sheet,
@@ -19,52 +17,50 @@ import { Button } from "../../../../ui/button";
 import { debounce } from "./../../../../../utils/debounce";
 
 const ContentDataReading = ({ id }) => {
-  const [readingText, setReadingText] = useState("");
+
+  const [content, setContent] = useState("");
+  const [range, setRange] = useState("");
+  const modules = {
+    toolbar: [
+      [{ header: "1" }, { header: "2" }, { font: [] }],
+      [{ size: [] }],
+      ["bold", "italic", "underline", "strike", "blockquote"],
+      [
+        { list: "ordered" },
+        { list: "bullet" },
+        { indent: "-1" },
+        { indent: "+1" }
+      ],
+      ["link", "image", "video"],
+      ["clean"]
+    ],
+    clipboard: {
+      // toggle to add extra line breaks when pasting HTML:
+      matchVisual: false
+    }
+  };
+
   const [title, setTitle] = useState("");
 
-  const [readingId, setreadingId] = useState("");
-  const editorRef = useRef(null);
-  const idRef = useRef(null);
+
+
+  const quillRef = useRef();
 
   const [token, settoken] = useState(localStorage.getItem("token"));
 
-  const [textContent, settextContent] = useState("");
   const [open, setOpen] = useState(false);
   const [prompt, setprompt] = useState("");
   const side = "left";
 
-  const [firstRender, setfirstRender] = useState(true);
+
 
   const [loading, setloading] = useState(false);
 
   useEffect(() => {
-    const getToken = localStorage.getItem("token");
-    getReadingMaterial(getToken);
+    getReadingMaterial();
   }, [id]);
 
-  // const removeEditorWarning = () => {
-  //   setTimeout(() => {
-  //     try {
-  //       const fr = document.querySelector(".fr-wrapper");
-  //       if (fr && fr.firstChild && fr.firstChild.children[0].tagName == "A") {
-  //         fr.firstChild.remove();
-  //       }
-
-  //       const frSecond = document.querySelector(".fr-second-toolbar");
-  //       if (
-  //         frSecond &&
-  //         frSecond.firstChild &&
-  //         frSecond.firstChild.tagName === "A"
-  //       ) {
-  //         frSecond.firstChild.remove();
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }, 50); // Adjust the delay as needed
-  // };
-
-  const getReadingMaterial = async (getToken) => {
+  const getReadingMaterial = async () => {
     setloading(true);
     try {
       const res = await axios({
@@ -73,19 +69,12 @@ const ContentDataReading = ({ id }) => {
         url: "https://server.indephysio.com/reading",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer " + getToken
+          Authorization: "Bearer " + token
         }
       });
 
       setTitle(res.data.title);
-      // console.log(id);
-      // setTimeout(() => {
-      //   if (editorRef.current) {
-      //     const editor = editorRef.current.editor;
-      //     editor.html.set(res.data.reading_text);
-      //   }
-      // }, 0);
-      handleModelChange(res.data.reading_text);
+      setContent(res.data.reading_text);
       setloading(false);
     } catch (error) {
       console.log(error);
@@ -93,99 +82,92 @@ const ContentDataReading = ({ id }) => {
     }
   };
 
-  const handleModelChange = (model) => {
-    setReadingText(model);
-    idRef.current = id;
-  };
+  // const handleImageUpload = async (files) => {
+  //   const formData = new FormData();
+  //   formData.append("file", files[0]);
 
-  const handleImageUpload = async (files) => {
-    const formData = new FormData();
-    formData.append("file", files[0]);
+  //   try {
+  //     const response = await axios.post(
+  //       "https://server.indephysio.com/upload/image",
+  //       formData,
+  //       {
+  //         headers: { "Content-Type": "multipart/form-data" }
+  //       }
+  //     );
 
-    try {
-      const response = await axios.post(
-        "https://server.indephysio.com/upload/image",
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" }
-        }
-      );
+  //     const imageLink =
+  //       "https://server.indephysio.com/" + response.data.filepath;
 
-      const imageLink =
-        "https://server.indephysio.com/" + response.data.filepath;
+  //     if (response.data.filepath && editorRef.current) {
+  //       const editor = editorRef.current.editor;
+  //       editor.image.insert(imageLink, null, null, editor.image.get());
+  //     }
+  //   } catch (error) {
+  //     console.error("Error uploading image:", error);
+  //   }
+  // };
+  // const handleVideoUpload = async (files) => {
+  //   const formData = new FormData();
+  //   formData.append("file", files[0]);
 
-      if (response.data.filepath && editorRef.current) {
-        const editor = editorRef.current.editor;
-        editor.image.insert(imageLink, null, null, editor.image.get());
-      }
-    } catch (error) {
-      console.error("Error uploading image:", error);
-    }
-  };
-  const handleVideoUpload = async (files) => {
-    const formData = new FormData();
-    formData.append("file", files[0]);
+  //   console.log("filesdata", files);
 
-    console.log("filesdata", files);
+  //   try {
+  //     const response = await axios.post(
+  //       "https://server.indephysio.com/upload/image",
+  //       formData,
+  //       {
+  //         headers: { "Content-Type": "multipart/form-data" }
+  //       }
+  //     );
 
-    try {
-      const response = await axios.post(
-        "https://server.indephysio.com/upload/image",
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" }
-        }
-      );
+  //     const imageLink =
+  //       "https://server.indephysio.com/" + response.data.filepath;
 
-      const imageLink =
-        "https://server.indephysio.com/" + response.data.filepath;
+  //     if (response.data.filepath && editorRef.current) {
+  //       const editor = editorRef.current.editor;
+  //       editor.html.insert(
+  //         `<span contenteditable="false" draggable="true" class="fr-video fr-dvb fr-draggable fr-active"><video src="${imageLink}" style="width: 545px; height: 338px;" controls="" class="fr-draggable">Your browser does not support HTML5 video.</video></span>`
+  //       );
+  //     }
+  //   } catch (error) {
+  //     console.error("Error uploading image:", error);
+  //   }
+  // };
+  // const handleFileUpload = async (files) => {
+  //   const formData = new FormData();
+  //   formData.append("file", files[0]);
 
-      if (response.data.filepath && editorRef.current) {
-        const editor = editorRef.current.editor;
-        editor.html.insert(
-          `<span contenteditable="false" draggable="true" class="fr-video fr-dvb fr-draggable fr-active"><video src="${imageLink}" style="width: 545px; height: 338px;" controls="" class="fr-draggable">Your browser does not support HTML5 video.</video></span>`
-        );
-      }
-    } catch (error) {
-      console.error("Error uploading image:", error);
-    }
-  };
-  const handleFileUpload = async (files) => {
-    const formData = new FormData();
-    formData.append("file", files[0]);
+  //   console.log(files[0]);
 
-    console.log(files[0]);
+  //   const fileName = files[0]["name"];
 
-    const fileName = files[0]["name"];
+  //   try {
+  //     const response = await axios.post(
+  //       "https://server.indephysio.com/upload/image",
+  //       formData,
+  //       {
+  //         headers: { "Content-Type": "multipart/form-data" }
+  //       }
+  //     );
 
-    try {
-      const response = await axios.post(
-        "https://server.indephysio.com/upload/image",
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" }
-        }
-      );
+  //     const imageLink =
+  //       "https://server.indephysio.com/" + response.data.filepath;
 
-      const imageLink =
-        "https://server.indephysio.com/" + response.data.filepath;
-
-      if (response.data.filepath && editorRef.current) {
-        const editor = editorRef.current.editor;
-        editor.file.insert(imageLink, fileName, {
-          link: imageLink
-        });
-      }
-    } catch (error) {
-      console.error("Error uploading image:", error);
-    }
-  };
+  //     if (response.data.filepath && editorRef.current) {
+  //       const editor = editorRef.current.editor;
+  //       editor.file.insert(imageLink, fileName, {
+  //         link: imageLink
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.error("Error uploading image:", error);
+  //   }
+  // };
 
   const handleUpdateContent = async (textToUpdate) => {
-    console.log(idRef.current, " ", textToUpdate);
-
     const obj = {
-      read_id: idRef.current,
+      read_id: id,
       text: textToUpdate
     };
 
@@ -207,7 +189,6 @@ const ContentDataReading = ({ id }) => {
 
   const handleGenerateContent = async (e) => {
     e.preventDefault();
-    // console.log(prompt);
 
     setloading(true);
 
@@ -223,24 +204,26 @@ const ContentDataReading = ({ id }) => {
       }
     });
 
-    if (res.data.status) {
-      const editor = editorRef.current.editor;
-      editor.html.insert(res.data.content);
-    }
     setloading(false);
 
-    // handleUpdateContent();
+    setContent(content.concat(res.data.content));
+
     setOpen(false);
-    console.log(res.data);
   };
+
+  const handleChange = useCallback(
+    debounce((val) => {
+      handleUpdateContent(val);
+      // Perform the search or API request here
+    }, 500), // Adjust delays as needed
+    [id]
+  );
 
   return (
     <div className="w-full p-2">
       <div className="flex justify-between items-center my-2">
         <div className="text-start">
-          <h1 className="text-black dark:text-white">
-            {title}
-          </h1>
+          <h1 className="text-black dark:text-white  text-lg font-bold">{title}</h1>
         </div>
         <div>
           <button onClick={setOpen} className="p-2 bg-teal-600 text-white">
@@ -248,92 +231,36 @@ const ContentDataReading = ({ id }) => {
           </button>
         </div>
       </div>
-      {!loading && (
-        <FroalaEditor
-          ref={editorRef}
-          tag="textarea"
-          config={{
-            attribution: false,
-            toolbarSticky: true,
-            imageUploadRemoteUrls: false,
-            immediateReactModelUpdate: true,
-            language: "es",
-            videoInsertButtons: [
-              "videoBack",
-              "|",
-              "videoUpload",
-              "videoByURL",
-              "videoEmbed"
-            ],
-            imageInsertButtons: ["imageBack", "|", "imageUpload", "imageByURL"],
-            toolbarButtons: [
-              "bold",
-              "italic",
-              "undo",
-              "html",
-              "redo",
-              "textColor",
-              "backgroundColor",
-              "underline",
-              "strikeThrough",
-              "subscript",
-              "superscript",
-              "fontFamily",
-              "fontSize",
-              "color",
-              "inlineStyle",
-              "paragraphStyle",
-              "paragraphFormat",
-              "align",
-              "formatOL",
-              "formatUL",
-              "outdent",
-              "indent",
-              "quote",
-              "insertLink",
-              "insertImage",
-              "insertVideo",
-              "insertFile",
-              "insertTable",
-              "emoticons",
-              "specialCharacters",
-              "insertHR",
-              "selectAll",
-              "clearFormatting",
-              "print"
-            ],
-            events: {
-              initialized: function (e, editor) {
-                // editor.edit.off();
-                console.log(loading);
-
-                if (loading) this.edit.off();
-                // else this.edit.on();
-              },
-              "image.beforeUpload": (files) => {
-                const link = handleImageUpload(files);
-
-                return false; // Prevent default behavior
-              },
-              "video.beforeUpload": (files) => {
-                const link = handleVideoUpload(files);
-
-                return false; // Prevent defaul t behavior
-              },
-              "file.beforeUpload": function (files) {
-                const link = handleFileUpload(files);
-                return false;
-              },
-              contentChanged: function (data) {
-                const content = this.html.get();
-                handleUpdateContent(content);
-              }
-            }
-          }}
-          model={readingText}
-          onModelChange={handleModelChange}
-        />
-      )}
+      
+      <ReactQuill
+        ref={quillRef}
+        theme="snow"
+        formats={[
+          "header",
+          "font",
+          "size",
+          "bold",
+          "italic",
+          "underline",
+          "strike",
+          "blockquote",
+          "list",
+          "bullet",
+          "indent",
+          "link",
+          "image",
+          "video"
+        ]}
+        onSelectionChange={setRange}
+        readOnly={loading ? true : false}
+        placeholder="Write something amazing..."
+        modules={modules}
+        onChange={(val) => {
+          setContent(val);
+          handleChange(val);
+        }}
+        value={content}
+      />
 
       <div>
         <div>

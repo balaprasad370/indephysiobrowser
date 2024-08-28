@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState, useEffect } from "react";
+import React, { useLayoutEffect, useState, useEffect,useContext } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import GridCard from "./../../../ui/gridcard";
 import { CheckIcon } from "@radix-ui/react-icons";
@@ -17,6 +17,7 @@ import {
   SheetClose
 } from "../../../ui/sheet.tsx";
 
+import { GlobalInfo } from "./../../../../App";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -30,6 +31,7 @@ import {
 } from "../../../ui/alert.tsx";
 
 const LanguageLevel = () => {
+  const context = useContext(GlobalInfo);
   const [token, settoken] = useState("");
   const [items, setitems] = useState([]);
 
@@ -63,7 +65,6 @@ const LanguageLevel = () => {
     if (lang_code == null) {
       navigate("/");
     }
-
   }, []);
 
   const handleCreateLevel = async () => {
@@ -188,7 +189,6 @@ const LanguageLevel = () => {
 
   return (
     <>
-     
       <div>
         <div className="w-full flex items-center justify-center">
           <div className="lg:w-3/5 md:w-full sm:w-full flex items-center justify-between">
@@ -226,7 +226,7 @@ const LanguageLevel = () => {
                 link={item.link}
                 handleDelete={handleDelete}
                 bgColor={item.package_color}
-                image={"https://server.indephysio.com/" + item.package_img}
+                image={context.filesServerUrl + item.package_img}
                 handleEdit={handleEdit}
                 id={item.package_id}
                 //   className={i === 3 || i === 6 ? "md:col-span-2" : ""}

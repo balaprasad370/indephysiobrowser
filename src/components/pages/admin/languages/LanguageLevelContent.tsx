@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState, useEffect } from "react";
+import React, { useLayoutEffect, useState, useEffect,useContext } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import GridCard from "./../../../ui/gridcard";
 import { CheckIcon } from "@radix-ui/react-icons";
@@ -16,6 +16,7 @@ import {
   SheetFooter,
   SheetClose
 } from "../../../ui/sheet.tsx";
+import { GlobalInfo } from './../../../../App';
 
 import {
   AlertDialog,
@@ -30,6 +31,7 @@ import {
 } from "../../../ui/alert.tsx";
 
 const LanguageLevel = () => {
+  const context = useContext(GlobalInfo)
   const [token, settoken] = useState("");
   const [items, setitems] = useState([]);
 
@@ -219,7 +221,7 @@ const LanguageLevel = () => {
                 description={item.parent_module_description}
                 header={item.parent_module_name}
                 link={item.link}
-                image={"https://server.indephysio.com/" + item.chapter_img}
+                image={context.filesServerUrl + item.chapter_img}
                 handleDelete={handleDelete}
                 handleEdit={handleEdit}
                 id={item.parent_module_id}

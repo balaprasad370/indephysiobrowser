@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, createContext } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/electron-vite.animate.svg";
 import "./App.css";
@@ -32,17 +32,13 @@ import CandidateProfile from "./components/pages/admin/CandidateProfile";
 import Schedule from "./components/pages/admin/Schedule";
 import QuizGenerator from "./components/pages/admin/QuizGenerator";
 import IframeQuiz from "./components/pages/iframes/IframeQuiz";
-import ReadingMaterial from "./components/pages/admin/readingmaterial/ReadingMaterial";
 import LanguageLevel from "./components/pages/admin/languages/LanguageLevel";
-import LanguageLevelContent from './components/pages/admin/languages/LanguageLevelContent';
-import LanguageLevelChapterContent from './components/pages/admin/languages/LanguageLevelChapterContent';
-import LanguageLevelPackage from './components/pages/admin/languages/LanguageLevelPackage';
+import LanguageLevelContent from "./components/pages/admin/languages/LanguageLevelContent";
+import LanguageLevelChapterContent from "./components/pages/admin/languages/LanguageLevelChapterContent";
+import LanguageLevelPackage from "./components/pages/admin/languages/LanguageLevelPackage";
 
+export const GlobalInfo = createContext();
 function App() {
-  // window.ipcRenderer.on("main-process-message", (messgae, data) => {
-  //   console.log(data, "vegh");
-  // });
-
   useEffect(() => {
     try {
       const theme = localStorage.getItem("theme");
@@ -64,62 +60,87 @@ function App() {
 
   const routeChange = initialRoute();
   const [count, setCount] = useState(0);
+  const contextData = {
+    filesServerUrl: "https://d2c9u2e33z36pz.cloudfront.net/"
+  };
+
   return (
-    <div className="bg-light dark:bg-neutral-800 min-h-screen h-full">
-      <Routes location={routeChange}>
-        <Route path="/" element={<Home />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/login" index element={<Login />} />
+    <GlobalInfo.Provider value={contextData}>
+      <div className="bg-light dark:bg-neutral-800 min-h-screen h-full">
+        <Routes location={routeChange}>
+          <Route path="/" element={<Home />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" index element={<Login />} />
 
-        <Route path="/admin" element={<AdminSidebar />}>
-          <Route index path="dashboard" element={<Admindashboard />} />
-          <Route path="chapters" element={<Chapters />} />
-          <Route path="quiz" element={<Quiz />} />
-          <Route path="quiz/sub/:id" element={<Subquizzes />} />
-          <Route path="quiz/:id" element={<Quizdetails />} />
-          <Route path="quiz/generate" element={<QuizGenerator />} />
-          <Route path="students" element={<Students />} />
-          <Route path="settings" element={<Settings />} />
-          <Route path="reading" element={<ReadingMaterial />} />
-          <Route path="assessment">
-            <Route index element={<Assessment />} />
-            <Route path="sub/:id" element={<Subassessments />} />
-            <Route path="details/:id" element={<AssessmentDetails />} />
+          <Route path="/admin" element={<AdminSidebar />}>
+            <Route index path="dashboard" element={<Admindashboard />} />
+            <Route path="chapters" element={<Chapters />} />
+            <Route path="quiz" element={<Quiz />} />
+            <Route path="quiz/sub/:id" element={<Subquizzes />} />
+            <Route path="quiz/:id" element={<Quizdetails />} />
+            <Route path="quiz/generate" element={<QuizGenerator />} />
+            <Route path="students" element={<Students />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="assessment">
+              <Route index element={<Assessment />} />
+              <Route path="sub/:id" element={<Subassessments />} />
+              <Route path="details/:id" element={<AssessmentDetails />} />
+            </Route>
+            <Route path="candidate/:id" element={<CandidateProfile />} />
+
+            {/* lnagugages  */}
+
+            <Route path="language" element={<Navigate to="/" />} />
+            <Route
+              exact
+              path="language/:lang_code"
+              element={<LanguageLevel />}
+            />
+
+            <Route
+              path="language/:lang_code/level"
+              element={<Navigate to="/admin/language/" />}
+            />
+            <Route
+              path="language/:lang_code/level/:lang_level"
+              element={<LanguageLevelPackage />}
+            />
+
+            {/* packages  */}
+            <Route
+              path="language/:lang_code/level/:lang_level/package"
+              element={<LanguageLevelContent />}
+            />
+            <Route
+              path="language/:lang_code/level/:lang_level/package/:package_id"
+              element={<LanguageLevelContent />}
+            />
+            {/* packages  */}
+
+            <Route
+              path="language/:lang_code/level/:lang_level/package/:package_id/chapter"
+              element={<LanguageLevelContent />}
+            />
+            <Route
+              path="language/:lang_code/level/:lang_level/package/:package_id/chapter/:chapter_id"
+              element={<LanguageLevelChapterContent />}
+            />
+            {/* languages  */}
+
+            {/* schedule  */}
+            <Route path="schedule" element={<Schedule />} />
           </Route>
-          <Route path="candidate/:id" element={<CandidateProfile />} />
 
-          {/* lnagugages  */}
+          <Route path="/student" element={<StudentSidebar />}>
+            <Route index path="dashboard" element={<Studentdashboard />} />
+          </Route>
 
-          <Route path="language" element={<Navigate to="/" />} />
-          <Route exact  path="language/:lang_code" element={<LanguageLevel />} />
-
-          <Route path="language/:lang_code/level" element={<Navigate to="/admin/language/" /> }/>
-          <Route path="language/:lang_code/level/:lang_level" element={<LanguageLevelPackage />} />
-
-
-          {/* packages  */}
-          <Route path="language/:lang_code/level/:lang_level/package" element={<LanguageLevelContent />} />
-          <Route path="language/:lang_code/level/:lang_level/package/:package_id" element={<LanguageLevelContent />} />
-          {/* packages  */}
-
-
-          <Route path="language/:lang_code/level/:lang_level/package/:package_id/chapter" element={<LanguageLevelContent />} />
-          <Route path="language/:lang_code/level/:lang_level/package/:package_id/chapter/:chapter_id" element={<LanguageLevelChapterContent />} />
-          {/* languages  */}
-
-          {/* schedule  */}
-          <Route path="schedule" element={<Schedule />} />
-        </Route>
-
-        <Route path="/student" element={<StudentSidebar />}>
-          <Route index path="dashboard" element={<Studentdashboard />} />
-        </Route>
-
-        <Route path="/referral" element={<ReferralSidebar />}>
-          <Route path="dashboard" element={<Referraldashboard />} />
-        </Route>
-      </Routes>
-    </div>
+          <Route path="/referral" element={<ReferralSidebar />}>
+            <Route path="dashboard" element={<Referraldashboard />} />
+          </Route>
+        </Routes>
+      </div>
+    </GlobalInfo.Provider>
   );
 }
 

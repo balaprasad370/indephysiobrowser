@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState, useEffect } from "react";
+import React, { useLayoutEffect, useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { EditText, EditTextarea } from "react-edit-text";
@@ -30,6 +30,7 @@ import {
   AlertDialogTrigger
 } from "../../ui/alert.tsx";
 import { Button } from "../../ui/button";
+import { GlobalInfo } from "./../../../App";
 
 // document.getElementsByTagName("html")[0].setAttribute("class","dark");
 
@@ -49,6 +50,8 @@ const LabelInputContainer = ({
 
 const Quizdetails = ({ id, disableStatus }) => {
   //   const { id } = useParams();
+
+  const context = useContext(GlobalInfo);
   const [quiz, setquiz] = useState([]);
   const [quizMetaData, setquizMetaData] = useState("");
 
@@ -62,26 +65,18 @@ const Quizdetails = ({ id, disableStatus }) => {
 
   useEffect(() => {
     // fetchQuizDetails(id);
-    fetchQuizLatestDetails();
+    console.log("id is chjanged", id);
+
+    fetchQuizLatestDetails(id);
   }, [disableStatus, id]);
 
-  // useEffect(() => {
-
-  //   const textarea = textareaRef.current;
-  //   if (textarea) {
-  //     textarea.style.height = 'auto'; // Reset height to auto to calculate new height
-  //     textarea.style.height = `${textarea.scrollHeight}px`; // Set height to scrollHeight
-  //   }
-
-  // }, [])
-
-  const fetchQuizLatestDetails = async () => {
+  const fetchQuizLatestDetails = async (mod_id) => {
     try {
       const response = await axios({
         method: "post",
         url: "https://server.indephysio.com/questions/details",
         data: {
-          module_id: id
+          module_id: mod_id
         }
       });
 
@@ -587,19 +582,11 @@ const Quizdetails = ({ id, disableStatus }) => {
                   item.type.toLowerCase() != "textnormal" &&
                   item.type.toLowerCase() != "textimage" &&
                   item.type.toLowerCase() != "textaudio" &&
-                  item.type.toLowerCase() != "evaluate" && (
+                  item.type.toLowerCase() != "evaluate" &&
+                  item.type.toLowerCase() != "speaking" && (
                     <div className="absolute right-2 bottom-1 z-50">
                       <LabelInputContainer className="flex flex-row items-center justify-between">
-                        {/* <Label htmlFor="firstname">Login as </Label> */}
                         <Select
-                          defaultValue={
-                            item.correctAnswerIndex == null
-                              ? "Choose answer"
-                              : "option" +
-                                item.correctAnswerIndex +
-                                "|" +
-                                item.id
-                          }
                           id={"selectanswer|" + item.id}
                           className="text-black bg-white"
                           onValueChange={(value) => {
@@ -620,7 +607,13 @@ const Quizdetails = ({ id, disableStatus }) => {
                           }}
                         >
                           <SelectTrigger className="w-[130px] text-black bg-white">
-                            <SelectValue placeholder="Choose Answer" />
+                            <SelectValue
+                              placeholder={
+                                item.correctAnswerIndex == null
+                                  ? "Choose answer"
+                                  : "option" + item.correctAnswerIndex
+                              }
+                            />
                           </SelectTrigger>
                           <SelectContent className="text-black bg-white">
                             <SelectItem
@@ -856,6 +849,24 @@ const Quizdetails = ({ id, disableStatus }) => {
                             </div>
                           </div>
                         )}
+                        {item.type.toLowerCase() == "speaking" && (
+                          <div className="w-full flex justify-start items-center flex-row text-black dark:text-white pl-4">
+                            <div className="flex justify-start items-center w-full">
+                              <textarea
+                                type="text"
+                                disabled={true}
+                                className="col-span-3 flex h-10 w-full rounded-md min-h-[10rem]
+                                        border border-input bg-background px-3 py-2 text-sm
+                                        ring-offset-background file:border-0 file:bg-transparent
+                                        file:text-sm file:font-medium placeholder:text-muted-foreground
+                                        focus-visible:outline-none focus-visible:ring-2
+                                        focus-visible:ring-ring focus-visible:ring-offset-2
+                                        disabled:cursor-not-allowed disabled:opacity-50 text-black "
+                                placeholder="Candidate will take speaking test from mobile app"
+                              ></textarea>
+                            </div>
+                          </div>
+                        )}
                         {item.type.toLowerCase() == "textnormal" && (
                           <div className="w-full flex justify-start items-center flex-row text-black dark:text-white pl-4">
                             <div className="flex justify-start items-center ">
@@ -902,10 +913,7 @@ const Quizdetails = ({ id, disableStatus }) => {
                               <div className="relative">
                                 <img
                                   id={"img" + item.id}
-                                  src={
-                                    "https://server.indephysio.com/" +
-                                    item.imageURL
-                                  }
+                                  src={context.filesServerUrl + item.imageURL}
                                   className="w-full  object-contain max-h-[20rem]"
                                 />
                                 <div className="absolute bottom-2 right-0">
@@ -1028,17 +1036,11 @@ const Quizdetails = ({ id, disableStatus }) => {
                               <div className="relative">
                                 <audio controls id={"audio" + item.id}>
                                   <source
-                                    src={
-                                      "https://server.indephysio.com/" +
-                                      item.audioURL
-                                    }
+                                    src={context.filesServerUrl + item.audioURL}
                                     type="audio/ogg"
                                   />
                                   <source
-                                    src={
-                                      "https://server.indephysio.com/" +
-                                      item.audioURL
-                                    }
+                                    src={context.filesServerUrl + item.audioURL}
                                     type="audio/mpeg"
                                   />
                                   Your browser does not support the audio
@@ -1244,10 +1246,7 @@ const Quizdetails = ({ id, disableStatus }) => {
                             <div className="relative">
                               <img
                                 id={"img" + item.id}
-                                src={
-                                  "https://server.indephysio.com/" +
-                                  item.imageURL
-                                }
+                                src={context.filesServerUrl + item.imageURL}
                                 className="w-full  object-contain max-h-[20rem]"
                               />
                               <div className="absolute bottom-2 right-0">
@@ -1473,10 +1472,7 @@ const Quizdetails = ({ id, disableStatus }) => {
                             <div className="relative">
                               <img
                                 id={"img" + item.id}
-                                src={
-                                  "https://server.indephysio.com/" +
-                                  item.imageURL
-                                }
+                                src={context.filesServerUrl + item.imageURL}
                                 className="w-full  object-contain max-h-[20rem]"
                               />
                               <div className="absolute bottom-2 right-0">
@@ -1576,24 +1572,18 @@ const Quizdetails = ({ id, disableStatus }) => {
                               {/* <img
                             id={"audio" + item.id}
                             src={
-                              "https://server.indephysio.com/" + item.imageURL
+                             context.filesServerUrl + item.imageURL
                             }
                             className="w-full  object-contain max-h-[20rem]"
                           /> */}
 
                               <audio controls id={"audio" + item.id}>
                                 <source
-                                  src={
-                                    "https://server.indephysio.com/" +
-                                    item.audioURL
-                                  }
+                                  src={context.filesServerUrl + item.audioURL}
                                   type="audio/ogg"
                                 />
                                 <source
-                                  src={
-                                    "https://server.indephysio.com/" +
-                                    item.audioURL
-                                  }
+                                  src={context.filesServerUrl + item.audioURL}
                                   type="audio/mpeg"
                                 />
                                 Your browser does not support the audio element.
@@ -1822,17 +1812,11 @@ const Quizdetails = ({ id, disableStatus }) => {
                             <div className="relative">
                               <audio controls id={"audio" + item.id}>
                                 <source
-                                  src={
-                                    "https://server.indephysio.com/" +
-                                    item.audioURL
-                                  }
+                                  src={context.filesServerUrl + item.audioURL}
                                   type="audio/ogg"
                                 />
                                 <source
-                                  src={
-                                    "https://server.indephysio.com/" +
-                                    item.audioURL
-                                  }
+                                  src={context.filesServerUrl + item.audioURL}
                                   type="audio/mpeg"
                                 />
                                 Your browser does not support the audio element.
@@ -2207,7 +2191,8 @@ const Quizdetails = ({ id, disableStatus }) => {
                                 {ele.type.toLowerCase() != "textnormal" &&
                                   ele.type.toLowerCase() != "textimage" &&
                                   ele.type.toLowerCase() != "textaudio" &&
-                                  ele.type.toLowerCase() != "evaluate" && (
+                                  ele.type.toLowerCase() != "evaluate" &&
+                                  ele.type.toLowerCase() != "speaking" && (
                                     <div className="absolute right-2 bottom-1 z-50">
                                       <LabelInputContainer className="flex flex-row items-center justify-between">
                                         {/* <Label htmlFor="firstname">Login as </Label> */}
@@ -2517,6 +2502,24 @@ const Quizdetails = ({ id, disableStatus }) => {
                                       </div>
                                     </div>
                                   )}
+                                  {ele.type.toLowerCase() == "speaking" && (
+                                    <div className="w-full flex justify-start items-center flex-row text-black dark:text-white pl-4">
+                                      <div className="flex justify-start items-center w-full">
+                                        <textarea
+                                          type="text"
+                                          disabled={true}
+                                          className="col-span-3 flex h-10 w-full rounded-md min-h-[10rem]
+                                        border border-input bg-background px-3 py-2 text-sm
+                                        ring-offset-background file:border-0 file:bg-transparent
+                                        file:text-sm file:font-medium placeholder:text-muted-foreground
+                                        focus-visible:outline-none focus-visible:ring-2
+                                        focus-visible:ring-ring focus-visible:ring-offset-2
+                                        disabled:cursor-not-allowed disabled:opacity-50 text-black "
+                                          placeholder="Candidate take the speaking test from mobile app"
+                                        ></textarea>
+                                      </div>
+                                    </div>
+                                  )}
 
                                   {ele.type.toLowerCase() == "textnormal" && (
                                     <div className="w-full flex justify-start items-start">
@@ -2574,7 +2577,7 @@ const Quizdetails = ({ id, disableStatus }) => {
                                           <img
                                             id={"img" + ele.id}
                                             src={
-                                              "https://server.indephysio.com/" +
+                                              context.filesServerUrl +
                                               ele.imageURL
                                             }
                                             className="w-full  object-contain max-h-[20rem]"
@@ -2723,14 +2726,14 @@ const Quizdetails = ({ id, disableStatus }) => {
                                           <audio controls id={"audio" + ele.id}>
                                             <source
                                               src={
-                                                "https://server.indephysio.com/" +
+                                                context.filesServerUrl +
                                                 ele.audioURL
                                               }
                                               type="audio/ogg"
                                             />
                                             <source
                                               src={
-                                                "https://server.indephysio.com/" +
+                                                context.filesServerUrl +
                                                 ele.audioURL
                                               }
                                               type="audio/mpeg"
@@ -2978,7 +2981,7 @@ const Quizdetails = ({ id, disableStatus }) => {
                                         <img
                                           id={"img" + ele.id}
                                           src={
-                                            "https://server.indephysio.com/" +
+                                            context.filesServerUrl +
                                             ele.imageURL
                                           }
                                           className="w-full  object-contain max-h-[20rem]"
@@ -3253,7 +3256,7 @@ const Quizdetails = ({ id, disableStatus }) => {
                                         <img
                                           id={"img" + ele.id}
                                           src={
-                                            "https://server.indephysio.com/" +
+                                            context.filesServerUrl +
                                             ele.imageURL
                                           }
                                           className="w-full  object-contain max-h-[20rem]"
@@ -3369,7 +3372,7 @@ const Quizdetails = ({ id, disableStatus }) => {
                                         {/* <img
                             id={"audio" + ele.id}
                             src={
-                              "https://server.indephysio.com/" + ele.imageURL
+                             context.filesServerUrl + ele.imageURL
                             }
                             className="w-full  object-contain max-h-[20rem]"
                           /> */}
@@ -3377,14 +3380,14 @@ const Quizdetails = ({ id, disableStatus }) => {
                                         <audio controls id={"audio" + ele.id}>
                                           <source
                                             src={
-                                              "https://server.indephysio.com/" +
+                                              context.filesServerUrl +
                                               ele.audioURL
                                             }
                                             type="audio/ogg"
                                           />
                                           <source
                                             src={
-                                              "https://server.indephysio.com/" +
+                                              context.filesServerUrl +
                                               ele.audioURL
                                             }
                                             type="audio/mpeg"
@@ -3663,14 +3666,14 @@ const Quizdetails = ({ id, disableStatus }) => {
                                         <audio controls id={"audio" + ele.id}>
                                           <source
                                             src={
-                                              "https://server.indephysio.com/" +
+                                              context.filesServerUrl +
                                               ele.audioURL
                                             }
                                             type="audio/ogg"
                                           />
                                           <source
                                             src={
-                                              "https://server.indephysio.com/" +
+                                              context.filesServerUrl +
                                               ele.audioURL
                                             }
                                             type="audio/mpeg"
@@ -3972,7 +3975,7 @@ const Quizdetails = ({ id, disableStatus }) => {
                       <div className="relative">
                         <img
                           id={"img" + item.id}
-                          src={"https://server.indephysio.com/" + item.imageURL}
+                          src={context.filesServerUrl + item.imageURL}
                           className="w-full  object-contain max-h-[20rem]"
                         />
                         <div className="absolute bottom-2 right-0">
@@ -4521,7 +4524,7 @@ const Quizdetails = ({ id, disableStatus }) => {
                                           <img
                                             id={"img" + ele.id}
                                             src={
-                                              "https://server.indephysio.com/" +
+                                              context.filesServerUrl +
                                               ele.imageURL
                                             }
                                             className="w-full  object-contain max-h-[20rem]"
@@ -4670,14 +4673,14 @@ const Quizdetails = ({ id, disableStatus }) => {
                                           <audio controls id={"audio" + ele.id}>
                                             <source
                                               src={
-                                                "https://server.indephysio.com/" +
+                                                context.filesServerUrl +
                                                 ele.audioURL
                                               }
                                               type="audio/ogg"
                                             />
                                             <source
                                               src={
-                                                "https://server.indephysio.com/" +
+                                                context.filesServerUrl +
                                                 ele.audioURL
                                               }
                                               type="audio/mpeg"
@@ -4926,7 +4929,7 @@ const Quizdetails = ({ id, disableStatus }) => {
                                         <img
                                           id={"img" + ele.id}
                                           src={
-                                            "https://server.indephysio.com/" +
+                                            context.filesServerUrl +
                                             ele.imageURL
                                           }
                                           className="w-full  object-contain max-h-[20rem]"
@@ -5201,7 +5204,7 @@ const Quizdetails = ({ id, disableStatus }) => {
                                         <img
                                           id={"img" + ele.id}
                                           src={
-                                            "https://server.indephysio.com/" +
+                                            context.filesServerUrl +
                                             ele.imageURL
                                           }
                                           className="w-full  object-contain max-h-[20rem]"
@@ -5317,7 +5320,7 @@ const Quizdetails = ({ id, disableStatus }) => {
                                         {/* <img
                             id={"audio" + ele.id}
                             src={
-                              "https://server.indephysio.com/" + ele.imageURL
+                             context.filesServerUrl + ele.imageURL
                             }
                             className="w-full  object-contain max-h-[20rem]"
                           /> */}
@@ -5325,14 +5328,14 @@ const Quizdetails = ({ id, disableStatus }) => {
                                         <audio controls id={"audio" + ele.id}>
                                           <source
                                             src={
-                                              "https://server.indephysio.com/" +
+                                              context.filesServerUrl +
                                               ele.audioURL
                                             }
                                             type="audio/ogg"
                                           />
                                           <source
                                             src={
-                                              "https://server.indephysio.com/" +
+                                              context.filesServerUrl +
                                               ele.audioURL
                                             }
                                             type="audio/mpeg"
@@ -5611,14 +5614,14 @@ const Quizdetails = ({ id, disableStatus }) => {
                                         <audio controls id={"audio" + ele.id}>
                                           <source
                                             src={
-                                              "https://server.indephysio.com/" +
+                                              context.filesServerUrl +
                                               ele.audioURL
                                             }
                                             type="audio/ogg"
                                           />
                                           <source
                                             src={
-                                              "https://server.indephysio.com/" +
+                                              context.filesServerUrl +
                                               ele.audioURL
                                             }
                                             type="audio/mpeg"
@@ -5916,15 +5919,11 @@ const Quizdetails = ({ id, disableStatus }) => {
                       <div className="relative">
                         <audio controls id={"audio" + item.id}>
                           <source
-                            src={
-                              "https://server.indephysio.com/" + item.audioURL
-                            }
+                            src={context.filesServerUrl + item.audioURL}
                             type="audio/ogg"
                           />
                           <source
-                            src={
-                              "https://server.indephysio.com/" + item.audioURL
-                            }
+                            src={context.filesServerUrl + item.audioURL}
                             type="audio/mpeg"
                           />
                           Your browser does not support the audio element.
@@ -6201,7 +6200,7 @@ const Quizdetails = ({ id, disableStatus }) => {
                                         <img
                                           id={"img" + ele.id}
                                           src={
-                                            "https://server.indephysio.com/" +
+                                            context.filesServerUrl +
                                             ele.imageURL
                                           }
                                           className="w-full  object-contain max-h-[20rem]"
@@ -6347,14 +6346,14 @@ const Quizdetails = ({ id, disableStatus }) => {
                                         <audio controls id={"audio" + ele.id}>
                                           <source
                                             src={
-                                              "https://server.indephysio.com/" +
+                                              context.filesServerUrl +
                                               ele.audioURL
                                             }
                                             type="audio/ogg"
                                           />
                                           <source
                                             src={
-                                              "https://server.indephysio.com/" +
+                                              context.filesServerUrl +
                                               ele.audioURL
                                             }
                                             type="audio/mpeg"
@@ -6779,7 +6778,7 @@ const Quizdetails = ({ id, disableStatus }) => {
                                           <img
                                             id={"img" + ele.id}
                                             src={
-                                              "https://server.indephysio.com/" +
+                                              context.filesServerUrl +
                                               ele.imageURL
                                             }
                                             className="w-full  object-contain max-h-[20rem]"
@@ -6928,14 +6927,14 @@ const Quizdetails = ({ id, disableStatus }) => {
                                           <audio controls id={"audio" + ele.id}>
                                             <source
                                               src={
-                                                "https://server.indephysio.com/" +
+                                                context.filesServerUrl +
                                                 ele.audioURL
                                               }
                                               type="audio/ogg"
                                             />
                                             <source
                                               src={
-                                                "https://server.indephysio.com/" +
+                                                context.filesServerUrl +
                                                 ele.audioURL
                                               }
                                               type="audio/mpeg"
@@ -7184,7 +7183,7 @@ const Quizdetails = ({ id, disableStatus }) => {
                                         <img
                                           id={"img" + ele.id}
                                           src={
-                                            "https://server.indephysio.com/" +
+                                            context.filesServerUrl +
                                             ele.imageURL
                                           }
                                           className="w-full  object-contain max-h-[20rem]"
@@ -7459,7 +7458,7 @@ const Quizdetails = ({ id, disableStatus }) => {
                                         <img
                                           id={"img" + ele.id}
                                           src={
-                                            "https://server.indephysio.com/" +
+                                            context.filesServerUrl +
                                             ele.imageURL
                                           }
                                           className="w-full  object-contain max-h-[20rem]"
@@ -7575,7 +7574,7 @@ const Quizdetails = ({ id, disableStatus }) => {
                                         {/* <img
                             id={"audio" + ele.id}
                             src={
-                              "https://server.indephysio.com/" + ele.imageURL
+                             context.filesServerUrl + ele.imageURL
                             }
                             className="w-full  object-contain max-h-[20rem]"
                           /> */}
@@ -7583,14 +7582,14 @@ const Quizdetails = ({ id, disableStatus }) => {
                                         <audio controls id={"audio" + ele.id}>
                                           <source
                                             src={
-                                              "https://server.indephysio.com/" +
+                                              context.filesServerUrl +
                                               ele.audioURL
                                             }
                                             type="audio/ogg"
                                           />
                                           <source
                                             src={
-                                              "https://server.indephysio.com/" +
+                                              context.filesServerUrl +
                                               ele.audioURL
                                             }
                                             type="audio/mpeg"
@@ -7869,14 +7868,14 @@ const Quizdetails = ({ id, disableStatus }) => {
                                         <audio controls id={"audio" + ele.id}>
                                           <source
                                             src={
-                                              "https://server.indephysio.com/" +
+                                              context.filesServerUrl +
                                               ele.audioURL
                                             }
                                             type="audio/ogg"
                                           />
                                           <source
                                             src={
-                                              "https://server.indephysio.com/" +
+                                              context.filesServerUrl +
                                               ele.audioURL
                                             }
                                             type="audio/mpeg"

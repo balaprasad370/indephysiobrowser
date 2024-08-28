@@ -286,6 +286,13 @@ const Schedule = () => {
       event_index: []
     };
 
+    let bgColor = "";
+    packages.forEach((ele) => {
+      if (ele.package_id === packageId) {
+        bgColor = ele.package_color;
+      }
+    });
+
     if (recurEventType == "") {
       setEvents(
         events.concat({
@@ -293,6 +300,7 @@ const Schedule = () => {
           start: selectedDateTime.startStr,
           end: selectedDateTime.endStr,
           resourceId: 1,
+          backgroundColor: bgColor,
           allDay: false
         })
       );
@@ -303,6 +311,7 @@ const Schedule = () => {
         allDay: false,
         startTime: moment(selectedDateTime.start).format("HH:mm:ss"),
         resourceId: 1,
+        backgroundColor: bgColor,
         endTime: moment(selectedDateTime.end).format("HH:mm:ss"),
         daysOfWeek: [0, 1, 2, 3, 4, 5, 6]
       };
@@ -327,6 +336,7 @@ const Schedule = () => {
         allDay: false,
         startTime: moment(selectedDateTime.start).format("HH:mm:ss"),
         resourceId: 1,
+        backgroundColor: bgColor,
         endTime: moment(selectedDateTime.end).format("HH:mm:ss"),
         daysOfWeek: [selectedDateTime.start.getDay()]
       };
@@ -351,6 +361,7 @@ const Schedule = () => {
         startTime: moment(selectedDateTime.start).format("HH:mm:ss"),
         endTime: moment(selectedDateTime.end).format("HH:mm:ss"),
         resourceId: 1,
+        backgroundColor: bgColor,
         daysOfWeek: [1, 2, 3, 4, 5]
       };
       obj.event_index = [1, 2, 3, 4, 5];
@@ -438,18 +449,19 @@ const Schedule = () => {
   const handleDeleteSlot = async () => {
     // console.log(selectedDateTimeEdit.id);
     // return;
+    try {
+      const res = await axios({
+        method: "post",
+        data: { eventId: selectedDateTimeEdit.id },
+        url: "https://server.indephysio.com/schedule/v1/delete",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token
+        }
+      });
+      DeleteEventUI(selectedDateTimeEdit.id);
+    } catch (error) {}
 
-    const res = await axios({
-      method: "post",
-      data: { eventId: selectedDateTimeEdit.id },
-      url: "https://server.indephysio.com/schedule/v1/delete",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token
-      }
-    });
-
-    console.log(res.data);
     setselectedDateTimeEdit("");
   };
   const handleUpdateSlot = async () => {
@@ -501,6 +513,11 @@ const Schedule = () => {
       prevEvents.map((event) =>
         event.id === eventId ? { ...event, title: newTitle } : event
       )
+    );
+  };
+  const DeleteEventUI = (eventId) => {
+    setEvents((prevEvents) =>
+      prevEvents.filter((event) => event.id !== eventId)
     );
   };
 

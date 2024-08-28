@@ -22,6 +22,12 @@ button {
   outline: none;
 }
 
+.ql-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: white;
+}
 
 @keyframes logo-spin {
   from {
@@ -58,7 +64,7 @@ input {
 }
 
 .quiz-details button {
-  border:none !important;
+  border: none !important;
   /* background-color: red !important; */
 }
 

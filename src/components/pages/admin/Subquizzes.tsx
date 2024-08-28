@@ -4,7 +4,7 @@ import { cn } from "./../../../utils/cn";
 import { HoverEffect } from "./../../ui/card-hover-effect";
 import { Button } from "./../../ui/button";
 import Auth from "./../../../hooks/useAuth";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Sheet,
   SheetContent,
@@ -30,6 +30,32 @@ import { Button } from "../../ui/button";
 
 const Subquizzes = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // fetchQuizzes();
+    // console.log(id);
+    handleNavigate();
+  }, []);
+
+  const handleNavigate = async () => {
+    try {
+      const res = await axios({
+        method: "post",
+        data: {
+          module_id: id
+        },
+        url: "https://server.indephysio.com/chapter/quiz/navigate"
+      });
+
+      navigate(res.data.url);
+    } catch (error) {
+      console.log(error);
+
+      navigate("/");
+    }
+  };
+
   const [quizzes, setquizzes] = useState([]);
   const [moduleName, setmoduleName] = useState("");
   const [moduleDescription, setmoduleDescription] = useState("");
@@ -43,10 +69,6 @@ const Subquizzes = () => {
   const [moduleDeleteId, setmoduleDeleteId] = useState("");
 
   const tokenData = Auth();
-
-  useEffect(() => {
-    fetchQuizzes();
-  }, []);
 
   const fetchQuizzes = async () => {
     try {

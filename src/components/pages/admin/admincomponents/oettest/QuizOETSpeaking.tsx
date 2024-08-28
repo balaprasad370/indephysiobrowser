@@ -12,7 +12,7 @@ import {
 import axios from "axios";
 import Auth from "./../../../../../hooks/useAuth";
 
-const QuizOETWriting = ({
+const QuizOETSpeaking = ({
   disableStatus,
   setdisableStatus,
   moduleId,
@@ -26,8 +26,8 @@ const QuizOETWriting = ({
   const [totalQuestions, settotalQuestions] = useState(0);
   const [topic, settopic] = useState("");
   const [error, seterror] = useState("");
-  const [type, settype] = useState("oetwriting");
-
+  const [type, settype] = useState("oetspeaking");
+  
   const [chapters, setchapters] = useState([]);
   const [modules, setmodules] = useState([]);
   const [ChapterId, setChapterId] = useState("");
@@ -96,7 +96,7 @@ const QuizOETWriting = ({
           chapterId: chapter_id
         }
       });
-      // console.log(response.data);
+      console.log(response.data);
       // setchapters(response.data);
       setmodules(response.data);
     } catch (error) {
@@ -273,4 +273,4 @@ const QuizOETWriting = ({
   );
 };
 
-export default QuizOETWriting;
+export default QuizOETSpeaking;

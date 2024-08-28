@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { EditText } from "react-edit-text";
 import { MdModeEditOutline } from "react-icons/md";
@@ -8,9 +8,11 @@ import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import { Toaster, toast } from "sonner";
+import { GlobalInfo } from "./../../../../../App";
 
 const ContentDataAssessment = ({ id }) => {
   // console.log(id);
+  const context = useContext(GlobalInfo);
 
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
 
@@ -183,7 +185,7 @@ const ContentDataAssessment = ({ id }) => {
           <div className="w-full justify-center items-center flex">
             <div className="w-4/5 border border-dashed border-black dark:border-white min-h-[200px] rounded-md relative">
               <img
-                src={"https://server.indephysio.com/" + question?.file_url}
+                src={context.filesServerUrl + question?.file_url}
                 id={"img" + question?.id}
                 className="w-full  object-contain max-h-[20rem]"
               />
@@ -240,11 +242,11 @@ const ContentDataAssessment = ({ id }) => {
                   className="w-full  object-contain max-h-[20rem]"
                 >
                   <source
-                    src={"https://server.indephysio.com/" + question?.file_url}
+                    src={context.filesServerUrl + question?.file_url}
                     type="audio/mp3"
                   />
                   <source
-                    src={"https://server.indephysio.com/" + question?.file_url}
+                    src={context.filesServerUrl + question?.file_url}
                     type="audio/mpeg"
                   />
                 </audio>
@@ -300,7 +302,7 @@ const ContentDataAssessment = ({ id }) => {
             <div className="w-4/5 border border-dashed border-white min-h-[200px] rounded-md relative">
               <div className="w-full">
                 <Document
-                  file={"https://server.indephysio.com/" + question?.file_url}
+                  file={context.filesServerUrl + question?.file_url}
                   onLoadSuccess={onDocumentLoadSuccess}
                 >
                   <Page pageNumber={pageNumber} />

@@ -9,8 +9,11 @@ import IframeQuiz from "../../pages/iframes/IframeQuiz";
 import QuizOETReading from "./admincomponents/QuizOETReading";
 import QuizOETReadingB from "./admincomponents/QuizOETReadingB";
 import QuizOETReadingC from "./admincomponents/QuizOETReadingC";
-import QuizOETWriting from './admincomponents/oettest/QuizOETWriting';
-
+import QuizOETWriting from "./admincomponents/oettest/QuizOETWriting";
+import QuizOETListening from "./admincomponents/oettest/QuizOETListening";
+import QuizOETSpeaking from "./admincomponents/oettest/QuizOETSpeaking";
+import QuizListening from "./admincomponents/generatorcomponents/Listening";
+import { Hourglass } from "react-loader-spinner";
 import {
   Select,
   SelectContent,
@@ -26,12 +29,14 @@ const QuizGenerator = () => {
       TrueFalse: true,
       Blanks: true,
       Comprehension: true,
-      matching: false,
+      Listening: true,
       Jumbled: false,
       OETReadingA: true,
       OETReadingB: true,
       OETReadingC: true,
-      OETWriting:true
+      OETWriting: true,
+      OETListening: true,
+      OETSpeaking: true
     }
   ]);
 
@@ -529,6 +534,18 @@ const QuizGenerator = () => {
               </div>
             )}
 
+            {currentType == "listening" && (
+              <div className="flex flex-col lg:w-3/12 items-start justify-start md:w-full sm:w-full xs:full w-full text-sm">
+                <QuizListening
+                  moduleId={moduleId}
+                  setmoduleId={setmoduleId}
+                  disableStatus={disableStatus}
+                  setgeneratedOutput={setgeneratedOutput}
+                  setdisableStatus={setdisableStatus}
+                />
+              </div>
+            )}
+
             {currentType == "oetreadinga" && (
               <div className="flex flex-col lg:w-3/12 items-start justify-start md:w-full sm:w-full xs:full w-full text-sm">
                 <QuizOETReading
@@ -573,12 +590,47 @@ const QuizGenerator = () => {
                 />
               </div>
             )}
+            {currentType == "oetspeaking" && (
+              <div className="flex flex-col lg:w-3/12 items-start justify-start md:w-full sm:w-full xs:full w-full text-sm">
+                <QuizOETSpeaking
+                  moduleId={moduleId}
+                  setmoduleId={setmoduleId}
+                  disableStatus={disableStatus}
+                  setgeneratedOutput={setgeneratedOutput}
+                  setdisableStatus={setdisableStatus}
+                />
+              </div>
+            )}
+            {currentType == "oetlistening" && (
+              <div className="flex flex-col lg:w-3/12 items-start justify-start md:w-full sm:w-full xs:full w-full text-sm">
+                <QuizOETListening
+                  moduleId={moduleId}
+                  setmoduleId={setmoduleId}
+                  disableStatus={disableStatus}
+                  setgeneratedOutput={setgeneratedOutput}
+                  setdisableStatus={setdisableStatus}
+                />
+              </div>
+            )}
 
             {/* Document Section */}
             <div className="mt-6 lg:w-9/12 md:w-full sm:w-full xs:w-full h-full w-full">
               {/* <h2 className="text-lg font-semibold">Output </h2> */}
               <div className="border border-dashed border-black dark:border-white rounded-md h-full  p-5 text-start">
-                {disableStatus && <p> Generating Content...</p>}
+                {disableStatus && (
+                  <div className="w-full items-center justify-center flex flex-col">
+                    <Hourglass
+                      visible={true}
+                      height="80"
+                      width="80"
+                      ariaLabel="hourglass-loading"
+                      wrapperStyle={{}}
+                      wrapperClass=""
+                      colors={["#306cce", "#72a1ed"]}
+                    />
+                    <div>Generating Content...</div>
+                  </div>
+                )}
                 {/* 
                 {generatedOutput != "" &&
                   generatedOutput.map((ele, index) => {

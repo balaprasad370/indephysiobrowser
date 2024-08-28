@@ -12,7 +12,7 @@ import {
 import axios from "axios";
 import Auth from "./../../../../../hooks/useAuth";
 
-const QuizOETWriting = ({
+const QuizListening = ({
   disableStatus,
   setdisableStatus,
   moduleId,
@@ -26,16 +26,19 @@ const QuizOETWriting = ({
   const [totalQuestions, settotalQuestions] = useState(0);
   const [topic, settopic] = useState("");
   const [error, seterror] = useState("");
-  const [type, settype] = useState("oetwriting");
+  const [type, settype] = useState("listening");
+  const [level, setlevel] = useState("");
+  const [duration, setduration] = useState(30);
 
   const [chapters, setchapters] = useState([]);
   const [modules, setmodules] = useState([]);
   const [ChapterId, setChapterId] = useState("");
+  const [listenType, setlistenType] = useState("mcq");
 
   const handleSubmit = async () => {
     seterror("");
 
-    if (topic == 0 || topic == "") {
+    if ((topic == 0 || topic == "") && listenType == "blanks") {
       seterror("Enter the Topic");
       return;
     }
@@ -46,10 +49,11 @@ const QuizOETWriting = ({
       topic: topic,
       chapterId: ChapterId,
       moduleId: moduleId,
-      type: type
+      type: type,
+      level: level,
+      duration: duration,
+      totalQuestions: totalQuestions
     };
-
-    console.log(obj);
 
     try {
       const res = await axios({
@@ -59,10 +63,14 @@ const QuizOETWriting = ({
       });
       console.log("respone", res.data);
       setgeneratedOutput(res.data);
-      setdisableStatus(false);
+      setTimeout(() => {
+        setdisableStatus(false);
+      }, 1000);
     } catch (error) {
       console.log(error);
-      setdisableStatus(false);
+      setTimeout(() => {
+        setdisableStatus(false);
+      }, 1000);
     }
 
     console.log(obj);
@@ -96,7 +104,7 @@ const QuizOETWriting = ({
           chapterId: chapter_id
         }
       });
-      // console.log(response.data);
+      console.log(response.data);
       // setchapters(response.data);
       setmodules(response.data);
     } catch (error) {
@@ -107,23 +115,110 @@ const QuizOETWriting = ({
   return (
     <>
       <div className="flex flex-col lg:w-full items-start justify-start md:w-full sm:w-full xs:full w-full text-sm">
-        <div className="flex flex-col space-y-4 w-11/12">
-          <div className="w-full flex  items-start justify-start flex-col">
-            <label className="block font-bold">Topic </label>
-            <textarea
-              type="text"
-              className="col-span-3 flex h-10 w-full rounded-md min-h-[4rem]
+        <div className="flex flex-col space-y-4 w-11/12 text-start">
+          {listenType == "mcq" && (
+            <>
+              <div className="w-full flex  items-start justify-start flex-col">
+                <label className="block font-bold">Topic for the audio</label>
+                <textarea
+                  type="text"
+                  className="col-span-3 flex h-10 w-full rounded-md min-h-[4rem]
               border border-input bg-background px-3 py-2 text-sm
               ring-offset-background file:border-0 file:bg-transparent
               file:text-sm file:font-medium placeholder:text-muted-foreground
               focus-visible:outline-none focus-visible:ring-2
               focus-visible:ring-ring focus-visible:ring-offset-2
               disabled:cursor-not-allowed disabled:opacity-50 text-black "
-              placeholder="Eg: Cancer"
+                  placeholder="Eg: school theme conversation"
+                  onChange={(e) => {
+                    settopic(e.target.value);
+                  }}
+                ></textarea>
+              </div>
+
+              <div className="w-full flex  items-start justify-start flex-col">
+                <label className="block font-bold">
+                  No of questions for an audio
+                </label>
+                <input
+                  type="number"
+                  className="col-span-3 flex h-10 w-full rounded-md min-h-[2rem]
+              border border-input bg-background px-3 py-2 text-sm
+              ring-offset-background file:border-0 file:bg-transparent
+              file:text-sm file:font-medium placeholder:text-muted-foreground
+              focus-visible:outline-none focus-visible:ring-2
+              focus-visible:ring-ring focus-visible:ring-offset-2
+              disabled:cursor-not-allowed disabled:opacity-50 text-black "
+                  placeholder="No of questions"
+                  onChange={(e) => {
+                    settotalQuestions(e.target.value);
+                  }}
+                />
+              </div>
+            </>
+          )}
+          <div className="w-full flex  items-start justify-start flex-col">
+            <label className="block font-bold">
+              Duration of audio (in secs)
+            </label>
+            <input
+              type="number"
+              value={duration}
+              className="col-span-3 flex h-10 w-full rounded-md min-h-[2rem]
+              border border-input bg-background px-3 py-2 text-sm
+              ring-offset-background file:border-0 file:bg-transparent
+              file:text-sm file:font-medium placeholder:text-muted-foreground
+              focus-visible:outline-none focus-visible:ring-2
+              focus-visible:ring-ring focus-visible:ring-offset-2
+              disabled:cursor-not-allowed disabled:opacity-50 text-black "
+              placeholder="Min 30 seconds - max 360 seconds"
               onChange={(e) => {
-                settopic(e.target.value);
+                console.log(e.target.value);
+                if (e.target.value == "") {
+                  setduration(0);
+                }
+                if (e.target.value > 360) {
+                  e.preventDefault();
+                } else {
+                  setduration(e.target.value);
+                }
               }}
-            ></textarea>
+            />
+          </div>
+
+          <div>
+            <div className="flex justify-between w-full items-center">
+              <label className="block font-bold">Language Level</label>
+            </div>
+            <Select
+              className="text-black bg-white w-full flex border-input  border"
+              style={{
+                borderWidth: "1px",
+                borderColor: "#e5e7eb"
+              }}
+              value={level}
+              onValueChange={(value) => {
+                setlevel(value);
+              }}
+            >
+              <SelectTrigger className="w-full text-black bg-white border-slate-300 border border-solid">
+                <SelectValue placeholder="Choose Level" />
+              </SelectTrigger>
+              <SelectContent className="text-black bg-white">
+                <SelectItem value="A1" className="hover:bg-slate-200">
+                  A1 Level
+                </SelectItem>
+                <SelectItem value="A2" className="hover:bg-slate-200">
+                  A2 Level
+                </SelectItem>
+                <SelectItem value="B1" className="hover:bg-slate-200">
+                  B1 Level
+                </SelectItem>
+                <SelectItem value="B2" className="hover:bg-slate-200">
+                  B2 Level
+                </SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           <div>
@@ -163,7 +258,7 @@ const QuizOETWriting = ({
                 fetchModules(value);
               }}
             >
-              <SelectTrigger className="w-full text-black bg-white">
+              <SelectTrigger className="w-full text-black bg-white border-slate-300 border border-solid">
                 <SelectValue placeholder="Choose Module" />
               </SelectTrigger>
               <SelectContent className="text-black bg-white">
@@ -227,7 +322,7 @@ const QuizOETWriting = ({
                 setmoduleId(value);
               }}
             >
-              <SelectTrigger className="w-full text-black bg-white">
+              <SelectTrigger className="w-full text-black bg-white border-slate-300 border border-solid">
                 <SelectValue placeholder="Choose Quiz" />
               </SelectTrigger>
               <SelectContent className="text-black bg-white">
@@ -273,4 +368,4 @@ const QuizOETWriting = ({
   );
 };
 
-export default QuizOETWriting;
+export default QuizListening;
