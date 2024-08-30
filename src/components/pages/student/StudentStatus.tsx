@@ -37,12 +37,6 @@ const StudentStatus = ({ student_id }) => {
             Pathway Timeline
           </h2>
           <div className="flex  space-x-4 flex-col w-full relative h-full">
-            {loading && (
-              <div className="absolute inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center">
-                <div className="">Loading...</div>
-              </div>
-            )}
-
             {/* status  */}
 
             <div className="flex flex-row justify-around items-center flex-grow w-full">

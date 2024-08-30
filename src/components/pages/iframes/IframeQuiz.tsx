@@ -9,6 +9,8 @@ import { Toaster, toast } from "sonner";
 import { FaUpload } from "react-icons/fa";
 import { MdCancel } from "react-icons/md";
 import { IoMdAdd } from "react-icons/io";
+
+import { BiSolidVolumeFull } from "react-icons/bi";
 import { cn } from "./../../../utils/cn";
 import {
   Select,
@@ -31,6 +33,8 @@ import {
 } from "../../ui/alert.tsx";
 import { Button } from "../../ui/button";
 import { GlobalInfo } from "./../../../App";
+
+import useSpeechSynthesis from "../../../hooks/useSpeechSynthesis";
 
 // document.getElementsByTagName("html")[0].setAttribute("class","dark");
 
@@ -57,6 +61,8 @@ const Quizdetails = ({ id, disableStatus }) => {
 
   const [deletequestion, setdeletequestion] = useState("");
   const [questionType, setquestionType] = useState("");
+
+  const { speak } = useSpeechSynthesis();
 
   const theme = document.getElementsByTagName("html")[0].getAttribute("class");
   useEffect(() => {
@@ -120,9 +126,9 @@ const Quizdetails = ({ id, disableStatus }) => {
     }
   };
 
-  const handleUpdateData = async (updatedata, value) => {
+  const handleUpdateData = async (updatedata, value, type = "") => {
     try {
-      console.log(value);
+      // console.log(value, updatedata);
 
       const updatedatasplit = updatedata.split(",");
 
@@ -140,6 +146,9 @@ const Quizdetails = ({ id, disableStatus }) => {
       });
 
       console.log(response.data);
+      if (type == "record") {
+        fetchQuizLatestDetails(id);
+      }
       toast.success("Successfully updated");
     } catch (e) {
       console.log(e);
@@ -307,6 +316,8 @@ const Quizdetails = ({ id, disableStatus }) => {
       questiontype = "MultiQuestionsImage";
     } else if (value == "multiquestionsaudio") {
       questiontype = "MultiQuestionsAudio";
+    } else if (value == "record") {
+      questiontype = "Record";
     }
 
     const obj = {
@@ -375,7 +386,7 @@ const Quizdetails = ({ id, disableStatus }) => {
       console.log("====================================");
     }
 
-    fetchQuizLatestDetails();
+    fetchQuizLatestDetails(id);
   };
 
   const handleDeleteQuestion = async () => {
@@ -391,7 +402,7 @@ const Quizdetails = ({ id, disableStatus }) => {
     console.log(res.data);
 
     try {
-      fetchQuizLatestDetails();
+      fetchQuizLatestDetails(id);
       // document.getElementById("questionid" + deletequestion).remove(this);
     } catch (error) {
       console.log(error);
@@ -411,7 +422,7 @@ const Quizdetails = ({ id, disableStatus }) => {
       });
 
       try {
-        fetchQuizLatestDetails();
+        fetchQuizLatestDetails(id);
         // document.getElementById("questionid" + deletequestion).remove(this);
       } catch (error) {
         console.log(error);
@@ -489,6 +500,9 @@ const Quizdetails = ({ id, disableStatus }) => {
                   </SelectItem>
                   <SelectItem value="imagemcq" className="hover:bg-slate-200">
                     Image with MCQ
+                  </SelectItem>
+                  <SelectItem value="record" className="hover:bg-slate-200">
+                    Record
                   </SelectItem>
                   <SelectItem
                     value="multiquestionsnormal"
@@ -583,6 +597,7 @@ const Quizdetails = ({ id, disableStatus }) => {
                   item.type.toLowerCase() != "textimage" &&
                   item.type.toLowerCase() != "textaudio" &&
                   item.type.toLowerCase() != "evaluate" &&
+                  item.type.toLowerCase() != "record" &&
                   item.type.toLowerCase() != "speaking" && (
                     <div className="absolute right-2 bottom-1 z-50">
                       <LabelInputContainer className="flex flex-row items-center justify-between">
@@ -681,7 +696,11 @@ const Quizdetails = ({ id, disableStatus }) => {
                           }
                           onSave={(d) => {
                             console.log(d);
-                            handleUpdateData(d.name, d.value);
+                            handleUpdateData(
+                              d.name,
+                              d.value,
+                              item.type.toLowerCase()
+                            );
                           }}
                         />
                       </div>
@@ -846,6 +865,24 @@ const Quizdetails = ({ id, disableStatus }) => {
                                         disabled:cursor-not-allowed disabled:opacity-50 text-black "
                                 placeholder="Candidate write the answer"
                               ></textarea>
+                            </div>
+                          </div>
+                        )}
+                        {item.type.toLowerCase() == "record" && (
+                          <div className="w-full flex justify-start items-center flex-row text-black dark:text-white pl-4">
+                            <div className="flex justify-start items-center w-full">
+                              <button
+                                onClick={() => {
+                                  speak({
+                                    rate: 0.7, // Slower speech
+                                    pitch: 0.5, // Slightly higher pitch
+                                    volume: 1, // Full volume,
+                                    text: item.question
+                                  });
+                                }}
+                              >
+                                <BiSolidVolumeFull className="text-black " />
+                              </button>
                             </div>
                           </div>
                         )}
@@ -2192,6 +2229,7 @@ const Quizdetails = ({ id, disableStatus }) => {
                                   ele.type.toLowerCase() != "textimage" &&
                                   ele.type.toLowerCase() != "textaudio" &&
                                   ele.type.toLowerCase() != "evaluate" &&
+                                  ele.type.toLowerCase() != "record" &&
                                   ele.type.toLowerCase() != "speaking" && (
                                     <div className="absolute right-2 bottom-1 z-50">
                                       <LabelInputContainer className="flex flex-row items-center justify-between">
@@ -2499,6 +2537,24 @@ const Quizdetails = ({ id, disableStatus }) => {
                                         disabled:cursor-not-allowed disabled:opacity-50 text-black "
                                           placeholder="Candidate write the answer"
                                         ></textarea>
+                                      </div>
+                                    </div>
+                                  )}
+                                  {ele.type.toLowerCase() == "record" && (
+                                    <div className="w-full flex justify-start items-center flex-row text-black dark:text-white pl-4">
+                                      <div className="flex justify-start items-center w-full">
+                                        <button
+                                          onClick={() => {
+                                            speak({
+                                              rate: 0.7, // Slower speech
+                                              pitch: 0.5, // Slightly higher pitch
+                                              volume: 1, // Full volume,
+                                              text: ele.question
+                                            });
+                                          }}
+                                        >
+                                          <BiSolidVolumeFull className="text-black " />
+                                        </button>
                                       </div>
                                     </div>
                                   )}

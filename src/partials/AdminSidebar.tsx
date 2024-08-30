@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useState } from "react";
-import { Link, Outlet, useLocation,useNavigate } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import nouser from "../assets/nouser.jpg";
 import { GrChapterAdd } from "react-icons/gr";
 import { HiOutlineLightBulb } from "react-icons/hi";
@@ -24,7 +24,8 @@ import {
   ShoppingCart,
   Users2,
   LogOut,
-  ChevronDownIcon
+  ChevronDownIcon,
+  Users
 } from "lucide-react";
 
 import {
@@ -58,7 +59,6 @@ import { ButtonProps, Button } from "./../components/ui/button";
 import { useEffect } from "./../../node_modules/preact/hooks/src/index";
 
 const AdminSidebar = () => {
-
   const [theme, settheme] = useState("dark");
 
   const navigate = useNavigate();
@@ -111,6 +111,20 @@ const AdminSidebar = () => {
                 </TooltipTrigger>
                 <TooltipContent side="right">Quiz Generator</TooltipContent>
               </Tooltip>
+
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Link
+                    to="/admin/candidates"
+                    className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                  >
+                    <Users className="h-5 w-5" />
+                    <span className="sr-only"> Candidates </span>
+                  </Link>
+                </TooltipTrigger>
+
+                <TooltipContent side="right">Candidates</TooltipContent>
+              </Tooltip>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Link
@@ -128,11 +142,13 @@ const AdminSidebar = () => {
 
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button className="flex p-0 h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8 bg-transparent text-red-600 dark:text-red-600 hover:outline-none hover:border-none" 
-                  onClick={() => {
-                   localStorage.removeItem("token");
-                   navigate("/login",{replace:true});
-                  }}>
+                  <Button
+                    className="flex p-0 h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8 bg-transparent text-red-600 dark:text-red-600 hover:outline-none hover:border-none"
+                    onClick={() => {
+                      localStorage.removeItem("token");
+                      navigate("/login", { replace: true });
+                    }}
+                  >
                     <LogOut className="h-5 w-5" />
                     <span className="sr-only">Logout</span>
                   </Button>
@@ -299,7 +315,7 @@ const AdminSidebar = () => {
                     <DropdownMenuItem
                       onClick={() => {
                         localStorage.removeItem("token");
-                        navigate("/login",{replace:true});
+                        navigate("/login", { replace: true });
                       }}
                     >
                       Logout

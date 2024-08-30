@@ -13,7 +13,9 @@ import QuizOETWriting from "./admincomponents/oettest/QuizOETWriting";
 import QuizOETListening from "./admincomponents/oettest/QuizOETListening";
 import QuizOETSpeaking from "./admincomponents/oettest/QuizOETSpeaking";
 import QuizListening from "./admincomponents/generatorcomponents/Listening";
+import QuizRecord from "./admincomponents/generatorcomponents/Record";
 import { Hourglass } from "react-loader-spinner";
+
 import {
   Select,
   SelectContent,
@@ -30,6 +32,7 @@ const QuizGenerator = () => {
       Blanks: true,
       Comprehension: true,
       Listening: true,
+      Record: true,
       Jumbled: false,
       OETReadingA: true,
       OETReadingB: true,
@@ -604,6 +607,17 @@ const QuizGenerator = () => {
             {currentType == "oetlistening" && (
               <div className="flex flex-col lg:w-3/12 items-start justify-start md:w-full sm:w-full xs:full w-full text-sm">
                 <QuizOETListening
+                  moduleId={moduleId}
+                  setmoduleId={setmoduleId}
+                  disableStatus={disableStatus}
+                  setgeneratedOutput={setgeneratedOutput}
+                  setdisableStatus={setdisableStatus}
+                />
+              </div>
+            )}
+            {currentType == "record" && (
+              <div className="flex flex-col lg:w-3/12 items-start justify-start md:w-full sm:w-full xs:full w-full text-sm">
+                <QuizRecord
                   moduleId={moduleId}
                   setmoduleId={setmoduleId}
                   disableStatus={disableStatus}

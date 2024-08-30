@@ -36,6 +36,9 @@ import LanguageLevel from "./components/pages/admin/languages/LanguageLevel";
 import LanguageLevelContent from "./components/pages/admin/languages/LanguageLevelContent";
 import LanguageLevelChapterContent from "./components/pages/admin/languages/LanguageLevelChapterContent";
 import LanguageLevelPackage from "./components/pages/admin/languages/LanguageLevelPackage";
+import Candidates from "./components/pages/admin/Candidates";
+import Transactions from "./components/pages/admin/Transactions";
+import Documents from "./components/pages/admin/Documents";
 
 export const GlobalInfo = createContext();
 function App() {
@@ -75,6 +78,7 @@ function App() {
           <Route path="/admin" element={<AdminSidebar />}>
             <Route index path="dashboard" element={<Admindashboard />} />
             <Route path="chapters" element={<Chapters />} />
+            <Route path="candidates" element={<Candidates />} />
             <Route path="quiz" element={<Quiz />} />
             <Route path="quiz/sub/:id" element={<Subquizzes />} />
             <Route path="quiz/:id" element={<Quizdetails />} />
@@ -87,6 +91,11 @@ function App() {
               <Route path="details/:id" element={<AssessmentDetails />} />
             </Route>
             <Route path="candidate/:id" element={<CandidateProfile />} />
+            <Route
+              path="candidate/transactions/:id"
+              element={<Transactions />}
+            />
+            <Route path="candidate/documents/:id" element={<Documents />} />
 
             {/* lnagugages  */}
 
