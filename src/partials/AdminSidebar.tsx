@@ -9,6 +9,7 @@ import { Sheet, SheetContent, SheetTrigger } from "../components/ui/sheet";
 import { FaRegMoon } from "react-icons/fa";
 import { FiSun } from "react-icons/fi";
 import { RiAiGenerate } from "react-icons/ri";
+import { BsFillMegaphoneFill } from "react-icons/bs";
 import {
   File,
   Home,
@@ -125,6 +126,21 @@ const AdminSidebar = () => {
 
                 <TooltipContent side="right">Candidates</TooltipContent>
               </Tooltip>
+
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Link
+                    to="/admin/branding"
+                    className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                  >
+                    <BsFillMegaphoneFill className="h-5 w-5" />
+                    <span className="sr-only"> Branding </span>
+                  </Link>
+                </TooltipTrigger>
+
+                <TooltipContent side="right">Branding</TooltipContent>
+              </Tooltip>
+
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Link

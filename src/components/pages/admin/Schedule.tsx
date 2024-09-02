@@ -157,7 +157,7 @@ const Schedule = () => {
         } else if (ele.schdeule_recur_type == "weekly") {
           eve = {
             title: ele.title,
-            groupId: "redevents",
+            groupId: "redevents" + index,
             allDay: false,
             startTime: ele.schedule_start_time,
             resourceId: 1,
@@ -186,7 +186,7 @@ const Schedule = () => {
         } else if (ele.schdeule_recur_type == "weekdays") {
           eve = {
             title: ele.title,
-            groupId: "redevents",
+            groupId: "redevents" + index,
             allDay: false,
             startTime: ele.schedule_start_time,
             endTime: ele.schedule_end_time,
@@ -215,6 +215,8 @@ const Schedule = () => {
         }
         _events.push(eve);
       });
+      console.log(_events);
+
       setEvents(_events);
     } catch (error) {
       console.log(error);
@@ -307,7 +309,7 @@ const Schedule = () => {
     } else if (recurEventType == "daily") {
       const eve = {
         title: title,
-        groupId: "redevents",
+        groupId: "redevents" + index,
         allDay: false,
         startTime: moment(selectedDateTime.start).format("HH:mm:ss"),
         resourceId: 1,
@@ -332,7 +334,7 @@ const Schedule = () => {
     } else if (recurEventType == "weekly") {
       const eve = {
         title: title,
-        groupId: "redevents",
+        groupId: "redevents" + index,
         allDay: false,
         startTime: moment(selectedDateTime.start).format("HH:mm:ss"),
         resourceId: 1,
@@ -356,7 +358,7 @@ const Schedule = () => {
     } else if (recurEventType == "weekdays") {
       const eve = {
         title: title,
-        groupId: "redevents",
+        groupId: "redevents" + index,
         allDay: false,
         startTime: moment(selectedDateTime.start).format("HH:mm:ss"),
         endTime: moment(selectedDateTime.end).format("HH:mm:ss"),

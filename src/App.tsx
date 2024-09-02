@@ -39,6 +39,9 @@ import LanguageLevelPackage from "./components/pages/admin/languages/LanguageLev
 import Candidates from "./components/pages/admin/Candidates";
 import Transactions from "./components/pages/admin/Transactions";
 import Documents from "./components/pages/admin/Documents";
+import Branding from "./components/pages/branding/Branding";
+import AddBranding from "./components/pages/branding/AddBranding";
+import ViewBranding from "./components/pages/branding/ViewBranding";
 
 export const GlobalInfo = createContext();
 function App() {
@@ -77,6 +80,9 @@ function App() {
 
           <Route path="/admin" element={<AdminSidebar />}>
             <Route index path="dashboard" element={<Admindashboard />} />
+            <Route path="branding" element={<Branding />} />
+            <Route path="branding/new" element={<AddBranding />} />
+            <Route path="branding/view/:brand_id" element={<ViewBranding />} />
             <Route path="chapters" element={<Chapters />} />
             <Route path="candidates" element={<Candidates />} />
             <Route path="quiz" element={<Quiz />} />
