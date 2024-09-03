@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   ColumnDef,
   flexRender,
@@ -25,6 +25,7 @@ import {
   DropdownMenuTrigger
 } from "../../ui/dropdown";
 import { Button } from "../../ui/button";
+import { GlobalInfo } from "./../../../App";
 import {
   ChevronRightIcon,
   CaretSortIcon,
@@ -41,6 +42,7 @@ export type Payment = {
 
 export default function DataTableDemo() {
   const { id } = useParams();
+  const context = useContext(GlobalInfo);
   const [data, setData] = React.useState<Payment[]>([]);
   const [token, settoken] = useState(localStorage.getItem("token"));
 
@@ -181,7 +183,7 @@ export default function DataTableDemo() {
     try {
       const response = await axios({
         method: "post",
-        url: "https://server.indephysio.com/admin/student/transactionDetails",
+        url: context.apiEndPoint + "admin/student/transactionDetails",
         data: {
           studentId: id
         },
@@ -210,7 +212,7 @@ export default function DataTableDemo() {
     try {
       const response = await axios({
         method: "post",
-        url: "https://server.indephysio.com/admin/student/updateTransaction",
+        url: context.apiEndPoint + "admin/student/updateTransaction",
         data: {
           transaction_id: transaction_id,
           status: val

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -19,6 +19,7 @@ import {
   SheetClose
 } from "../../../../ui/sheet.tsx";
 import { Button } from "../../../../ui/button";
+import { GlobalInfo } from "./../../../../../App";
 const side = "right";
 const shortMonths = [
   "Jan", // January
@@ -46,6 +47,7 @@ const shortWeek = [
 
 const Schedule = ({ id }) => {
   const { chapter_id } = useParams();
+  const context = useContext(GlobalInfo);
 
   const [token, settoken] = useState(localStorage.getItem("token"));
 
@@ -101,7 +103,7 @@ const Schedule = ({ id }) => {
     try {
       const res = await axios({
         method: "get",
-        url: "https://server.indephysio.com/schedule/chapters/" + chapter_id,
+        url: context.apiEndPoint + "schedule/chapters/" + chapter_id,
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + token
@@ -142,7 +144,7 @@ const Schedule = ({ id }) => {
     try {
       const res = await axios({
         method: "post",
-        url: "https://server.indephysio.com/schedule/v1/add",
+        url: context.apiEndPoint + "schedule/v1/add",
         data: obj,
         headers: {
           "Content-Type": "application/json",

@@ -23,7 +23,7 @@ const GridLayoutView = () => {
   const getBrands = async () => {
     const response = await axios({
       method: "get",
-      url: "https://server.indephysio.com/admin/branding/" + brand_id,
+      url: context.apiEndPoint + "admin/branding/" + brand_id,
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -92,7 +92,7 @@ const GridLayoutView = () => {
     // console.log(obj);
 
     const response = await axios.post(
-      "https://server.indephysio.com/admin/branding/update",
+      context.apiEndPoint + "admin/branding/update",
       obj,
       {
         headers: {
@@ -115,7 +115,7 @@ const GridLayoutView = () => {
     formData.append("file", file);
 
     const response = await axios.post(
-      "https://server.indephysio.com/upload/image",
+      context.apiEndPoint + "upload/image",
       formData,
       {
         headers: {

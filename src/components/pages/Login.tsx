@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 
@@ -19,6 +19,7 @@ import {
 } from "@tabler/icons-react";
 import { Toaster, toast } from "sonner";
 import useAuth from "../../hooks/useAuth";
+import { GlobalInfo } from "./../../App";
 
 const BottomGradient = () => {
   return (
@@ -45,6 +46,7 @@ const LabelInputContainer = ({
 
 const Login = () => {
   const navigate = useNavigate();
+  const context = useContext(GlobalInfo);
 
   const [usertype, setusertype] = useState("admin");
   const [username, setusername] = useState("");
@@ -78,7 +80,7 @@ const Login = () => {
       const response = await axios({
         method: "post",
         data: obj,
-        url: `https://server.indephysio.com/login`
+        url: context.apiEndPoint + `login`
       });
 
       if (response.data.status) {

@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import DisplayFiles from "./admincomponents/DisplayFiles";
 import { IoMdClose } from "react-icons/io";
+import { GlobalInfo } from "./../../../App";
 
 import {
   AlertDialog,
@@ -18,6 +19,7 @@ import {
 
 const Documents = () => {
   const { id } = useParams();
+  const context = useContext(GlobalInfo);
   const [token, settoken] = useState(localStorage.getItem("token"));
   const [documents, setdocuments] = useState([]);
   const [open, setopen] = useState(false);
@@ -32,7 +34,7 @@ const Documents = () => {
     try {
       const res = await axios({
         method: "post",
-        url: "https://server.indephysio.com/admin/student/getdocuments",
+        url: context.apiEndPoint + "admin/student/getdocuments",
         data: {
           student_id: id
         },
@@ -51,7 +53,7 @@ const Documents = () => {
     try {
       const response = await axios({
         method: "post",
-        url: "https://server.indephysio.com/admin/student/getDetails",
+        url: context.apiEndPoint + "admin/student/getDetails",
         data: {
           student_id: id
         },
@@ -77,7 +79,7 @@ const Documents = () => {
     try {
       const res = await axios({
         method: "post",
-        url: "https://server.indephysio.com/admin/student/updateDocument",
+        url: context.apiEndPoint + "admin/student/updateDocument",
         data: {
           document_id: currentFile.doc_id,
           status: currentStatus
@@ -112,7 +114,7 @@ const Documents = () => {
     try {
       const res = await axios({
         method: "post",
-        url: "https://server.indephysio.com/admin/student/updateDocumentStatus",
+        url: context.apiEndPoint + "admin/student/updateDocumentStatus",
         data: {
           student_id: id,
           status: val

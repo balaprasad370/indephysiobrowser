@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -28,6 +28,7 @@ import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 import { cn } from "./../../../utils/cn";
 import axios from "axios";
+import { GlobalInfo } from "./../../../App";
 import {
   Select,
   SelectContent,
@@ -65,6 +66,7 @@ const Schedule = () => {
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const calendarRef = useRef(null);
+  const context = useContext(GlobalInfo);
 
   const [selectedDateTime, setselectedDateTime] = useState("");
   const [selectedDateTimeEdit, setselectedDateTimeEdit] = useState("");
@@ -93,7 +95,7 @@ const Schedule = () => {
     try {
       const res = await axios({
         method: "get",
-        url: "https://server.indephysio.com/schedule/v1/get",
+        url: context.apiEndPoint + "schedule/v1/get",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + token
@@ -226,7 +228,7 @@ const Schedule = () => {
   const handleGetLevels = async (getToken) => {
     const res = await axios({
       method: "get",
-      url: "https://server.indephysio.com/levels/de",
+      url: context.apiEndPoint + "levels/de",
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + token
@@ -240,7 +242,7 @@ const Schedule = () => {
   const handleGetPackages = async (level_id) => {
     const res = await axios({
       method: "get",
-      url: "https://server.indephysio.com/packages/de/" + level_id,
+      url: context.apiEndPoint + "packages/de/" + level_id,
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + token
@@ -407,7 +409,7 @@ const Schedule = () => {
     try {
       const res = await axios({
         method: "post",
-        url: "https://server.indephysio.com/schedule/v1/add",
+        url: context.apiEndPoint + "schedule/v1/add",
         data: obj,
         headers: {
           "Content-Type": "application/json",
@@ -455,7 +457,7 @@ const Schedule = () => {
       const res = await axios({
         method: "post",
         data: { eventId: selectedDateTimeEdit.id },
-        url: "https://server.indephysio.com/schedule/v1/delete",
+        url: context.apiEndPoint + "schedule/v1/delete",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + token
@@ -474,7 +476,7 @@ const Schedule = () => {
     const res = await axios({
       method: "post",
       data: obj,
-      url: "https://server.indephysio.com/schedule/v1/update",
+      url: context.apiEndPoint + "schedule/v1/update",
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + token
@@ -496,7 +498,7 @@ const Schedule = () => {
       const res = await axios({
         method: "post",
         data: obj,
-        url: "https://server.indephysio.com/schedule/v1/updatechange",
+        url: context.apiEndPoint + "schedule/v1/updatechange",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + token

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Toaster, toast } from "sonner";
@@ -20,10 +20,13 @@ import {
 } from "@tabler/icons-react";
 
 import useAuth from "../../hooks/useAuth";
+import { GlobalInfo } from "./../../App";
 
 const Signup = () => {
   const navigate = useNavigate();
   const tokenData = useAuth();
+
+  const context = useContext(GlobalInfo);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -31,7 +34,7 @@ const Signup = () => {
   const [mobile, setMobile] = useState("");
   const [password, setPassword] = useState("");
   const [cnfPassword, setCnfPassword] = useState("");
-  const [userType, setUserType] = useState("student");
+  const [userType, setUserType] = useState("admin");
 
   const [firstNameError, setfirstNameError] = useState("");
   const [emailError, setemailError] = useState("");
@@ -105,7 +108,7 @@ const Signup = () => {
     try {
       const response = await axios({
         method: "post",
-        url: `https://server.indephysio.com/signup`,
+        url: context.apiEndPoint + `signup`,
         data: obj
       });
 
@@ -119,7 +122,7 @@ const Signup = () => {
         }, 6000);
       }
     } catch (error) {
-      //   console.log(error);
+        console.log(error);
 
       toast.error(
         `Something went wrong Contact Us <a href='mailto:support@physioplusnetwork.com'>support@physioplusnetwork.com</a>`
@@ -157,17 +160,11 @@ const Signup = () => {
               }}
             >
               <SelectTrigger className="w-[180px] text-black bg-white">
-                <SelectValue placeholder="Student" />
+                <SelectValue placeholder="Admin" />
               </SelectTrigger>
               <SelectContent className="text-black bg-white">
                 <SelectItem value="admin" className="hover:bg-slate-200">
                   Admin
-                </SelectItem>
-                <SelectItem value="student" className="hover:bg-slate-200">
-                  Student
-                </SelectItem>
-                <SelectItem value="referral" className="hover:bg-slate-200">
-                  Referral
                 </SelectItem>
               </SelectContent>
             </Select>
@@ -191,9 +188,9 @@ const Signup = () => {
               )}
             </LabelInputContainer>
             <LabelInputContainer>
-              <Label htmlFor="firstname">Last name</Label>
+              <Label htmlFor="lastname">Last name</Label>
               <Input
-                id="firstname"
+                id="lastname"
                 placeholder="Last name"
                 value={lastName}
                 onChange={(e) => {
@@ -219,9 +216,9 @@ const Signup = () => {
             {emailError != "" && <p className="text-red-600">{emailError}</p>}
           </LabelInputContainer>
           <LabelInputContainer>
-            <Label htmlFor="firstname">Mobile number</Label>
+            <Label htmlFor="mobile_no">Mobile number</Label>
             <Input
-              id="firstname"
+              id="mobile_no"
               placeholder="Mobile number"
               value={mobile}
               onChange={(e) => {
@@ -233,9 +230,9 @@ const Signup = () => {
             {mobileError != "" && <p className="text-red-600">{mobileError}</p>}
           </LabelInputContainer>
           <LabelInputContainer>
-            <Label htmlFor="lastname">Password</Label>
+            <Label htmlFor="password">Password</Label>
             <Input
-              id="lastname"
+              id="password"
               placeholder="password"
               value={password}
               onChange={(e) => {
@@ -250,9 +247,9 @@ const Signup = () => {
           </LabelInputContainer>
 
           <LabelInputContainer>
-            <Label htmlFor="lastname">Confirm Password</Label>
+            <Label htmlFor="confirm_password">Confirm Password</Label>
             <Input
-              id="lastname"
+              id="confirm_password"
               placeholder="confirm password"
               value={cnfPassword}
               onChange={(e) => {

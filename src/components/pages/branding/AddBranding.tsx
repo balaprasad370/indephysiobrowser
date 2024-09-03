@@ -1,6 +1,7 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import axios from "axios";
 import { Toaster, toast } from "sonner";
+import { GlobalInfo } from "./../../../App";
 
 const GridLayout = () => {
   // State to store the uploaded images
@@ -9,6 +10,7 @@ const GridLayout = () => {
   const [filePath1, setfilePath1] = useState("");
   const [filePath2, setfilePath2] = useState("");
   const [name, setname] = useState("");
+  const context = useContext(GlobalInfo);
 
   const [file1Error, setfile1Error] = useState("");
   const [file2Error, setfile2Error] = useState("");
@@ -73,7 +75,7 @@ const GridLayout = () => {
     };
 
     const response = await axios.post(
-      "https://server.indephysio.com/admin/branding",
+      context.apiEndPoint + "admin/branding",
       obj,
       {
         headers: {
@@ -104,7 +106,7 @@ const GridLayout = () => {
     formData.append("file", file);
 
     const response = await axios.post(
-      "https://server.indephysio.com/upload/image",
+      context.apiEndPoint + "upload/image",
       formData,
       {
         headers: {
@@ -203,7 +205,10 @@ const GridLayout = () => {
                 <div className="text-red-600">{file2Error}</div>
               )}
 
-              <button type="submit" className="mt-2 bg-teal-500 text-white text-sm">
+              <button
+                type="submit"
+                className="mt-2 bg-teal-500 text-white text-sm"
+              >
                 Copy Link
               </button>
             </div>

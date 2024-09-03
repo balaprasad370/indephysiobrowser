@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState, useEffect,useContext } from "react";
+import React, { useLayoutEffect, useState, useEffect, useContext } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import GridCard from "./../../../ui/gridcard";
 import { CheckIcon } from "@radix-ui/react-icons";
@@ -16,7 +16,7 @@ import {
   SheetFooter,
   SheetClose
 } from "../../../ui/sheet.tsx";
-import { GlobalInfo } from './../../../../App';
+import { GlobalInfo } from "./../../../../App";
 
 import {
   AlertDialog,
@@ -31,7 +31,7 @@ import {
 } from "../../../ui/alert.tsx";
 
 const LanguageLevel = () => {
-  const context = useContext(GlobalInfo)
+  const context = useContext(GlobalInfo);
   const [token, settoken] = useState("");
   const [items, setitems] = useState([]);
 
@@ -83,7 +83,7 @@ const LanguageLevel = () => {
     const res = await axios({
       method: "post",
       data: obj,
-      url: "https://server.indephysio.com/chapters/v1/add",
+      url: context.apiEndPoint + "chapters/v1/add",
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + token
@@ -98,7 +98,8 @@ const LanguageLevel = () => {
     const res = await axios({
       method: "get",
       url:
-        "https://server.indephysio.com/chapters/v1/" +
+        context.apiEndPoint +
+        "chapters/v1/" +
         lang_code +
         "/" +
         lang_level +
@@ -143,7 +144,7 @@ const LanguageLevel = () => {
     const res = await axios({
       method: "post",
       data: obj,
-      url: "https://server.indephysio.com/chapters/v1/update",
+      url: context.apiEndPoint + "chapters/v1/update",
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + token
@@ -156,7 +157,7 @@ const LanguageLevel = () => {
   const handleDeleteConfirm = async () => {
     const res = await axios({
       method: "delete",
-      url: "https://server.indephysio.com/chapters/v1/" + levelIdUpdate,
+      url: context.apiEndPoint + "chapters/v1/" + levelIdUpdate,
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + token
@@ -171,7 +172,7 @@ const LanguageLevel = () => {
     formData.append("file", file);
 
     const response = await axios.post(
-      "https://server.indephysio.com/upload/image",
+      context.apiEndPoint + "upload/image",
       formData,
       {
         headers: {

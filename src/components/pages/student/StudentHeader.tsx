@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import useAuth from "../../../hooks/useAuth";
 import nouser from "../../../assets/nouser.jpg";
 import axios from "axios";
 
+import { GlobalInfo } from "./../../../App";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,6 +16,7 @@ import {
 const StudentHeader = ({ student_id }) => {
   const tokenData = useAuth();
   const [profile, setprofile] = useState("");
+  const context = useContext(GlobalInfo);
 
   useEffect(() => {
     fetchProfile();
@@ -23,7 +25,7 @@ const StudentHeader = ({ student_id }) => {
   const fetchProfile = async () => {
     const res = await axios({
       method: "post",
-      url: "https://server.indephysio.com/profile",
+      url: context.apiEndPoint + "profile",
       data: {
         student_id: student_id
       }

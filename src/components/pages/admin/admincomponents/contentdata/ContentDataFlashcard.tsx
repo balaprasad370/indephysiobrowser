@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { MdModeEditOutline } from "react-icons/md";
 
@@ -36,9 +36,11 @@ import {
   SelectValue
 } from "../../../../ui/select.tsx";
 import { MdDeleteOutline } from "react-icons/md";
+import { GlobalInfo } from "./../../../../../App";
 
 const ContentDataFlashcard = ({ id }) => {
   const [token, settoken] = useState(localStorage.getItem("token"));
+  const context = useContext(GlobalInfo);
   const [items, setitems] = useState([]);
   const [flashMetaData, setflashMetaData] = useState({});
   const [open, setOpen] = useState(false);
@@ -61,7 +63,7 @@ const ContentDataFlashcard = ({ id }) => {
     try {
       const res = await axios({
         method: "get",
-        url: "https://server.indephysio.com/flashcard/" + id,
+        url: context.apiEndPoint + "flashcard/" + id,
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + token
@@ -78,7 +80,7 @@ const ContentDataFlashcard = ({ id }) => {
     try {
       const res = await axios({
         method: "get",
-        url: "https://server.indephysio.com/flashcard/metadata/" + id,
+        url: context.apiEndPoint + "flashcard/metadata/" + id,
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + token
@@ -99,7 +101,7 @@ const ContentDataFlashcard = ({ id }) => {
 
     const res = await axios({
       method: "post",
-      url: "https://server.indephysio.com/flashcard/add/question",
+      url: context.apiEndPoint + "flashcard/add/question",
       data: obj,
       headers: {
         "Content-Type": "application/json",
@@ -122,7 +124,7 @@ const ContentDataFlashcard = ({ id }) => {
 
     const res = await axios({
       method: "post",
-      url: "https://server.indephysio.com/flashcard/update/question",
+      url: context.apiEndPoint + "flashcard/update/question",
       data: obj,
       headers: {
         "Content-Type": "application/json",
@@ -141,7 +143,7 @@ const ContentDataFlashcard = ({ id }) => {
 
     const res = await axios({
       method: "post",
-      url: "https://server.indephysio.com/flashcard/generate",
+      url: context.apiEndPoint + "flashcard/generate",
       data: {
         text: prompt,
         chapter_id: chapter_id,
@@ -172,7 +174,7 @@ const ContentDataFlashcard = ({ id }) => {
 
     const res = await axios({
       method: "delete",
-      url: "https://server.indephysio.com/flashcard/" + currentDeleteId,
+      url: context.apiEndPoint + "flashcard/" + currentDeleteId,
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + token

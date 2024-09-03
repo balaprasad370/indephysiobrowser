@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { cn } from "./../../../utils/cn";
 import { HoverEffect } from "./../../ui/card-hover-effect";
@@ -27,10 +27,12 @@ import {
   AlertDialogTrigger
 } from "../../ui/alert.tsx";
 import { Button } from "../../ui/button";
+import { GlobalInfo } from "./../../../App";
 
 const Subquizzes = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const context = useContext(GlobalInfo);
 
   useEffect(() => {
     // fetchQuizzes();
@@ -45,7 +47,7 @@ const Subquizzes = () => {
         data: {
           module_id: id
         },
-        url: "https://server.indephysio.com/chapter/quiz/navigate"
+        url: context.apiEndPoint + "chapter/quiz/navigate"
       });
 
       navigate(res.data.url);
@@ -74,7 +76,7 @@ const Subquizzes = () => {
     try {
       const response = await axios({
         method: "get",
-        url: "https://server.indephysio.com/modules/" + id
+        url: context.apiEndPoint + "modules/" + id
       });
       setquizzes(response.data);
     } catch (error) {}
@@ -87,7 +89,7 @@ const Subquizzes = () => {
 
     // const res = await axios({
     //   method: "post",
-    //   url: "https://server.indephysio.com/modules/delete",
+    //   url: context.apiEndPoint + "modules/delete",
     //   data: {
     //     moduleId: id
     //   }
@@ -101,7 +103,7 @@ const Subquizzes = () => {
     setOpenDelete(false);
     const res = await axios({
       method: "post",
-      url: "https://server.indephysio.com/modules/delete",
+      url: context.apiEndPoint + "modules/delete",
       data: {
         moduleId: moduleDeleteId
       }
@@ -125,7 +127,7 @@ const Subquizzes = () => {
 
     const res = await axios({
       method: "post",
-      url: "https://server.indephysio.com/modules/add",
+      url: context.apiEndPoint + "modules/add",
       data: obj
     });
 
@@ -140,7 +142,7 @@ const Subquizzes = () => {
 
     let response = await axios({
       method: "get",
-      url: "https://server.indephysio.com/modules/data/" + id
+      url: context.apiEndPoint + "modules/data/" + id
     });
 
     console.log(response.data);
@@ -163,7 +165,7 @@ const Subquizzes = () => {
 
     const res = await axios({
       method: "post",
-      url: "https://server.indephysio.com/modules/update",
+      url: context.apiEndPoint + "modules/update",
       data: obj
     });
 

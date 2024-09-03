@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { cn } from "./../../../utils/cn";
 import { Button } from "./../../ui/button";
@@ -28,11 +28,13 @@ import {
   AlertDialogTrigger
 } from "../../ui/alert.tsx";
 import { Button } from "../../ui/button";
+import { GlobalInfo } from "./../../../App";
 
 const Subassessment = () => {
   const params = useParams();
   const pa_as_id = params.id;
-  console.log(pa_as_id);
+  // console.log(pa_as_id);
+  const context = useContext(GlobalInfo);
 
   const [quizzes, setquizzes] = useState([]);
   const [moduleName, setmoduleName] = useState("");
@@ -51,15 +53,13 @@ const Subassessment = () => {
   useEffect(() => {
     fetchQuizzes();
   }, []);
-
   const fetchQuizzes = async () => {
     try {
       const response = await axios({
         method: "get",
-        url: "https://server.indephysio.com/assessments/all/sub/" + pa_as_id
+        url: context.apiEndPoint + "assessments/all/sub/" + pa_as_id
       });
       setquizzes(response.data);
-      console.log("sdvad",response.data);
     } catch (error) {}
   };
 
@@ -72,7 +72,7 @@ const Subassessment = () => {
     try {
       const res = await axios({
         method: "post",
-        url: "https://server.indephysio.com/assessments/delete",
+        url: context.apiEndPoint + "assessments/delete",
         data: {
           assessment_id: chapterId
         }
@@ -94,7 +94,7 @@ const Subassessment = () => {
 
     let response = await axios({
       method: "get",
-      url: "https://server.indephysio.com/assessments/" + id
+      url: context.apiEndPoint + "assessments/" + id
     });
 
     console.log(response.data);
@@ -116,7 +116,7 @@ const Subassessment = () => {
 
     const res = await axios({
       method: "post",
-      url: "https://server.indephysio.com/assessments/add",
+      url: context.apiEndPoint + "assessments/add",
       data: obj
     });
 
@@ -138,7 +138,7 @@ const Subassessment = () => {
 
     const res = await axios({
       method: "post",
-      url: "https://server.indephysio.com/assessments/update",
+      url: context.apiEndPoint + "assessments/update",
       data: obj
     });
 

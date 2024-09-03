@@ -45,7 +45,7 @@ const ContentDataAssessment = ({ id }) => {
         data: {
           assess_id: id
         },
-        url: `https://server.indephysio.com/assessments/details`
+        url: context.apiEndPoint + `assessments/details`
       });
       setquestion(res.data);
       console.log(res.data);
@@ -72,7 +72,7 @@ const ContentDataAssessment = ({ id }) => {
       formData.append("file", file);
 
       const response = await axios.post(
-        "https://server.indephysio.com/upload/image",
+        context.apiEndPoint + "upload/image",
         formData,
         {
           headers: {
@@ -90,7 +90,7 @@ const ContentDataAssessment = ({ id }) => {
 
       const res = await axios({
         method: "post",
-        url: "https://server.indephysio.com/assessments/updatecolumn",
+        url: context.apiEndPoint + "assessments/updatecolumn",
         data: obj
       });
 
@@ -112,7 +112,7 @@ const ContentDataAssessment = ({ id }) => {
 
     const res = await axios({
       method: "post",
-      url: "https://server.indephysio.com/assessments/updateassesscolumn",
+      url: context.apiEndPoint + "assessments/updateassesscolumn",
       data: obj
     });
 
@@ -131,7 +131,7 @@ const ContentDataAssessment = ({ id }) => {
 
     const res = await axios({
       method: "post",
-      url: "https://server.indephysio.com/assessments/updateassesscolumn",
+      url: context.apiEndPoint + "assessments/updateassesscolumn",
       data: obj
     });
 

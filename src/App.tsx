@@ -67,7 +67,8 @@ function App() {
   const routeChange = initialRoute();
   const [count, setCount] = useState(0);
   const contextData = {
-    filesServerUrl: "https://d2c9u2e33z36pz.cloudfront.net/"
+    filesServerUrl: "https://d2c9u2e33z36pz.cloudfront.net/",
+    apiEndPoint: "https://server.indephysio.com/"
   };
 
   return (

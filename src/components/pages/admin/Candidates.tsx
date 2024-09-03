@@ -72,6 +72,7 @@ import {
 } from "../../ui/tooltip";
 
 import LanguageIndex from "./languages/index";
+import { GlobalInfo } from "./../../../App";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -90,6 +91,8 @@ function Dashboard() {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+
+  const context = useContext(GlobalInfo);
 
   const navigate = useNavigate();
 
@@ -258,7 +261,7 @@ function Dashboard() {
   const fetchStudents = async () => {
     const res = await axios({
       method: "post",
-      url: "https://server.indephysio.com/students/all"
+      url: context.apiEndPoint + "students/all"
     });
     setdata(res.data);
     // console.log(res.data);

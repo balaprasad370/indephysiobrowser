@@ -71,6 +71,7 @@ import {
   TooltipProvider
 } from "../../ui/tooltip";
 
+import { GlobalInfo } from "./../../../App";
 
 import LanguageIndex from "./languages/index";
 import {
@@ -282,7 +283,7 @@ export const columns = [
 ];
 
 function Dashboard() {
- 
+  const context = useContext(GlobalInfo);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -314,14 +315,10 @@ function Dashboard() {
     }
   });
 
-  useEffect(() => {
-    // fetchStudents();
-  }, []);
-
   const fetchStudents = async () => {
     const res = await axios({
       method: "post",
-      url: "https://server.indephysio.com/students/active"
+      url: context.apiEndPoint + "students/active"
     });
     setdata(res.data);
     console.log(res.data);
@@ -527,7 +524,6 @@ function Dashboard() {
         </TooltipProvider>
       )}
 
-    
       <div className="text-start">
         {/* radix card  */}
         <LanguageIndex />

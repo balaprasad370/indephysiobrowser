@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { EditText } from "react-edit-text";
 import { MdModeEditOutline } from "react-icons/md";
@@ -6,20 +6,18 @@ import axios from "axios";
 import { FaUpload, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
+import { GlobalInfo } from "./../../../App";
 import "react-pdf/dist/Page/TextLayer.css";
 import { Toaster, toast } from "sonner";
 
 const AssessmentDetails = () => {
   const { id } = useParams();
+  const context = useContext(GlobalInfo);
 
   // const theme = document.getElementsByTagName("html")[0].getAttribute("class");
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
 
   const [question, setquestion] = useState("");
-
-
-
-
 
   // react pdf
 
@@ -48,7 +46,7 @@ const AssessmentDetails = () => {
         data: {
           assess_id: id
         },
-        url: `https://server.indephysio.com/assessments/details`
+        url: context.apiEndPoint + `assessments/details`
       });
       setquestion(res.data);
       console.log(res.data);
@@ -75,7 +73,7 @@ const AssessmentDetails = () => {
       formData.append("file", file);
 
       const response = await axios.post(
-        "https://server.indephysio.com/upload/image",
+        context.apiEndPoint + "upload/image",
         formData,
         {
           headers: {
@@ -93,7 +91,7 @@ const AssessmentDetails = () => {
 
       const res = await axios({
         method: "post",
-        url: "https://server.indephysio.com/assessments/updatecolumn",
+        url: context.apiEndPoint + "assessments/updatecolumn",
         data: obj
       });
 
@@ -115,7 +113,7 @@ const AssessmentDetails = () => {
 
     const res = await axios({
       method: "post",
-      url: "https://server.indephysio.com/assessments/updateassesscolumn",
+      url: context.apiEndPoint + "assessments/updateassesscolumn",
       data: obj
     });
 
@@ -134,7 +132,7 @@ const AssessmentDetails = () => {
 
     const res = await axios({
       method: "post",
-      url: "https://server.indephysio.com/assessments/updateassesscolumn",
+      url: context.apiEndPoint + "assessments/updateassesscolumn",
       data: obj
     });
 
@@ -188,7 +186,7 @@ const AssessmentDetails = () => {
           <div className="w-full justify-center items-center flex">
             <div className="w-4/5 border border-dashed border-black dark:border-white min-h-[200px] rounded-md relative">
               <img
-                src={"https://server.indephysio.com/" + question?.file_url}
+                src={context.filesServerUrl +  question?.file_url}
                 id={"img" + question?.id}
                 className="w-full  object-contain max-h-[20rem]"
               />
@@ -245,11 +243,11 @@ const AssessmentDetails = () => {
                   className="w-full  object-contain max-h-[20rem]"
                 >
                   <source
-                    src={"https://server.indephysio.com/" + question?.file_url}
+                    src={context.filesServerUrl + "" + question?.file_url}
                     type="audio/mp3"
                   />
                   <source
-                    src={"https://server.indephysio.com/" + question?.file_url}
+                    src={context.filesServerUrl + "" + question?.file_url}
                     type="audio/mpeg"
                   />
                 </audio>
@@ -305,7 +303,7 @@ const AssessmentDetails = () => {
             <div className="w-4/5 border border-dashed border-white min-h-[200px] rounded-md relative">
               <div className="w-full">
                 <Document
-                  file={"https://server.indephysio.com/" + question?.file_url}
+                  file={context.filesServerUrl  + question?.file_url}
                   onLoadSuccess={onDocumentLoadSuccess}
                 >
                   <Page pageNumber={pageNumber} />

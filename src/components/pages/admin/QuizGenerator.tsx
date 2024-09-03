@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Input } from "./../../ui/input";
 import axios from "axios";
 import { Link } from "react-router-dom";
@@ -16,6 +16,7 @@ import QuizListening from "./admincomponents/generatorcomponents/Listening";
 import QuizRecord from "./admincomponents/generatorcomponents/Record";
 import { Hourglass } from "react-loader-spinner";
 
+import { GlobalInfo } from "./../../../App";
 import {
   Select,
   SelectContent,
@@ -44,6 +45,7 @@ const QuizGenerator = () => {
   ]);
 
   const tokenData = useAuth();
+  const context = useContext(GlobalInfo);
 
   const [currentType, setcurrentType] = useState("mcq");
   const [chapters, setchapters] = useState([]);
@@ -72,9 +74,7 @@ const QuizGenerator = () => {
     try {
       const response = await axios({
         method: "get",
-        url:
-          "https://server.indephysio.com/chapters/userbased/" +
-          tokenData.client_id
+        url: context.apiEndPoint + "chapters/userbased/" + tokenData.client_id
       });
       // console.log(response.data);
       setchapters(response.data);
@@ -87,7 +87,7 @@ const QuizGenerator = () => {
     try {
       const response = await axios({
         method: "post",
-        url: "https://server.indephysio.com/chapters/modules/getone",
+        url: context.apiEndPoint + "chapters/modules/getone",
         data: {
           chapterId: chapter_id
         }
@@ -146,7 +146,7 @@ const QuizGenerator = () => {
     try {
       const res = await axios({
         method: "post",
-        url: "https://server.indephysio.com/generate/quiz",
+        url: context.apiEndPoint + "generate/quiz",
         data: obj
       });
       console.log(res.data);

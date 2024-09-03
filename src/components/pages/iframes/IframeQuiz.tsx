@@ -80,7 +80,7 @@ const Quizdetails = ({ id, disableStatus }) => {
     try {
       const response = await axios({
         method: "post",
-        url: "https://server.indephysio.com/questions/details",
+        url: context.apiEndPoint + "questions/details",
         data: {
           module_id: mod_id
         }
@@ -96,7 +96,7 @@ const Quizdetails = ({ id, disableStatus }) => {
     try {
       const response = await axios({
         method: "post",
-        url: "https://server.indephysio.com/module/details",
+        url: context.apiEndPoint + "module/details",
         data: {
           quizId: id
         }
@@ -113,7 +113,7 @@ const Quizdetails = ({ id, disableStatus }) => {
     try {
       const response = await axios({
         method: "post",
-        url: "https://server.indephysio.com/module/quizdata",
+        url: context.apiEndPoint + "module/quizdata",
         data: {
           quizId: id
         }
@@ -142,7 +142,7 @@ const Quizdetails = ({ id, disableStatus }) => {
           questioncolumn: questioncolumn,
           updatedvalue: value
         },
-        url: "https://server.indephysio.com/update-query-data"
+        url: context.apiEndPoint + "update-query-data"
       });
 
       console.log(response.data);
@@ -180,7 +180,7 @@ const Quizdetails = ({ id, disableStatus }) => {
       formData.append("file", file);
 
       const response = await axios.post(
-        "https://server.indephysio.com/upload/image",
+        context.apiEndPoint + "upload/image",
         formData,
         {
           headers: {
@@ -198,7 +198,7 @@ const Quizdetails = ({ id, disableStatus }) => {
 
       const res = await axios({
         method: "post",
-        url: "https://server.indephysio.com/updateColumn",
+        url: context.apiEndPoint + "updateColumn",
         data: obj
       });
 
@@ -281,7 +281,7 @@ const Quizdetails = ({ id, disableStatus }) => {
         questioncolumn: "jumbled_question_order",
         updatedvalue: strjumble.join(",")
       },
-      url: "https://server.indephysio.com/update-query-data"
+      url: context.apiEndPoint + "update-query-data"
     });
 
     console.log(response.data);
@@ -330,7 +330,7 @@ const Quizdetails = ({ id, disableStatus }) => {
     const res = await axios({
       method: "post",
       data: obj,
-      url: "https://server.indephysio.com/module/question/add"
+      url: context.apiEndPoint + "module/question/add"
     });
 
     fetchQuizLatestDetails(id);
@@ -374,7 +374,7 @@ const Quizdetails = ({ id, disableStatus }) => {
       const res = await axios({
         method: "post",
         data: obj,
-        url: "https://server.indephysio.com/module/subquestion/add"
+        url: context.apiEndPoint + "module/subquestion/add"
       });
 
       console.log("====================================");
@@ -397,7 +397,7 @@ const Quizdetails = ({ id, disableStatus }) => {
       data: {
         questionId: deletequestion
       },
-      url: "https://server.indephysio.com/module/question/delete"
+      url: context.apiEndPoint + "module/question/delete"
     });
     console.log(res.data);
 
@@ -415,7 +415,7 @@ const Quizdetails = ({ id, disableStatus }) => {
     try {
       const res = await axios({
         method: "post",
-        url: "https://server.indephysio.com/module/clear",
+        url: context.apiEndPoint + "module/clear",
         data: {
           moduleId: id
         }

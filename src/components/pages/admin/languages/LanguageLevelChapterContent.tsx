@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
@@ -36,6 +36,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger
 } from "../../../ui/alert.tsx";
+import { GlobalInfo } from "./../../../../App";
 
 import {
   Select,
@@ -48,6 +49,7 @@ import {
 const LanguageLevelChapterContent = () => {
   const [items, setitems] = useState([]);
   const [token, settoken] = useState("");
+  const context = useContext(GlobalInfo);
 
   const { chapter_id } = useParams();
   const [addtype, setaddtype] = useState("");
@@ -73,7 +75,7 @@ const LanguageLevelChapterContent = () => {
   const getAllChapterContent = async (getToken) => {
     const res = await axios({
       method: "get",
-      url: "https://server.indephysio.com/chapter/v1/admin/" + chapter_id,
+      url: context.apiEndPoint + "chapter/v1/admin/" + chapter_id,
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + getToken
@@ -153,7 +155,7 @@ const LanguageLevelChapterContent = () => {
         data: {
           items: data
         },
-        url: "https://server.indephysio.com/chapter/v1/admin/rearrange",
+        url: context.apiEndPoint + "chapter/v1/admin/rearrange",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + token
@@ -179,7 +181,7 @@ const LanguageLevelChapterContent = () => {
       const res = await axios({
         method: "post",
         data: obj,
-        url: "https://server.indephysio.com/chapters/v1/admin/add",
+        url: context.apiEndPoint + "chapters/v1/admin/add",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + token
@@ -216,7 +218,7 @@ const LanguageLevelChapterContent = () => {
       const res = await axios({
         method: "post",
         data: data,
-        url: "https://server.indephysio.com/chapters/v1/admin/delete",
+        url: context.apiEndPoint + "chapters/v1/admin/delete",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + token
@@ -243,7 +245,7 @@ const LanguageLevelChapterContent = () => {
       const res = await axios({
         method: "post",
         data: data,
-        url: "https://server.indephysio.com/chapters/v1/admin/update",
+        url: context.apiEndPoint + "chapters/v1/admin/update",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + token

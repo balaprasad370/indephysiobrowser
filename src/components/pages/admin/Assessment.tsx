@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { cn } from "./../../../utils/cn";
 import { Button } from "./../../ui/button";
@@ -35,8 +35,11 @@ import {
   AlertDialogTrigger
 } from "../../ui/alert.tsx";
 import { Button } from "../../ui/button";
+import { GlobalInfo } from "./../../../App";
 
 const Assessment = () => {
+  const context = useContext(GlobalInfo);
+
   const [quizzes, setquizzes] = useState([]);
   const [moduleName, setmoduleName] = useState("");
   const [moduleDescription, setmoduleDescription] = useState("");
@@ -64,7 +67,8 @@ const Assessment = () => {
       const response = await axios({
         method: "get",
         url:
-          "https://server.indephysio.com/assessments/all/userbased/" +
+          context.apiEndPoint +
+          "assessments/all/userbased/" +
           tokenData.client_id
       });
       setquizzes(response.data);
@@ -80,7 +84,7 @@ const Assessment = () => {
     try {
       const response = await axios({
         method: "get",
-        url: "https://server.indephysio.com/chapters/all/all"
+        url: context.apiEndPoint + "chapters/all/all"
       });
 
       setchapters(response.data);
@@ -96,7 +100,7 @@ const Assessment = () => {
     try {
       const res = await axios({
         method: "post",
-        url: "https://server.indephysio.com/assessments/delete",
+        url: context.apiEndPoint + "assessments/delete",
         data: {
           assessment_id: chapterId
         }
@@ -118,7 +122,7 @@ const Assessment = () => {
 
     let response = await axios({
       method: "get",
-      url: "https://server.indephysio.com/assessments/" + id
+      url: context.apiEndPoint + "assessments/" + id
     });
 
     console.log("response", response.data);
@@ -142,7 +146,7 @@ const Assessment = () => {
 
     const res = await axios({
       method: "post",
-      url: "https://server.indephysio.com/assessments/add",
+      url: context.apiEndPoint + "assessments/add",
       data: obj
     });
 
@@ -165,7 +169,7 @@ const Assessment = () => {
 
     const res = await axios({
       method: "post",
-      url: "https://server.indephysio.com/assessments/update",
+      url: context.apiEndPoint + "assessments/update",
       data: obj
     });
 

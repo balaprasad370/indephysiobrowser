@@ -82,7 +82,7 @@ const LanguageLevel = () => {
     const res = await axios({
       method: "post",
       data: obj,
-      url: "https://server.indephysio.com/levels/add",
+      url: context.apiEndPoint + "levels/add",
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + token
@@ -95,7 +95,7 @@ const LanguageLevel = () => {
   const handleGetLevels = async (getToken) => {
     const res = await axios({
       method: "get",
-      url: "https://server.indephysio.com/levels/" + lang_code,
+      url: context.apiEndPoint + "levels/" + lang_code,
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + getToken
@@ -136,7 +136,7 @@ const LanguageLevel = () => {
     const res = await axios({
       method: "post",
       data: obj,
-      url: "https://server.indephysio.com/levels/update",
+      url: context.apiEndPoint + "levels/update",
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + token
@@ -151,7 +151,7 @@ const LanguageLevel = () => {
     formData.append("file", file);
 
     const response = await axios.post(
-      "https://server.indephysio.com/upload/image",
+      context.apiEndPoint + "upload/image",
       formData,
       {
         headers: {
@@ -167,7 +167,7 @@ const LanguageLevel = () => {
   const handleDeleteConfirm = async () => {
     const res = await axios({
       method: "delete",
-      url: "https://server.indephysio.com/levels/" + levelIdUpdate,
+      url: context.apiEndPoint + "levels/" + levelIdUpdate,
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + token

@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+  useContext
+} from "react";
 import axios from "axios";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -15,11 +21,13 @@ import {
 } from "../../../../ui/sheet.tsx";
 import { Button } from "../../../../ui/button";
 import { debounce } from "./../../../../../utils/debounce";
+import { GlobalInfo } from "./../../../../../App";
 
 const ContentDataReading = ({ id }) => {
-
   const [content, setContent] = useState("");
   const [range, setRange] = useState("");
+  const context = useContext(GlobalInfo);
+
   const modules = {
     toolbar: [
       [{ header: "1" }, { header: "2" }, { font: [] }],
@@ -42,8 +50,6 @@ const ContentDataReading = ({ id }) => {
 
   const [title, setTitle] = useState("");
 
-
-
   const quillRef = useRef();
 
   const [token, settoken] = useState(localStorage.getItem("token"));
@@ -51,8 +57,6 @@ const ContentDataReading = ({ id }) => {
   const [open, setOpen] = useState(false);
   const [prompt, setprompt] = useState("");
   const side = "left";
-
-
 
   const [loading, setloading] = useState(false);
 
@@ -66,7 +70,7 @@ const ContentDataReading = ({ id }) => {
       const res = await axios({
         method: "post",
         data: { read_id: id },
-        url: "https://server.indephysio.com/reading",
+        url: context.apiEndPoint + "reading",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + token
@@ -88,7 +92,7 @@ const ContentDataReading = ({ id }) => {
 
   //   try {
   //     const response = await axios.post(
-  //       "https://server.indephysio.com/upload/image",
+  //       context.apiEndPoint + "upload/image",
   //       formData,
   //       {
   //         headers: { "Content-Type": "multipart/form-data" }
@@ -96,7 +100,7 @@ const ContentDataReading = ({ id }) => {
   //     );
 
   //     const imageLink =
-  //       "https://server.indephysio.com/" + response.data.filepath;
+  //       context.apiEndPoint + "" + response.data.filepath;
 
   //     if (response.data.filepath && editorRef.current) {
   //       const editor = editorRef.current.editor;
@@ -114,7 +118,7 @@ const ContentDataReading = ({ id }) => {
 
   //   try {
   //     const response = await axios.post(
-  //       "https://server.indephysio.com/upload/image",
+  //       context.apiEndPoint + "upload/image",
   //       formData,
   //       {
   //         headers: { "Content-Type": "multipart/form-data" }
@@ -122,7 +126,7 @@ const ContentDataReading = ({ id }) => {
   //     );
 
   //     const imageLink =
-  //       "https://server.indephysio.com/" + response.data.filepath;
+  //       context.apiEndPoint + "" + response.data.filepath;
 
   //     if (response.data.filepath && editorRef.current) {
   //       const editor = editorRef.current.editor;
@@ -144,7 +148,7 @@ const ContentDataReading = ({ id }) => {
 
   //   try {
   //     const response = await axios.post(
-  //       "https://server.indephysio.com/upload/image",
+  //       context.apiEndPoint + "upload/image",
   //       formData,
   //       {
   //         headers: { "Content-Type": "multipart/form-data" }
@@ -152,7 +156,7 @@ const ContentDataReading = ({ id }) => {
   //     );
 
   //     const imageLink =
-  //       "https://server.indephysio.com/" + response.data.filepath;
+  //       context.apiEndPoint + "" + response.data.filepath;
 
   //     if (response.data.filepath && editorRef.current) {
   //       const editor = editorRef.current.editor;
@@ -175,7 +179,7 @@ const ContentDataReading = ({ id }) => {
       const res = axios({
         method: "post",
         data: obj,
-        url: "https://server.indephysio.com/reading/update",
+        url: context.apiEndPoint + "reading/update",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + token
@@ -194,7 +198,7 @@ const ContentDataReading = ({ id }) => {
 
     const res = await axios({
       method: "post",
-      url: "https://server.indephysio.com/reading/generate",
+      url: context.apiEndPoint + "reading/generate",
       data: {
         text: prompt
       },
@@ -223,7 +227,9 @@ const ContentDataReading = ({ id }) => {
     <div className="w-full p-2">
       <div className="flex justify-between items-center my-2">
         <div className="text-start">
-          <h1 className="text-black dark:text-white  text-lg font-bold">{title}</h1>
+          <h1 className="text-black dark:text-white  text-lg font-bold">
+            {title}
+          </h1>
         </div>
         <div>
           <button onClick={setOpen} className="p-2 bg-teal-600 text-white">
@@ -231,7 +237,7 @@ const ContentDataReading = ({ id }) => {
           </button>
         </div>
       </div>
-      
+
       <ReactQuill
         ref={quillRef}
         theme="snow"

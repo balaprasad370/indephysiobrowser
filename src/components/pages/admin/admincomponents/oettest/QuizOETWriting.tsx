@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import { HiOutlineExternalLink } from "react-icons/hi";
 import { MdRefresh } from "react-icons/md";
@@ -11,6 +11,7 @@ import {
 } from "../../../../ui/select.tsx";
 import axios from "axios";
 import Auth from "./../../../../../hooks/useAuth";
+import { GlobalInfo } from "./../../../../../App";
 
 const QuizOETWriting = ({
   disableStatus,
@@ -20,6 +21,7 @@ const QuizOETWriting = ({
   setgeneratedOutput
 }) => {
   const tokenData = Auth();
+  const context = useContext(GlobalInfo);
 
   const [passageWords, setpassageWords] = useState(0);
   const [totalPassages, settotalPassages] = useState(0);
@@ -54,7 +56,7 @@ const QuizOETWriting = ({
     try {
       const res = await axios({
         method: "post",
-        url: "https://server.indephysio.com/generate/quiz",
+        url: context.apiEndPoint + "generate/quiz",
         data: obj
       });
       console.log("respone", res.data);
@@ -76,9 +78,7 @@ const QuizOETWriting = ({
     try {
       const response = await axios({
         method: "get",
-        url:
-          "https://server.indephysio.com/chapters/userbased/" +
-          tokenData.client_id
+        url: context.apiEndPoint + "chapters/userbased/" + tokenData.client_id
       });
       // console.log(response.data);
       setchapters(response.data);
@@ -91,7 +91,7 @@ const QuizOETWriting = ({
     try {
       const response = await axios({
         method: "post",
-        url: "https://server.indephysio.com/chapters/modules/getone",
+        url: context.apiEndPoint + "chapters/modules/getone",
         data: {
           chapterId: chapter_id
         }

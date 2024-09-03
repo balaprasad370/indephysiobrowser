@@ -230,7 +230,7 @@ const Branding = () => {
     const response = await axios({
       method: "get",
 
-      url: "https://server.indephysio.com/admin/branding",
+      url: context.apiEndPoint + "admin/branding",
 
       headers: {
         Authorization: `Bearer ${token}`
@@ -246,7 +246,7 @@ const Branding = () => {
       data: {
         brand_id: delete_id
       },
-      url: "https://server.indephysio.com/admin/branding/delete",
+      url: context.apiEndPoint + "admin/branding/delete",
       headers: {
         Authorization: `Bearer ${token}`
       }

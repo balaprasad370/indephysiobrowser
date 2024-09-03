@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState, useEffect,useContext } from "react";
+import React, { useLayoutEffect, useState, useEffect, useContext } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import GridCard from "./../../../ui/gridcard";
 import { CheckIcon } from "@radix-ui/react-icons";
@@ -84,7 +84,7 @@ const LanguageLevel = () => {
     const res = await axios({
       method: "post",
       data: obj,
-      url: "https://server.indephysio.com/packages/add",
+      url: context.apiEndPoint + "packages/add",
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + token
@@ -97,11 +97,7 @@ const LanguageLevel = () => {
   const handleGetLevels = async (getToken) => {
     const res = await axios({
       method: "get",
-      url:
-        "https://server.indephysio.com/packages/" +
-        lang_code +
-        "/" +
-        lang_level,
+      url: context.apiEndPoint + "packages/" + lang_code + "/" + lang_level,
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + getToken
@@ -145,7 +141,7 @@ const LanguageLevel = () => {
     const res = await axios({
       method: "post",
       data: obj,
-      url: "https://server.indephysio.com/packages/v1/update",
+      url: context.apiEndPoint + "packages/v1/update",
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + token
@@ -161,7 +157,7 @@ const LanguageLevel = () => {
     formData.append("file", file);
 
     const response = await axios.post(
-      "https://server.indephysio.com/upload/image",
+      context.apiEndPoint + "upload/image",
       formData,
       {
         headers: {
@@ -177,7 +173,7 @@ const LanguageLevel = () => {
   const handleDeleteConfirm = async () => {
     const res = await axios({
       method: "delete",
-      url: "https://server.indephysio.com/packages/v1/" + levelIdUpdate,
+      url: context.apiEndPoint + "packages/v1/" + levelIdUpdate,
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + token

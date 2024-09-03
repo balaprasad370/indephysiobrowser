@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import useAuth from "../../../hooks/useAuth";
 import axios from "axios";
+import { GlobalInfo } from "./../../../App";
 
 const StudentStatus = ({ student_id }) => {
   const tokenData = useAuth();
+  const context = useContext(GlobalInfo);
 
   const [studentStatus, setstudentStatus] = useState("");
   const [loading, setloading] = useState(false);
@@ -17,7 +19,7 @@ const StudentStatus = ({ student_id }) => {
   const fetchStatus = async () => {
     const res = await axios({
       method: "post",
-      url: "https://server.indephysio.com/profile/status",
+      url: context.apiEndPoint + "profile/status",
       data: {
         student_id: student_id
       }

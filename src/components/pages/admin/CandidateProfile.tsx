@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import StudentHeader from "./../student/StudentHeader";
 import StudentStatus from "./../student/StudentStatus";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
+import { GlobalInfo } from "./../../../App";
 import {
   Card,
   CardContent,
@@ -19,6 +20,7 @@ import {
 
 const CandidateProfile = () => {
   const params = useParams();
+  const context = useContext(GlobalInfo);
   const student_id = params.id;
   const [token, settoken] = useState(localStorage.getItem("token"));
   const [userData, setuserData] = useState({});
@@ -30,7 +32,7 @@ const CandidateProfile = () => {
     try {
       const response = await axios({
         method: "post",
-        url: "https://server.indephysio.com/admin/student/getDetails",
+        url: context.apiEndPoint + "admin/student/getDetails",
         data: {
           student_id: student_id
         },
@@ -51,7 +53,7 @@ const CandidateProfile = () => {
     try {
       const response = await axios({
         method: "post",
-        url: "https://server.indephysio.com/admin/student/consultancyFee",
+        url: context.apiEndPoint + "admin/student/consultancyFee",
         data: {
           student_id: student_id
         },
@@ -72,7 +74,7 @@ const CandidateProfile = () => {
     try {
       const response = await axios({
         method: "post",
-        url: "https://server.indephysio.com/admin/student/candidateStatus",
+        url: context.apiEndPoint + "admin/student/candidateStatus",
         data: {
           student_id: student_id
         },
@@ -175,7 +177,7 @@ const CandidateProfile = () => {
                   {userData.document_status == 2 ? "verified" : "Not verified"}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                click
+                  click
                   <Link
                     className="text-blue-500 font-bold px-2"
                     to={"/admin/candidate/documents/" + userData.student_id}
