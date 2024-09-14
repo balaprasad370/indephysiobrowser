@@ -203,7 +203,7 @@ const LanguageIndex = () => {
     <>
       <div className="px-4">
         <div className="w-full flex items-center justify-center">
-          <div className="w-3/5 flex items-center justify-between">
+          <div className="lg:w-3/5 w-full  flex items-center justify-between">
             <div className="text-start my-4">
               <h2 className="text-black  dark:text-white text-lg font-bold">
                 Choose Subject
@@ -227,9 +227,9 @@ const LanguageIndex = () => {
           </div>
         </div>
 
-        <div className="grid md:auto-rows-[18rem] grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto ">
-          {languages.length > 0 &&
-            languages.map((item, index) => {
+        {languages.length > 0 ? (
+          <div className="grid md:auto-rows-[18rem] grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto ">
+            {languages.map((item, index) => {
               return (
                 <GridCard
                   key={index}
@@ -245,7 +245,12 @@ const LanguageIndex = () => {
                 />
               );
             })}
-        </div>
+          </div>
+        ) : (
+          <div className="flex justify-center items-center font-bold text-xl w-full min-h-64">
+            No subjects found
+          </div>
+        )}
 
         {/* create level  */}
         <div>

@@ -70,6 +70,9 @@ function App() {
   const contextData = {
     filesServerUrl: "https://d2c9u2e33z36pz.cloudfront.net/",
     apiEndPoint: "https://server.indephysio.com/"
+    // massimo
+    // filesServerUrl: "https://d3nbnikvasv2ex.cloudfront.net/",
+    // apiEndPoint: "https://server.massimo.global/"
   };
 
   return (

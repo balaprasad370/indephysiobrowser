@@ -115,7 +115,7 @@ const Signup = () => {
       //   console.log(response.data);
       if (response.data.message) {
         toast.success("Account has been created successfully", {
-          description: "Verification has been sent to " + email
+          description: "You can login now"
         });
         setTimeout(() => {
           navigate("/login");

@@ -45,14 +45,16 @@ const GridCard = ({
             <div className="absolute top-0 w-full">
               <div className="flex justify-between items-center w- p-3">
                 <div
+                  className="bg-white rounded-full pl-2 py-1 pr-1 flex justify-center items-center"
                   onClick={(e) => {
                     e.preventDefault();
                     handleEdit({ title, id, description, bgColor });
                   }}
                 >
-                  <FaEdit size={24} className="text-blue-600 font-bold" />
+                  <FaEdit size={22} className="text-blue-600 font-bold" />
                 </div>
                 <div
+                  className="bg-white rounded-full p-1 "
                   onClick={(e) => {
                     e.preventDefault();
                     handleDelete(id);

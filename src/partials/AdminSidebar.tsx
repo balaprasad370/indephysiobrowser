@@ -204,47 +204,98 @@ const AdminSidebar = () => {
                 <SheetContent side="left" className="sm:max-w-xs">
                   <nav className="grid gap-6 text-lg font-medium">
                     <Link
-                      href="#"
-                      className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
+                      to="/"
+                      className="group flex h-9 w-full shrink-0 items-start justify-start gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
                     >
-                      <Package2 className="h-5 w-5 transition-all group-hover:scale-110" />
-                      <span className="sr-only">Acme Inc</span>
+                      <Package2 className="h-4 w-4 transition-all group-hover:scale-110" />
+                      <span className="sr-only">Dashboard</span>
                     </Link>
-                    <Link
-                      href="#"
-                      className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                    >
-                      <Home className="h-5 w-5" />
-                      Dashboard
-                    </Link>
-                    <Link
-                      href="#"
-                      className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                    >
-                      <ShoppingCart className="h-5 w-5" />
-                      Orders
-                    </Link>
-                    <Link
-                      href="#"
-                      className="flex items-center gap-4 px-2.5 text-foreground"
-                    >
-                      <Package className="h-5 w-5" />
-                      Products
-                    </Link>
-                    <Link
-                      href="#"
-                      className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                    >
-                      <Users2 className="h-5 w-5" />
-                      Customers
-                    </Link>
-                    <Link
-                      href="#"
-                      className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                    >
-                      <LineChart className="h-5 w-5" />
-                      Settings
-                    </Link>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Link
+                          to="/"
+                          className="flex h-9 w-full items-center justify-start rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                        >
+                          <Home className="h-5 w-5" />
+                          <span className="pl-2">Dashboard</span>
+                        </Link>
+                      </TooltipTrigger>
+                      <TooltipContent side="right">Dashboard</TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Link
+                          to="/admin/quiz/generate"
+                          className="flex h-9 w-full items-center justify-start rounded-lg !dark:text-white transition-colors hover:text-foreground md:h-8 md:w-8"
+                        >
+                          <RiAiGenerate className="h-5 w-6" />
+
+                          <span className="pl-2">Quiz Generator</span>
+                        </Link>
+                      </TooltipTrigger>
+                      <TooltipContent side="right">
+                        Quiz Generator
+                      </TooltipContent>
+                    </Tooltip>
+
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Link
+                          to="/admin/candidates"
+                          className="flex h-9 w-full items-center justify-start rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                        >
+                          <Users className="h-5 w-5" />
+                          <span className="pl-2"> Candidates </span>
+                        </Link>
+                      </TooltipTrigger>
+
+                      <TooltipContent side="right">Candidates</TooltipContent>
+                    </Tooltip>
+
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Link
+                          to="/admin/branding"
+                          className="flex h-9 w-full items-center justify-start rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                        >
+                          <BsFillMegaphoneFill className="h-5 w-5" />
+                          <span className="pl-2"> Branding </span>
+                        </Link>
+                      </TooltipTrigger>
+
+                      <TooltipContent side="right">Branding</TooltipContent>
+                    </Tooltip>
+
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Link
+                          to="/admin/schedule"
+                          className="flex h-9 w-full items-center justify-start rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                        >
+                          <FaCalendarAlt className="h-5 w-5" />
+                          <span className="pl-2">Schedule Management</span>
+                        </Link>
+                      </TooltipTrigger>
+                      <TooltipContent side="right">
+                        Schedule Management
+                      </TooltipContent>
+                    </Tooltip>
+
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          className="flex p-0 h-9 my-4  w-full items-center justify-start rounded-lg text-red-600 focus:outline-none"
+                          onClick={() => {
+                            localStorage.removeItem("token");
+                            navigate("/login", { replace: true });
+                          }}
+                        >
+                          <LogOut className="h-5 w-5" />
+                          <span className="pl-2">Logout</span>
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent side="right">Logout</TooltipContent>
+                    </Tooltip>
                   </nav>
                 </SheetContent>
               </Sheet>
@@ -325,9 +376,9 @@ const AdminSidebar = () => {
                   <DropdownMenuContent align="end">
                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>Settings</DropdownMenuItem>
-                    <DropdownMenuItem>Support</DropdownMenuItem>
-                    <DropdownMenuSeparator />
+                    {/* <DropdownMenuItem>Settings</DropdownMenuItem>
+                    <DropdownMenuItem>Support</DropdownMenuItem> */}
+                    {/* <DropdownMenuSeparator /> */}
                     <DropdownMenuItem
                       onClick={() => {
                         localStorage.removeItem("token");

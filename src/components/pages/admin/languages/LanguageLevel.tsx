@@ -181,7 +181,7 @@ const LanguageLevel = () => {
     <>
       <div>
         <div className="w-full flex items-center justify-center">
-          <div className="lg:w-3/5 md:w-full sm:w-full flex items-center justify-between">
+          <div className="lg:w-3/5 w-full sm:w-full flex items-center justify-between">
             <div className="text-start my-4">
               <h2 className="text-black  dark:text-white text-lg font-bold">
                 Choose Level

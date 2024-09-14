@@ -1187,7 +1187,7 @@ const Schedule = () => {
                 </SheetClose>
               </SheetFooter>
 
-              <div className="my-2 px-4 flex justify-center items-center">
+              {/* <div className="my-2 px-4 flex justify-center items-center">
                 <Button
                   className="bg-teal-600 text-white "
                   onClick={() => {
@@ -1204,7 +1204,7 @@ const Schedule = () => {
                 >
                   Join the meeting
                 </Button>
-              </div>
+              </div> */}
             </SheetContent>
           </Sheet>
         </div>

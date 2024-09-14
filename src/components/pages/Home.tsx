@@ -2,12 +2,11 @@ import React from "react";
 import { AuroraBackground } from "./../ui/aurora-background";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import  useAuth  from "../../hooks/useAuth";
+import useAuth from "../../hooks/useAuth";
 
 const Home = () => {
   const navigate = useNavigate();
   const tokenData = useAuth();
-
 
   return (
     <>
@@ -23,7 +22,7 @@ const Home = () => {
           className="relative flex flex-col gap-4 items-center justify-center px-4"
         >
           <div className="text-3xl md:text-7xl font-bold dark:text-white text-center">
-           Indephysio : The Dawn of a Fresh Start
+            Indephysio : The Dawn of a Fresh Start
           </div>
           <div className="font-extralight text-base md:text-4xl dark:text-neutral-200 py-4">
             Embrace Transformation, Renewal and Growth
