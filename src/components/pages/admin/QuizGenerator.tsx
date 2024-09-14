@@ -17,6 +17,8 @@ import QuizRecord from "./admincomponents/generatorcomponents/Record";
 import { Hourglass } from "react-loader-spinner";
 
 import { GlobalInfo } from "./../../../App";
+import Match from "./admincomponents/generatorcomponents/Match";
+import JumbledSentences from "./admincomponents/generatorcomponents/JumbledSentences";
 import {
   Select,
   SelectContent,
@@ -34,7 +36,8 @@ const QuizGenerator = () => {
       Comprehension: true,
       Listening: true,
       Record: true,
-      Jumbled: false,
+      Jumbled: true,
+      Match: true,
       OETReadingA: true,
       OETReadingB: true,
       OETReadingC: true,
@@ -618,6 +621,28 @@ const QuizGenerator = () => {
             {currentType == "record" && (
               <div className="flex flex-col lg:w-3/12 items-start justify-start md:w-full sm:w-full xs:full w-full text-sm">
                 <QuizRecord
+                  moduleId={moduleId}
+                  setmoduleId={setmoduleId}
+                  disableStatus={disableStatus}
+                  setgeneratedOutput={setgeneratedOutput}
+                  setdisableStatus={setdisableStatus}
+                />
+              </div>
+            )}
+            {currentType == "match" && (
+              <div className="flex flex-col lg:w-3/12 items-start justify-start md:w-full sm:w-full xs:full w-full text-sm">
+                <Match
+                  moduleId={moduleId}
+                  setmoduleId={setmoduleId}
+                  disableStatus={disableStatus}
+                  setgeneratedOutput={setgeneratedOutput}
+                  setdisableStatus={setdisableStatus}
+                />
+              </div>
+            )}
+            {currentType == "jumbled" && (
+              <div className="flex flex-col lg:w-3/12 items-start justify-start md:w-full sm:w-full xs:full w-full text-sm">
+                <JumbledSentences
                   moduleId={moduleId}
                   setmoduleId={setmoduleId}
                   disableStatus={disableStatus}

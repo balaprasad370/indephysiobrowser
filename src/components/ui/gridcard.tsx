@@ -50,7 +50,7 @@ const GridCard = ({
                     handleEdit({ title, id, description, bgColor });
                   }}
                 >
-                  <FaEdit size={18} />
+                  <FaEdit size={24} className="text-blue-600 font-bold" />
                 </div>
                 <div
                   onClick={(e) => {
@@ -58,7 +58,10 @@ const GridCard = ({
                     handleDelete(id);
                   }}
                 >
-                  <MdDeleteOutline size={20} />
+                  <MdDeleteOutline
+                    size={24}
+                    className="text-red-600 font-bold"
+                  />
                 </div>
               </div>
             </div>

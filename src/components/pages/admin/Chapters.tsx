@@ -319,13 +319,13 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 const initialItems = [
   { id: "item-1", content: "Item 1" },
   { id: "item-2", content: "Item 2" },
-  { id: "item-3", content: "Item 3" },
+  { id: "item-3", content: "Item 3" }
 ];
 
 const initialItems2 = [
   { id: "item-4", content: "Item 4" },
   { id: "item-5", content: "Item 5" },
-  { id: "item-6", content: "Item 6" },
+  { id: "item-6", content: "Item 6" }
 ];
 
 const VerticalLists = () => {
@@ -338,7 +338,10 @@ const VerticalLists = () => {
     if (!destination) return;
 
     // Restrict items in the left list from being dragged to the right list
-    if (source.droppableId === "droppable1" && destination.droppableId === "droppable2") {
+    if (
+      source.droppableId === "droppable1" &&
+      destination.droppableId === "droppable2"
+    ) {
       return;
     }
 
@@ -381,7 +384,7 @@ const VerticalLists = () => {
                 padding: 8,
                 width: 250,
                 minHeight: 500,
-                backgroundColor: "#f0f0f0",
+                backgroundColor: "#f0f0f0"
               }}
             >
               {list1.map((item, index) => (
@@ -397,7 +400,7 @@ const VerticalLists = () => {
                         backgroundColor: "#fff",
                         borderRadius: 4,
                         boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
-                        ...provided.draggableProps.style,
+                        ...provided.draggableProps.style
                       }}
                     >
                       {item.content}
@@ -419,7 +422,7 @@ const VerticalLists = () => {
                 padding: 8,
                 width: 250,
                 minHeight: 500,
-                backgroundColor: "#f0f0f0",
+                backgroundColor: "#f0f0f0"
               }}
             >
               {list2.map((item, index) => (
@@ -435,7 +438,7 @@ const VerticalLists = () => {
                         backgroundColor: "#fff",
                         borderRadius: 4,
                         boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
-                        ...provided.draggableProps.style,
+                        ...provided.draggableProps.style
                       }}
                     >
                       {item.content}
@@ -467,9 +470,15 @@ const move = (source, destination, droppableSource, droppableDestination) => {
 
   destClone.splice(droppableDestination.index, 0, removed);
 
+  console.log("====================================");
+  console.log(removed, destClone);
+  console.log("====================================");
+
   return {
-    droppable1: droppableSource.droppableId === "droppable1" ? sourceClone : destClone,
-    droppable2: droppableSource.droppableId === "droppable1" ? destClone : sourceClone,
+    droppable1:
+      droppableSource.droppableId === "droppable1" ? sourceClone : destClone,
+    droppable2:
+      droppableSource.droppableId === "droppable1" ? destClone : sourceClone
   };
 };
 

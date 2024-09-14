@@ -35,6 +35,7 @@ import { Button } from "../../ui/button";
 import { GlobalInfo } from "./../../../App";
 
 import useSpeechSynthesis from "../../../hooks/useSpeechSynthesis";
+import JumbledSentences from "./components/JumbledSentences";
 
 // document.getElementsByTagName("html")[0].setAttribute("class","dark");
 
@@ -71,7 +72,6 @@ const Quizdetails = ({ id, disableStatus }) => {
 
   useEffect(() => {
     // fetchQuizDetails(id);
-    console.log("id is chjanged", id);
 
     fetchQuizLatestDetails(id);
   }, [disableStatus, id]);
@@ -318,6 +318,10 @@ const Quizdetails = ({ id, disableStatus }) => {
       questiontype = "MultiQuestionsAudio";
     } else if (value == "record") {
       questiontype = "Record";
+    } else if (value == "match") {
+      questiontype = "Match";
+    } else if (value == "jumbledsentences") {
+      questiontype = "JumbledSentences";
     }
 
     const obj = {
@@ -325,7 +329,7 @@ const Quizdetails = ({ id, disableStatus }) => {
       moduleId: quizMetaData.id
     };
 
-    console.log(obj);
+    // console.log(obj);
 
     const res = await axios({
       method: "post",
@@ -489,6 +493,15 @@ const Quizdetails = ({ id, disableStatus }) => {
                   <SelectItem value="mcq" className="hover:bg-slate-200">
                     MCQ
                   </SelectItem>
+                  <SelectItem value="match" className="hover:bg-slate-200">
+                    Match the following
+                  </SelectItem>
+                  <SelectItem
+                    value="jumbledsentences"
+                    className="hover:bg-slate-200"
+                  >
+                    Jumbled sentences
+                  </SelectItem>
                   <SelectItem value="textnormal" className="hover:bg-slate-200">
                     Text
                   </SelectItem>
@@ -598,6 +611,8 @@ const Quizdetails = ({ id, disableStatus }) => {
                   item.type.toLowerCase() != "textaudio" &&
                   item.type.toLowerCase() != "evaluate" &&
                   item.type.toLowerCase() != "record" &&
+                  item.type.toLowerCase() != "match" &&
+                  item.type.toLowerCase() != "jumbledsentences" &&
                   item.type.toLowerCase() != "speaking" && (
                     <div className="absolute right-2 bottom-1 z-50">
                       <LabelInputContainer className="flex flex-row items-center justify-between">
@@ -665,7 +680,7 @@ const Quizdetails = ({ id, disableStatus }) => {
                   item.type.toLowerCase() != "subquestions" &&
                   item.type.toLowerCase() != "multiquestionsimage" &&
                   item.type.toLowerCase() != "multiquestionsaudio" && (
-                    <div className="w-full drop-shadow-md hover:drop-shadow-xl border border-black dark:border-slate-100 border-dashed rounded-md px-4 py-2">
+                    <div className="w-full  border border-black dark:border-slate-100 border-dashed rounded-md px-4 py-2">
                       <div className="flex question w-full text-black dark:text-white items-baseline justify-start flex-nowrap">
                         <div className="h-full items-center flex justify-center w-[40px] flex-nowrap flex-row">
                           <h2 className="text-lg">Q{idx + 1}&#41; &nbsp;</h2>
@@ -886,6 +901,109 @@ const Quizdetails = ({ id, disableStatus }) => {
                             </div>
                           </div>
                         )}
+
+                        {item.type.toLowerCase() == "match" && (
+                          <div className="w-full flex justify-start items-center flex-col text-black dark:text-white pl-4">
+                            <div className="flex justify-start items-start w-full">
+                              <div className="bg-purple-600 rounded-lg text-white text-sm p-1 font-bold">
+                                Match the following
+                              </div>
+                            </div>
+
+                            <div className="w-full flex justify-start items-center">
+                              <h2 className="text-md font-bold">Questions</h2>
+                            </div>
+
+                            <div className="flex justify-between items-start w-full">
+                              <div className="p-1 flex items-center flex-col justify-center">
+                                <div>
+                                  <h2>Left side</h2>
+                                </div>
+                                <JumbledSentences
+                                  items={item.match_left_question}
+                                  questionId={item.id}
+                                  moduleId={id}
+                                  column="match_question_left"
+                                />
+                              </div>
+                              <div className="p-1  flex items-center flex-col justify-center">
+                                <div>
+                                  <h2>Right side</h2>
+                                </div>
+                                <JumbledSentences
+                                  items={item.match_right_question}
+                                  questionId={item.id}
+                                  moduleId={id}
+                                  column="match_question_right"
+                                />
+                              </div>
+                            </div>
+
+                            <div className="w-full flex justify-start items-center">
+                              <h2 className="text-md font-bold">Answers </h2>{" "}
+                              <p> &nbsp; arrange them in correct order</p>
+                            </div>
+
+                            <div className="flex justify-between items-start w-full">
+                              <div className="p-1 flex items-center flex-col justify-center">
+                                <div>
+                                  <h2>Left side</h2>
+                                </div>
+                                <JumbledSentences
+                                  items={item.match_left_answer}
+                                  questionId={item.id}
+                                  moduleId={id}
+                                  column="match_answer_left"
+                                />
+                              </div>
+                              <div className="p-1  flex items-center flex-col justify-center">
+                                <div>
+                                  <h2>Right side</h2>
+                                </div>
+                                <JumbledSentences
+                                  items={item.match_right_answer}
+                                  questionId={item.id}
+                                  moduleId={id}
+                                  column="match_answer_right"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {item.type.toLowerCase() == "jumbledsentences" && (
+                          <div className="w-full flex justify-center items-center flex-col text-black dark:text-white pl-4">
+                            <div className="flex justify-start items-start w-full">
+                              <div className="bg-sky-600 rounded-lg text-white text-sm p-1 font-bold">
+                                Jumbled Sentences
+                              </div>
+                            </div>
+                            <div className="flex justify-center items-center w-full">
+                              <JumbledSentences
+                                items={item.match_single_question}
+                                questionId={item.id}
+                                moduleId={id}
+                                column="match_question_single"
+                              />
+                            </div>
+                            <div className="flex justify-center items-center w-full flex-col">
+                              <div className="flex justify-start items-center">
+                                <p className="font-bold">Answer</p>
+                                <p>
+                                  Provide answer please arrange them in correct
+                                  order
+                                </p>
+                              </div>
+                              <JumbledSentences
+                                items={item.match_single_answer}
+                                questionId={item.id}
+                                moduleId={id}
+                                column="match_answer_single"
+                              />
+                            </div>
+                          </div>
+                        )}
+
                         {item.type.toLowerCase() == "speaking" && (
                           <div className="w-full flex justify-start items-center flex-row text-black dark:text-white pl-4">
                             <div className="flex justify-start items-center w-full">
@@ -2230,6 +2348,9 @@ const Quizdetails = ({ id, disableStatus }) => {
                                   ele.type.toLowerCase() != "textaudio" &&
                                   ele.type.toLowerCase() != "evaluate" &&
                                   ele.type.toLowerCase() != "record" &&
+                                  item.type.toLowerCase() != "match" &&
+                                  item.type.toLowerCase() !=
+                                    "jumbledsentences" &&
                                   ele.type.toLowerCase() != "speaking" && (
                                     <div className="absolute right-2 bottom-1 z-50">
                                       <LabelInputContainer className="flex flex-row items-center justify-between">

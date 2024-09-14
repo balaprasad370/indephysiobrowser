@@ -171,16 +171,43 @@ const LanguageLevel = () => {
   };
 
   const handleDeleteConfirm = async () => {
-    const res = await axios({
-      method: "delete",
-      url: context.apiEndPoint + "packages/v1/" + levelIdUpdate,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token
-      }
-    });
+    try {
+      const res = await axios({
+        method: "delete",
+        url: context.apiEndPoint + "packages/v1/" + levelIdUpdate,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token
+        }
+      });
 
-    handleGetLevels(token);
+      handleGetLevels(token);
+    } catch (error) {}
+  };
+
+  const handleCopyAction = async () => {
+    try {
+      const res = await axios({
+        method: "post",
+        url: context.apiEndPoint + "packages/copy",
+        data: {
+          source_package_id: 1,
+          destination_package_id: 6
+        },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token
+        }
+      });
+
+      console.log("====================================");
+      console.log(res.data);
+      console.log("====================================");
+    } catch (error) {
+      console.log("====================================");
+      console.log(error);
+      console.log("====================================");
+    }
   };
 
   return (
@@ -192,6 +219,17 @@ const LanguageLevel = () => {
               <h2 className="text-black  dark:text-white text-lg font-bold">
                 Choose Package
               </h2>
+            </div>
+
+            <div>
+              <button
+                className="bg-red-600 text-white"
+                onClick={() => {
+                  handleCopyAction();
+                }}
+              >
+                Copy
+              </button>
             </div>
 
             <div>

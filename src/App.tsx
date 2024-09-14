@@ -42,6 +42,7 @@ import Documents from "./components/pages/admin/Documents";
 import Branding from "./components/pages/branding/Branding";
 import AddBranding from "./components/pages/branding/AddBranding";
 import ViewBranding from "./components/pages/branding/ViewBranding";
+import Meet from "./components/pages/admin/Meet";
 
 export const GlobalInfo = createContext();
 function App() {
@@ -92,6 +93,7 @@ function App() {
             <Route path="quiz/generate" element={<QuizGenerator />} />
             <Route path="students" element={<Students />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="meet/join/:room_name" element={<Meet />} />
             <Route path="assessment">
               <Route index element={<Assessment />} />
               <Route path="sub/:id" element={<Subassessments />} />

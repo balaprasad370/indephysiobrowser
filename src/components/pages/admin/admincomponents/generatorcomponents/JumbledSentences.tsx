@@ -13,7 +13,7 @@ import axios from "axios";
 import Auth from "./../../../../../hooks/useAuth";
 import { GlobalInfo } from "./../../../../../App";
 
-const QuizListening = ({
+const JumbledSentences = ({
   disableStatus,
   setdisableStatus,
   moduleId,
@@ -26,12 +26,11 @@ const QuizListening = ({
 
   const [passageWords, setpassageWords] = useState(0);
   const [totalPassages, settotalPassages] = useState(0);
-  const [totalQuestions, settotalQuestions] = useState(0);
+  const [totalQuestions, settotalQuestions] = useState(1);
   const [topic, settopic] = useState("");
   const [error, seterror] = useState("");
-  const [type, settype] = useState("match");
+  const [type, settype] = useState("jumbled");
   const [level, setlevel] = useState("A1");
-  const [duration, setduration] = useState(30);
   const [language, setlanguage] = useState("German");
 
   const [chapters, setchapters] = useState([]);
@@ -39,11 +38,12 @@ const QuizListening = ({
   const [ChapterId, setChapterId] = useState("");
   const [listenType, setlistenType] = useState("mcq");
   const [questionType, setquestionType] = useState("words");
+  const [totalSubSentences, settotalSubSentences] = useState(2);
 
   const handleSubmit = async () => {
     seterror("");
 
-    if ((topic == 0 || topic == "") && listenType == "blanks") {
+    if (topic == 0 || topic == "") {
       seterror("Enter the Topic");
       return;
     }
@@ -55,11 +55,12 @@ const QuizListening = ({
       chapterId: ChapterId,
       moduleId: moduleId,
       type: type,
+      client_id: tokenData.client_id,
       questionType: questionType,
       level: level,
-      duration: duration,
       language: language,
-      totalQuestions: totalQuestions
+      totalQuestions: totalQuestions,
+      totalSubSentences: totalSubSentences
     };
 
     try {
@@ -134,7 +135,7 @@ const QuizListening = ({
               focus-visible:outline-none focus-visible:ring-2
               focus-visible:ring-ring focus-visible:ring-offset-2
               disabled:cursor-not-allowed disabled:opacity-50 text-black "
-                  placeholder="Eg: Diabetes"
+                  placeholder="Eg: Human heart structure using grammar topic of accusative preposition"
                   onChange={(e) => {
                     settopic(e.target.value);
                   }}
@@ -158,9 +159,29 @@ const QuizListening = ({
                   }}
                 />
               </div>
+
+              <div className="w-full flex  items-start justify-start flex-col">
+                <label className="block font-bold">
+                  No of sentences of each question
+                </label>
+                <input
+                  type="number"
+                  className="col-span-3 flex h-10 w-full rounded-md min-h-[2rem]
+              border border-input bg-background px-3 py-2 text-sm
+              ring-offset-background file:border-0 file:bg-transparent
+              file:text-sm file:font-medium placeholder:text-muted-foreground
+              focus-visible:outline-none focus-visible:ring-2
+              focus-visible:ring-ring focus-visible:ring-offset-2
+              disabled:cursor-not-allowed disabled:opacity-50 text-black "
+                  placeholder="Eg: 5"
+                  onChange={(e) => {
+                    settotalSubSentences(e.target.value);
+                  }}
+                />
+              </div>
             </>
           )}
-          <div className="w-full flex  items-start justify-start flex-col">
+          {/* <div className="w-full flex  items-start justify-start flex-col">
             <label className="block font-bold">Question Type</label>
 
             <div className="w-full">
@@ -188,7 +209,7 @@ const QuizListening = ({
                 </SelectContent>
               </Select>
             </div>
-          </div>
+          </div> */}
 
           <div className="w-full flex items-start justify-start flex-col my-4">
             <label className="block font-bold">Output language</label>
@@ -412,4 +433,4 @@ const QuizListening = ({
   );
 };
 
-export default QuizListening;
+export default JumbledSentences;

@@ -29,6 +29,7 @@ import { format } from "date-fns";
 import { cn } from "./../../../utils/cn";
 import axios from "axios";
 import { GlobalInfo } from "./../../../App";
+import { useNavigate } from "react-router-dom";
 import {
   Select,
   SelectContent,
@@ -67,6 +68,9 @@ const Schedule = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const calendarRef = useRef(null);
   const context = useContext(GlobalInfo);
+  const [eventData, seteventsData] = useState([]);
+
+  const navigate = useNavigate();
 
   const [selectedDateTime, setselectedDateTime] = useState("");
   const [selectedDateTimeEdit, setselectedDateTimeEdit] = useState("");
@@ -101,6 +105,8 @@ const Schedule = () => {
           Authorization: "Bearer " + token
         }
       });
+
+      seteventsData(res.data);
 
       const _events = [];
       res.data.forEach((ele, index) => {
@@ -157,34 +163,82 @@ const Schedule = () => {
               .format("YYYY-MM-DD");
           }
         } else if (ele.schdeule_recur_type == "weekly") {
-          eve = {
-            title: ele.title,
-            groupId: "redevents" + index,
-            allDay: false,
-            startTime: ele.schedule_start_time,
-            resourceId: 1,
-            backgroundColor:
-              ele?.package_color != null ? ele.package_color : "",
-            endTime: ele.schedule_end_time,
-            daysOfWeek: [ele.schedule_recur_week_index],
-            id: "event" + ele.schedule_id
+          // eve = {
+          //   title: ele.title,
+          //   groupId: "redevents" + index,
+          //   allDay: false,
+          //   startTime: ele.schedule_start_time,
+          //   resourceId: 1,
+          //   backgroundColor:
+          //     ele?.package_color != null ? ele.package_color : "",
+          //   endTime: ele.schedule_end_time,
+          //   daysOfWeek: [ele.schedule_recur_week_index],
+          //   id: "event" + ele.schedule_id
+          // };
+
+          const excludeDatesArr = [];
+
+          if (
+            ele.schedule_recur_exclude_dates != "" &&
+            ele.schedule_recur_exclude_dates != undefined
+          ) {
+            const datesArr = ele.schedule_recur_exclude_dates.split(",");
+
+            for (const row of datesArr) {
+              const obji = {
+                freq: "weekly",
+                dtstart: row + "T" + ele.schedule_start_time,
+                until: row + "T" + ele.schedule_start_time
+              };
+
+              excludeDatesArr.push(obji);
+            }
+          }
+
+          const rruleObj = {
+            freq: "weekly",
+            dtstart: ele.schedule_start_date + "T" + ele.schedule_start_time
+            // until:
+            //   ele.schedule_recurring_date_end + "T" + ele.schedule_end_time
           };
 
-          eve.startRecur = moment(ele.schedule_recurring_date_start).format(
-            "YYYY-MM-DD"
+          let endTimeValid = moment(
+            ele.schedule_recurring_date_end,
+            "YYYY-MM-DD",
+            true
           );
+          if (endTimeValid.isValid()) {
+            rruleObj.until =
+              ele.schedule_recurring_date_end + "T" + ele.schedule_end_time;
+          }
+
+          eve = {
+            title: ele.title,
+            resourceId: 1,
+            // endTime: ele.schedule_end_time,
+            backgroundColor:
+              ele?.package_color != null ? ele.package_color : "",
+            id: "event" + ele.schedule_id,
+            rrule: rruleObj,
+            duration: ele.duration,
+            exrule: excludeDatesArr
+          };
+
+          // eve.startRecur = moment(ele.schedule_recurring_date_start).format(
+          //   "YYYY-MM-DD"
+          // );
           // eve.endRecur = moment(selectedDateTime.end).format("YYYY-MM-DD");
 
-          if (ele.schedule_recurring_date_start != "") {
-            eve.startRecur = moment(ele.schedule_recurring_date_start).format(
-              "YYYY-MM-DD"
-            );
-          }
-          if (ele.schedule_recurring_date_end != "") {
-            eve.endRecur = moment(ele.schedule_recurring_date_end)
-              .add(1, "days")
-              .format("YYYY-MM-DD");
-          }
+          // if (ele.schedule_recurring_date_start != "") {
+          //   eve.startRecur = moment(ele.schedule_recurring_date_start).format(
+          //     "YYYY-MM-DD"
+          //   );
+          // }
+          // if (ele.schedule_recurring_date_end != "") {
+          //   eve.endRecur = moment(ele.schedule_recurring_date_end)
+          //     .add(1, "days")
+          //     .format("YYYY-MM-DD");
+          // }
         } else if (ele.schdeule_recur_type == "weekdays") {
           eve = {
             title: ele.title,
@@ -269,8 +323,6 @@ const Schedule = () => {
   };
 
   const handleEventClick = (e) => {
-    console.log(e);
-
     seteditData(e.event.title);
     setselectedDateTimeEdit(e.event);
     setOpenEdit(true);
@@ -336,7 +388,7 @@ const Schedule = () => {
     } else if (recurEventType == "weekly") {
       const eve = {
         title: title,
-        groupId: "redevents" + index,
+        groupId: "redevents" + Date.now(),
         allDay: false,
         startTime: moment(selectedDateTime.start).format("HH:mm:ss"),
         resourceId: 1,
@@ -382,29 +434,6 @@ const Schedule = () => {
 
       setEvents(events.concat(eve));
     }
-    //  else if (recurEventType == "monthly") {
-    //   setEvents(
-    //     events.concat({
-    //       title: "Monthly Event on 21st",
-    //       // startTime: moment(selectedDateTime.start).format("HH:mm:ss"),
-    //       // endTime: moment(selectedDateTime.end).format("HH:mm:ss"),
-    //       allDay: false,
-    //       end: moment(selectedDateTime.end).format("HH:mm:ss"),
-    //       resourceId: 1,
-    //       rrule: {
-    //         freq: RRule.MONTHLY,
-    //         byminute: [10],
-    //         bymonthday: [21], // Day of the month
-    //         interval: 1, // Every month
-    //         dtstart: moment(selectedDateTime.start).format(
-    //           "YYYY-MM-DD HH:mm:ss"
-    //         ) // Start time
-    //         // until: moment(selectedDateTime.end).format("HH:mm:ss")
-    //         // No end date provided, so it recurs indefinitely
-    //       }
-    //     })
-    //   );
-    // }
 
     try {
       const res = await axios({
@@ -425,6 +454,7 @@ const Schedule = () => {
       setdescription("");
       setfromDate("");
       settoDate("");
+      getScheduleEvents();
     } catch (error) {
       console.log(error);
     }
@@ -464,10 +494,44 @@ const Schedule = () => {
         }
       });
       DeleteEventUI(selectedDateTimeEdit.id);
-    } catch (error) {}
+    } catch (error) {
+      console.log("====================================");
+      console.log(error);
+      console.log("====================================");
+    }
 
     setselectedDateTimeEdit("");
   };
+
+  const handleDeleteSlotRecurringSingle = async () => {
+    // console.log('====================================');
+    // console.log("recur",selectedDateTimeEdit.id);
+    // console.log('====================================');
+    // return;
+    try {
+      const res = await axios({
+        method: "post",
+        data: {
+          eventId: selectedDateTimeEdit.id,
+          start: selectedDateTimeEdit.start,
+          end: selectedDateTimeEdit.end
+        },
+        url: context.apiEndPoint + "schedule/v1/deleteRecur",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token
+        }
+      });
+      getScheduleEvents();
+    } catch (error) {
+      console.log("====================================");
+      console.log(error);
+      console.log("====================================");
+    }
+
+    setselectedDateTimeEdit("");
+  };
+
   const handleUpdateSlot = async () => {
     const obj = {
       title: editData,
@@ -491,21 +555,28 @@ const Schedule = () => {
     const obj = {
       eventId: event.event.id,
       start: event.event.start,
-      end: event.event.end
+      end: event.event.end,
+      recurEvent: event.event._def.recurringDef != null ? true : false
     };
 
     if (confirm("Do you want to reschedule the event")) {
-      const res = await axios({
-        method: "post",
-        data: obj,
-        url: context.apiEndPoint + "schedule/v1/updatechange",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token
-        }
-      });
+      try {
+        const res = await axios({
+          method: "post",
+          data: obj,
+          url: context.apiEndPoint + "schedule/v1/updatechange",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token
+          }
+        });
 
-      console.log(res.data);
+        console.log(res.data);
+      } catch (error) {
+        console.log("====================================");
+        console.log(error);
+        console.log("====================================");
+      }
     } else {
       console.log(event);
       event.revert();
@@ -789,7 +860,7 @@ const Schedule = () => {
                         </div>
                       </div>
                     </div>
-                    <div>
+                    {/* <div>
                       <div className="flex">
                         <div>
                           <RadioGroupItem value="daily" id="dailyevent" />
@@ -801,7 +872,7 @@ const Schedule = () => {
                           </label>
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                     <div>
                       <div className="flex">
                         <div>
@@ -819,7 +890,7 @@ const Schedule = () => {
                         </div>
                       </div>
                     </div>
-                    <div>
+                    {/* <div>
                       <div className="flex">
                         <div>
                           <RadioGroupItem value="weekdays" id="weekdaysevent" />
@@ -831,7 +902,7 @@ const Schedule = () => {
                           </label>
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                   </RadioGroup>
                 </div>
               )}
@@ -1079,14 +1150,31 @@ const Schedule = () => {
               <SheetFooter>
                 <SheetClose asChild>
                   <div className="flex justify-between w-full">
-                    <div>
-                      <Button
-                        onClick={handleDeleteSlot}
-                        className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#18181b] text-white hover:bg-primary/90 h-10 px-4 py-2 bg-red-600"
-                      >
-                        Delete Slot
-                      </Button>
-                    </div>
+                    {selectedDateTimeEdit != "" &&
+                      selectedDateTimeEdit._def.recurringDef != null && (
+                        <div>
+                          <Button
+                            onClick={handleDeleteSlotRecurringSingle}
+                            className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#18181b] text-white hover:bg-primary/90 h-10 px-4 py-2 bg-red-600"
+                          >
+                            Delete Slot
+                          </Button>
+                        </div>
+                      )}
+                    {selectedDateTimeEdit != "" && (
+                      <div>
+                        <Button
+                          onClick={handleDeleteSlot}
+                          className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#18181b] text-white hover:bg-primary/90 h-10 px-4 py-2 bg-red-600"
+                        >
+                          {selectedDateTimeEdit._def.recurringDef != null ? (
+                            <div>Delete All Slots</div>
+                          ) : (
+                            <div>Delete Slot</div>
+                          )}
+                        </Button>
+                      </div>
+                    )}
                     <div>
                       <Button
                         onClick={handleUpdateSlot}
@@ -1098,6 +1186,25 @@ const Schedule = () => {
                   </div>
                 </SheetClose>
               </SheetFooter>
+
+              <div className="my-2 px-4 flex justify-center items-center">
+                <Button
+                  className="bg-teal-600 text-white "
+                  onClick={() => {
+                    const event_id = selectedDateTimeEdit.id.replace(
+                      "event",
+                      ""
+                    );
+
+                    const data = eventData.filter(
+                      (ele) => ele.schedule_id == event_id
+                    );
+                    navigate("/admin/meet/join/" + data[0].room_name);
+                  }}
+                >
+                  Join the meeting
+                </Button>
+              </div>
             </SheetContent>
           </Sheet>
         </div>
