@@ -222,6 +222,8 @@ const LanguageLevel = () => {
                 description={item.parent_module_description}
                 header={item.parent_module_name}
                 link={item.link}
+                editable={item.editable}
+                deletable={item.deletable}
                 image={context.filesServerUrl + item.chapter_img}
                 handleDelete={handleDelete}
                 handleEdit={handleEdit}

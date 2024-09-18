@@ -1,8 +1,10 @@
 import React, { useLayoutEffect, useState, useEffect, useContext } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import GridCard from "./../../../ui/gridcard";
+import { Toaster, toast } from "sonner";
 import { CheckIcon } from "@radix-ui/react-icons";
 import { FaPlus } from "react-icons/fa6";
+import { LuCopyPlus } from "react-icons/lu";
 
 import axios from "axios";
 import { Button } from "./../../../ui/button";
@@ -16,6 +18,14 @@ import {
   SheetFooter,
   SheetClose
 } from "../../../ui/sheet.tsx";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "../../../ui/select.tsx";
 
 import { GlobalInfo } from "./../../../../App";
 import {
@@ -58,8 +68,14 @@ const LanguageLevel = () => {
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
+  const [openCopy, setopenCopy] = useState(false);
+
+  const [sourcePackage, setsourcePackage] = useState(0);
+  const [destinationPackage, setdestinationPackage] = useState(0);
 
   const [isdisableddelete, setisdisableddelete] = useState(true);
+
+  const [iscopyconfirm, setiscopyconfirm] = useState(true);
 
   useLayoutEffect(() => {
     if (lang_code == null) {
@@ -186,13 +202,19 @@ const LanguageLevel = () => {
   };
 
   const handleCopyAction = async () => {
+    setopenCopy(true);
+  };
+
+  const handleCopyActionConfirm = async () => {
+    if (sourcePackage == 0 || destinationPackage == 0) return;
+
     try {
       const res = await axios({
         method: "post",
         url: context.apiEndPoint + "packages/copy",
         data: {
-          source_package_id: 1,
-          destination_package_id: 6
+          source_package_id: sourcePackage,
+          destination_package_id: destinationPackage
         },
         headers: {
           "Content-Type": "application/json",
@@ -200,19 +222,27 @@ const LanguageLevel = () => {
         }
       });
 
-      console.log("====================================");
-      console.log(res.data);
-      console.log("====================================");
+      toast.success("copied successfully");
+
+      setiscopyconfirm(true);
+      setsourcePackage(0);
+      setdestinationPackage(0);
+
+      // console.log("====================================");
+      // console.log(res.data);
+      // console.log("====================================");
     } catch (error) {
-      console.log("====================================");
-      console.log(error);
-      console.log("====================================");
+      toast.error("something went wrong \n check the package once");
+      // console.log("====================================");
+      // console.log(error);
+      // console.log("====================================");
     }
   };
 
   return (
     <>
       <div>
+        <Toaster richColors position="top-right" />
         <div className="w-full flex items-center justify-center">
           <div className="lg:w-3/5 w-full sm:w-full flex items-center justify-between">
             <div className="text-start my-4">
@@ -221,30 +251,32 @@ const LanguageLevel = () => {
               </h2>
             </div>
 
-            {/* <div>
-              <button
-                className="bg-red-600 text-white"
-                onClick={() => {
-                  handleCopyAction();
-                }}
-              >
-                Copy
-              </button>
-            </div> */}
-
-            <div>
-              <button
-                className="flex items-center p-1 pb-2 bg-teal-600 text-white"
-                onClick={() => {
-                  //   alert("rv");
-                  setOpen(!open);
-                }}
-              >
-                <div className="p-1">
-                  <FaPlus />
-                </div>
-                <div className="pr-4">Create new Package </div>
-              </button>
+            <div className="flex items-center justify-center">
+              <div className="px-6">
+                <button
+                  className="bg-slate-600 p-1 px-4 text-white flex items-center "
+                  onClick={() => {
+                    handleCopyAction();
+                  }}
+                >
+                  <LuCopyPlus />
+                  &nbsp; Copy
+                </button>
+              </div>
+              <div>
+                <button
+                  className="flex items-center p-1 pb-2 bg-teal-600 text-white"
+                  onClick={() => {
+                    //   alert("rv");
+                    setOpen(!open);
+                  }}
+                >
+                  <div className="p-1">
+                    <FaPlus />
+                  </div>
+                  <div className="pr-4">Create new Package </div>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -258,6 +290,8 @@ const LanguageLevel = () => {
                 description={item.package_description}
                 header={item.package_name}
                 link={item.link}
+                editable={item.editable}
+                deletable={item.deletable}
                 handleDelete={handleDelete}
                 bgColor={item.package_color}
                 image={context.filesServerUrl + item.package_img}
@@ -489,6 +523,137 @@ const LanguageLevel = () => {
       </div>
 
       {/* delete level  */}
+
+      {/* copy level  */}
+
+      <div>
+        <Sheet key={side} open={openCopy} onOpenChange={setopenCopy}>
+          <SheetContent side={"right"}>
+            <SheetHeader>
+              <SheetTitle>Copy Package</SheetTitle>
+              <SheetDescription>
+                Copy the content from one package to another package
+              </SheetDescription>
+            </SheetHeader>
+            <div className="grid gap-4 py-4">
+              <div className="flex flex-col items-start justify-center w-full">
+                <label htmlFor="name" className="text-right font-bold">
+                  source package
+                </label>
+                <Select
+                  className="text-black bg-white w-full"
+                  // value={sourcePackage}
+                  onValueChange={(value) => {
+                    // console.log(value);
+                    setsourcePackage(value);
+                  }}
+                >
+                  <SelectTrigger className="w-[180px] text-black bg-white w-full border border-slate-200 my-4 border-solid">
+                    <SelectValue placeholder="Source package" />
+                  </SelectTrigger>
+                  <SelectContent className="text-black bg-white">
+                    {items.length > 0 ? (
+                      items.map((ele, index) => {
+                        return (
+                          <SelectItem
+                            key={index}
+                            value={ele.package_id}
+                            className="hover:bg-slate-200"
+                          >
+                            {ele.package_name} / {ele.package_description}
+                          </SelectItem>
+                        );
+                      })
+                    ) : (
+                      <SelectItem
+                        value="0"
+                        disabled
+                        className="hover:bg-slate-200"
+                      >
+                        No packages found
+                      </SelectItem>
+                    )}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex flex-col items-start justify-center w-full">
+                <label htmlFor="describe" className="text-right font-bold ">
+                  Destination package
+                </label>
+                <Select
+                  className="text-black bg-white w-full"
+                  // value={destinationPackage}
+                  onValueChange={(value) => {
+                    setdestinationPackage(value);
+                  }}
+                >
+                  <SelectTrigger className="w-[180px] text-black bg-white  w-full  border-slate-200 my-4 border-solid">
+                    <SelectValue placeholder="Destination package" />
+                  </SelectTrigger>
+                  <SelectContent className="text-black bg-white">
+                    {items.length > 0 ? (
+                      items.map((ele, index) => {
+                        if (!ele.editable) return;
+                        return (
+                          <SelectItem
+                            key={index}
+                            value={ele.package_id}
+                            className="hover:bg-slate-200"
+                          >
+                            {ele.package_name} / {ele.package_description}
+                          </SelectItem>
+                        );
+                      })
+                    ) : (
+                      <SelectItem
+                        value="0"
+                        disabled
+                        className="hover:bg-slate-200"
+                      >
+                        No packages found
+                      </SelectItem>
+                    )}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <label htmlFor="confirm">
+                  Type
+                  <strong className="px-1">confirm</strong>
+                  <input
+                    id="delete"
+                    autoComplete="off"
+                    autoCapitalize="off"
+                    placeholder="Type confirm"
+                    className="col-span-3 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    onChange={(e) => {
+                      if (e.target.value == "confirm") {
+                        setiscopyconfirm(false);
+                      } else {
+                        setiscopyconfirm(true);
+                      }
+                    }}
+                  />
+                </label>
+              </div>
+            </div>
+            <SheetFooter>
+              <SheetClose asChild>
+                <Button
+                  onClick={handleCopyActionConfirm}
+                  disabled={iscopyconfirm}
+                  className="inline-flex items-center justify-center whitespace-nowrap  rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#18181b] text-white hover:bg-primary/90 h-10 px-4 py-2"
+                >
+                  Copy the package
+                </Button>
+              </SheetClose>
+            </SheetFooter>
+          </SheetContent>
+        </Sheet>
+      </div>
+
+      {/* copy level  */}
     </>
   );
 };

@@ -14,6 +14,8 @@ const GridCard = ({
   link,
   bgColor,
   image,
+  editable,
+  deletable,
   handleEdit,
   handleDelete
 }: {
@@ -44,27 +46,31 @@ const GridCard = ({
 
             <div className="absolute top-0 w-full">
               <div className="flex justify-between items-center w- p-3">
-                <div
-                  className="bg-white rounded-full pl-2 py-1 pr-1 flex justify-center items-center"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleEdit({ title, id, description, bgColor });
-                  }}
-                >
-                  <FaEdit size={22} className="text-blue-600 font-bold" />
-                </div>
-                <div
-                  className="bg-white rounded-full p-1 "
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleDelete(id);
-                  }}
-                >
-                  <MdDeleteOutline
-                    size={24}
-                    className="text-red-600 font-bold"
-                  />
-                </div>
+                {(editable || editable == undefined) && (
+                  <div
+                    className="bg-white rounded-full pl-2 py-1 pr-1 flex justify-center items-center"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleEdit({ title, id, description, bgColor });
+                    }}
+                  >
+                    <FaEdit size={22} className="text-blue-600 font-bold" />
+                  </div>
+                )}
+                {(deletable || deletable == undefined) && (
+                  <div
+                    className="bg-white rounded-full p-1 "
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleDelete(id);
+                    }}
+                  >
+                    <MdDeleteOutline
+                      size={24}
+                      className="text-red-600 font-bold"
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </div>

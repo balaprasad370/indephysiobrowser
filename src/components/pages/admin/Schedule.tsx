@@ -127,6 +127,8 @@ const Schedule = () => {
               )
             ),
             resourceId: 1,
+            editable: ele.is_editable,
+            description: "dvcasd",
             allDay: false,
             backgroundColor:
               ele?.package_color != null ? ele.package_color : "",
@@ -216,6 +218,8 @@ const Schedule = () => {
             title: ele.title,
             resourceId: 1,
             // endTime: ele.schedule_end_time,
+            editable: ele.is_editable,
+            description: "dvcasd",
             backgroundColor:
               ele?.package_color != null ? ele.package_color : "",
             id: "event" + ele.schedule_id,
@@ -282,7 +286,7 @@ const Schedule = () => {
   const handleGetLevels = async (getToken) => {
     const res = await axios({
       method: "get",
-      url: context.apiEndPoint + "levels/de",
+      url: context.apiEndPoint + "levels/1",
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + token
@@ -290,13 +294,13 @@ const Schedule = () => {
     });
 
     setlevels(res.data);
-    console.log(res.data);
+    // console.log(res.data);
   };
 
   const handleGetPackages = async (level_id) => {
     const res = await axios({
       method: "get",
-      url: context.apiEndPoint + "packages/de/" + level_id,
+      url: context.apiEndPoint + "packages/1/" + level_id,
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + token
@@ -501,9 +505,10 @@ const Schedule = () => {
     }
 
     setselectedDateTimeEdit("");
+    setOpenEdit(false);
   };
 
-  const handleDeleteSlotRecurringSingle = async () => {
+  const handleDeleteSlotRecurringSingle = async (e) => {
     // console.log('====================================');
     // console.log("recur",selectedDateTimeEdit.id);
     // console.log('====================================');
@@ -530,6 +535,7 @@ const Schedule = () => {
     }
 
     setselectedDateTimeEdit("");
+    setOpenEdit(false);
   };
 
   const handleUpdateSlot = async () => {
@@ -549,6 +555,7 @@ const Schedule = () => {
     updateEventTitle(selectedDateTimeEdit.id, editData);
     console.log(res.data);
     setselectedDateTimeEdit("");
+    setOpenEdit(false);
   };
 
   const handleChangeEvent = async (event) => {
@@ -558,6 +565,12 @@ const Schedule = () => {
       end: event.event.end,
       recurEvent: event.event._def.recurringDef != null ? true : false
     };
+
+    if (
+      JSON.stringify(event.event.start) == JSON.stringify(event.oldEvent.start)
+    ) {
+      return;
+    }
 
     if (confirm("Do you want to reschedule the event")) {
       try {
@@ -631,6 +644,17 @@ const Schedule = () => {
           selectable={true}
           scrollTime={0}
           events={events}
+          eventContent={(eventInfo) => {
+            return (
+              <div>
+                <b>{eventInfo.timeText}</b>
+                <br />
+                <i>{eventInfo.event.title}</i>
+                <br />
+                <p>{eventInfo.event.durationEditable ? "" : "Admin"}</p>
+              </div>
+            );
+          }}
           select={handleDateSelect}
           eventClick={handleEventClick}
           resources={resources}
@@ -1148,46 +1172,49 @@ const Schedule = () => {
               </div>
 
               <SheetFooter>
-                <SheetClose asChild>
-                  <div className="flex justify-between w-full">
-                    {selectedDateTimeEdit != "" &&
-                      selectedDateTimeEdit._def.recurringDef != null && (
-                        <div>
-                          <Button
-                            onClick={handleDeleteSlotRecurringSingle}
-                            className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#18181b] text-white hover:bg-primary/90 h-10 px-4 py-2 bg-red-600"
-                          >
-                            Delete Slot
-                          </Button>
-                        </div>
-                      )}
-                    {selectedDateTimeEdit != "" && (
+                {/* <SheetClose asChild> */}
+                <div className="flex justify-between w-full">
+                  {selectedDateTimeEdit != "" &&
+                    selectedDateTimeEdit._def.recurringDef != null && (
                       <div>
                         <Button
-                          onClick={handleDeleteSlot}
-                          className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#18181b] text-white hover:bg-primary/90 h-10 px-4 py-2 bg-red-600"
+                          disabled={!selectedDateTimeEdit.durationEditable}
+                          onClick={handleDeleteSlotRecurringSingle}
+                          className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:cursor-none disabled:opacity-50 bg-[#18181b] text-white hover:bg-primary/90 h-10 px-4 py-2 bg-red-600"
                         >
-                          {selectedDateTimeEdit._def.recurringDef != null ? (
-                            <div>Delete All Slots</div>
-                          ) : (
-                            <div>Delete Slot</div>
-                          )}
+                          Delete Slot
                         </Button>
                       </div>
                     )}
+                  {selectedDateTimeEdit != "" && (
                     <div>
                       <Button
-                        onClick={handleUpdateSlot}
-                        className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#18181b] text-white hover:bg-primary/90 h-10 px-4 py-2"
+                        onClick={handleDeleteSlot}
+                        disabled={!selectedDateTimeEdit.durationEditable}
+                        className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#18181b] text-white hover:bg-primary/90 h-10 px-4 py-2 bg-red-600"
                       >
-                        Update Slot
+                        {selectedDateTimeEdit._def.recurringDef != null ? (
+                          <div>Delete All Slots</div>
+                        ) : (
+                          <div>Delete Slot</div>
+                        )}
                       </Button>
                     </div>
+                  )}
+                  <div>
+                    <Button
+                      onClick={handleUpdateSlot}
+                      disabled={!selectedDateTimeEdit.durationEditable}
+                      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-[#18181b] text-white hover:bg-primary/90 h-10 px-4 py-2"
+                    >
+                      Update Slot
+                    </Button>
                   </div>
-                </SheetClose>
+                </div>
+                {/* </SheetClose> */}
               </SheetFooter>
 
-              {/* <div className="my-2 px-4 flex justify-center items-center">
+              <div className="my-2 px-4 flex justify-center items-center">
                 <Button
                   className="bg-teal-600 text-white "
                   onClick={() => {
@@ -1204,7 +1231,7 @@ const Schedule = () => {
                 >
                   Join the meeting
                 </Button>
-              </div> */}
+              </div>
             </SheetContent>
           </Sheet>
         </div>
