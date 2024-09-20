@@ -85,10 +85,13 @@ const LanguageLevelChapterContent = () => {
         Authorization: "Bearer " + getToken
       }
     });
+
     setitems(res.data);
     // console.log("dcs", res.data);
+
   };
 
+  
   // Helper functions for reordering and moving items
   const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list);
@@ -124,6 +127,7 @@ const LanguageLevelChapterContent = () => {
 
     if (!destination) return;
 
+    
     try {
       // Restrict items in the left list from being dragged to the right list
       if (

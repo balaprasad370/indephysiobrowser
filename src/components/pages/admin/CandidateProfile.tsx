@@ -139,54 +139,55 @@ const CandidateProfile = () => {
               </CardContent>
             </Card>
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Consultancy fee
-                </CardTitle>
-                <img
-                  src="https://d2c9u2e33z36pz.cloudfront.net/uploads/1724586619referral.webp"
-                  width="24"
-                  height="24"
-                />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{consultanceFee}/-</div>
-                <p className="text-xs text-muted-foreground">
-                  click
-                  <Link
-                    className="text-blue-500 font-bold px-2"
-                    to={"/admin/candidate/transactions/" + userData.student_id}
-                  >
-                    here
-                  </Link>
-                  to update status
-                </p>
-              </CardContent>
+              <Link
+                className="text-blue-500 flex flex-col font-bold px-2"
+                to={"/admin/candidate/transactions/" + userData.student_id}
+              >
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium text-black dark:text-white">
+                    Consultancy fee
+                  </CardTitle>
+                  <img
+                    src="https://d2c9u2e33z36pz.cloudfront.net/uploads/1724586619referral.webp"
+                    width="24"
+                    height="24"
+                  />
+                </CardHeader>
+
+                <CardContent>
+                  <div className="text-2xl font-bold">{consultanceFee}/-</div>
+                  <p className="text-xs text-muted-foreground text-black dark:text-white">
+                    click here to update status
+                  </p>
+                </CardContent>
+              </Link>
             </Card>
             <Card className="relative">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Documents</CardTitle>
-                <img
-                  src="https://d2c9u2e33z36pz.cloudfront.net/uploads/1724586619leaderboard.webp"
-                  width="24"
-                  height="24"
-                />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold capitalize">
-                  {userData.document_status == 2 ? "verified" : "Not verified"}
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  click
-                  <Link
-                    className="text-blue-500 font-bold px-2"
-                    to={"/admin/candidate/documents/" + userData.student_id}
-                  >
-                    here
-                  </Link>
-                  to update status
-                </p>
-              </CardContent>
+              <Link
+                className="text-blue-500 flex flex-col font-bold px-2"
+                to={"/admin/candidate/documents/" + userData.student_id}
+              >
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium text-black dark:text-white">
+                    Documents
+                  </CardTitle>
+                  <img
+                    src="https://d2c9u2e33z36pz.cloudfront.net/uploads/1724586619leaderboard.webp"
+                    width="24"
+                    height="24"
+                  />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold capitalize">
+                    {userData.document_status == 2
+                      ? "verified"
+                      : "Not verified"}
+                  </div>
+                  <p className="text-xs text-muted-foreground text-black dark:text-white">
+                    click here to update status
+                  </p>
+                </CardContent>
+              </Link>
             </Card>
           </div>
         </section>
