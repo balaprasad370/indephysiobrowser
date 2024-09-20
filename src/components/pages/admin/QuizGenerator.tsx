@@ -430,7 +430,7 @@ const QuizGenerator = () => {
                   </div>
 
                   <div className="w-full flex  items-start justify-start flex-col">
-                    <label className="block font-bold">Level of German</label>
+                    <label className="block font-bold">Language Level</label>
                     <Select
                       className="text-black bg-white w-full flex border-input  border"
                       style={{
