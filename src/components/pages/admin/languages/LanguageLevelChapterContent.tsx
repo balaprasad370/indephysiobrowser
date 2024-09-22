@@ -52,7 +52,7 @@ const LanguageLevelChapterContent = () => {
   const [token, settoken] = useState("");
   const context = useContext(GlobalInfo);
 
-  const { chapter_id } = useParams();
+  const { chapter_id, package_id } = useParams();
   const [addtype, setaddtype] = useState("");
 
   const [title, settitle] = useState("");
@@ -88,10 +88,8 @@ const LanguageLevelChapterContent = () => {
 
     setitems(res.data);
     // console.log("dcs", res.data);
-
   };
 
-  
   // Helper functions for reordering and moving items
   const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list);
@@ -127,7 +125,6 @@ const LanguageLevelChapterContent = () => {
 
     if (!destination) return;
 
-    
     try {
       // Restrict items in the left list from being dragged to the right list
       if (
@@ -364,9 +361,13 @@ const LanguageLevelChapterContent = () => {
 
   const getEventSchedule = async () => {
     try {
+      const obj = {
+        package_id: package_id
+      };
       const res = await axios({
         method: "post",
-        url: context.apiEndPoint + "admin/schedule/arrange",
+        data: obj,
+        url: context.apiEndPoint + "admin/schedule/arrangeDynaminc",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + token
@@ -621,34 +622,7 @@ const LanguageLevelChapterContent = () => {
                                     <div className="flex w-full  my-3 rounded h-full">
                                       <div className="w-full flex justify-start items-start flex-col">
                                         <div>
-                                          <div>{item?.title}</div>
-                                        </div>
-
-                                        <div className="w-full flex justify-between items-center">
-                                          <div className="flex ">
-                                            <p>
-                                              {moment(
-                                                item?.schedule_start_date
-                                              ).format("DD MMM, YYYY")}
-                                            </p>
-                                          </div>
-                                          <div className="flex">
-                                            <p className="font-bold">
-                                              {moment(
-                                                item?.schedule_start_date +
-                                                  " " +
-                                                  item?.schedule_start_time
-                                              ).format("h:mm a")}
-                                            </p>
-                                            -
-                                            <p className="font-bold">
-                                              {moment(
-                                                item?.schedule_start_date +
-                                                  " " +
-                                                  item?.schedule_end_time
-                                              ).format("h:mm a")}
-                                            </p>
-                                          </div>
+                                          <div>Live Class</div>
                                         </div>
                                       </div>
                                     </div>

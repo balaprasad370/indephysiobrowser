@@ -1214,23 +1214,64 @@ const Schedule = () => {
                 {/* </SheetClose> */}
               </SheetFooter>
 
-              <div className="my-2 px-4 flex justify-center items-center">
-                <Button
-                  className="bg-teal-600 text-white "
-                  onClick={() => {
-                    const event_id = selectedDateTimeEdit.id.replace(
-                      "event",
-                      ""
-                    );
+              <div className="my-2 px-42 py-8  flex justify-between items-center">
+                <div className="my-2 flex justify-center items-center">
+                  <Button
+                    className="bg-blue-600 text-white"
+                    disabled={
+                      !moment(selectedDateTimeEdit.start).isBefore(moment())
+                    }
+                    onClick={() => {
+                      const event_id = selectedDateTimeEdit.id.replace(
+                        "event",
+                        ""
+                      );
+                      const data = eventData.filter(
+                        (ele) => ele.schedule_id == event_id
+                      );
+                      navigate(
+                        "/admin/schedule/liveclass/" +
+                          data[0].room_name +
+                          "/" +
+                          moment(selectedDateTimeEdit.start).format(
+                            "YYYY-MM-DD"
+                          ) +
+                          "/" +
+                          event_id
+                      );
+                    }}
+                  >
+                    View Liveclass Details
+                  </Button>
+                </div>
 
-                    const data = eventData.filter(
-                      (ele) => ele.schedule_id == event_id
-                    );
-                    navigate("/admin/meet/join/" + data[0].room_name);
-                  }}
-                >
-                  Join the meeting
-                </Button>
+                <div>
+                  <Button
+                    className="bg-teal-600 text-white "
+                    disabled={
+                      new Date(
+                        moment(selectedDateTimeEdit.start)
+                          .startOf("day")
+                          .format("YYYY-MM-DD")
+                      ) < new Date(moment().format("YYYY-MM-DD"))
+                    }
+                    onClick={() => {
+                      const event_id = selectedDateTimeEdit.id.replace(
+                        "event",
+                        ""
+                      );
+
+                      const data = eventData.filter(
+                        (ele) => ele.schedule_id == event_id
+                      );
+                      navigate(
+                        "/admin/meet/join/" + data[0].room_name + "/" + event_id
+                      );
+                    }}
+                  >
+                    Join the meeting
+                  </Button>
+                </div>
               </div>
             </SheetContent>
           </Sheet>

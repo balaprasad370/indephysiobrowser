@@ -43,6 +43,8 @@ import Branding from "./components/pages/branding/Branding";
 import AddBranding from "./components/pages/branding/AddBranding";
 import ViewBranding from "./components/pages/branding/ViewBranding";
 import Meet from "./components/pages/admin/Meet";
+import LiveclassDetails from "./components/pages/admin/LiveclassDetails";
+import NotFound from "./components/pages/NotFound";
 
 export const GlobalInfo = createContext();
 function App() {
@@ -69,7 +71,8 @@ function App() {
   const [count, setCount] = useState(0);
   const contextData = {
     filesServerUrl: "https://d2c9u2e33z36pz.cloudfront.net/",
-    apiEndPoint: "https://server.indephysio.com/"
+    apiEndPoint: "https://server.indephysio.com/",
+    liveclassServerUrl: "https://d3kpi6hpyesigd.cloudfront.net/"
     // massimo
     // filesServerUrl: "https://d3nbnikvasv2ex.cloudfront.net/",
     // apiEndPoint: "https://server.massimo.global/"
@@ -96,7 +99,14 @@ function App() {
             <Route path="quiz/generate" element={<QuizGenerator />} />
             <Route path="students" element={<Students />} />
             <Route path="settings" element={<Settings />} />
-            <Route path="meet/join/:room_name" element={<Meet />} />
+            <Route
+              path="meet/join/:room_name/:schedule_id"
+              element={<Meet />}
+            />
+            <Route
+              path="schedule/liveclass/:room_name/:date/:schedule_id"
+              element={<LiveclassDetails />}
+            />
             <Route path="assessment">
               <Route index element={<Assessment />} />
               <Route path="sub/:id" element={<Subassessments />} />
@@ -159,6 +169,8 @@ function App() {
           <Route path="/referral" element={<ReferralSidebar />}>
             <Route path="dashboard" element={<Referraldashboard />} />
           </Route>
+
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
     </GlobalInfo.Provider>
