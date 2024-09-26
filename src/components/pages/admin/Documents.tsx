@@ -4,6 +4,11 @@ import axios from "axios";
 import DisplayFiles from "./admincomponents/DisplayFiles";
 import { IoMdClose } from "react-icons/io";
 import { GlobalInfo } from "./../../../App";
+import SuperfastDocuments from "./documents/SuperfastDocuments";
+import ExpressDocuments from "./documents/ExpressDocuments";
+import ProfessionalDocuments from "./documents/ProfessionalDocuments";
+import UGFinals from "./documents/UGFinals";
+import UGDreamers from "./documents/UGDreamers";
 
 import {
   AlertDialog,
@@ -90,7 +95,8 @@ const Documents = () => {
       });
 
       //   console.log(res.data);
-      getDocuments();
+      // getDocuments();
+      getData();
     } catch (error) {
       console.log(error);
     }
@@ -131,9 +137,61 @@ const Documents = () => {
     }
   };
 
+  const renderPackageDocuments = () => {
+    switch (userData.package) {
+      case "Superfast":
+        return (
+          <SuperfastDocuments
+            studentDetails={userData}
+            student_id={id}
+            onAccept={handleAccept}
+            onReject={handleReject}
+          />
+        );
+      case "Express":
+        return (
+          <ExpressDocuments
+            studentDetails={userData}
+            student_id={id}
+            onAccept={handleAccept}
+            onReject={handleReject}
+          />
+        );
+      case "Professional":
+        return (
+          <ProfessionalDocuments
+            studentDetails={userData}
+            student_id={id}
+            onAccept={handleAccept}
+            onReject={handleReject}
+          />
+        );
+      case "UG Finals":
+        return (
+          <UGFinals
+            studentDetails={userData}
+            student_id={id}
+            onAccept={handleAccept}
+            onReject={handleReject}
+          />
+        );
+      case "UG Dreamers":
+        return (
+          <UGDreamers
+            studentDetails={userData}
+            student_id={id}
+            onAccept={handleAccept}
+            onReject={handleReject}
+          />
+        );
+      default:
+        return <div>No package found</div>;
+    }
+  };
+
   return (
     <>
-      <div>
+      <div className="text-black dark:text-white">
         <div className="flex justify-between items-center w-full px-10 py-4">
           <div>
             <h2 className="font-bold capitalize">
@@ -161,7 +219,7 @@ const Documents = () => {
             Eligible
           </button>
         </div>
-        {documents.length > 0 ? (
+        {/* {documents.length > 0 ? (
           <DisplayFiles
             files={documents}
             onAccept={handleAccept}
@@ -170,6 +228,13 @@ const Documents = () => {
         ) : (
           <div>No files found</div>
         )}
+         */}
+
+        <div className="px-2 md:px-10">
+          {userData.package == ""
+            ? "No package found sdv"
+            : renderPackageDocuments()}
+        </div>
       </div>
 
       {/* alert  */}

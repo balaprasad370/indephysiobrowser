@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useLayoutEffect, useState, useContext } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import nouser from "../assets/nouser.jpg";
 import { GrChapterAdd } from "react-icons/gr";
@@ -58,16 +58,14 @@ import {
 import useAuth from "../hooks/useAuth";
 import { ButtonProps, Button } from "./../components/ui/button";
 import { useEffect } from "./../../node_modules/preact/hooks/src/index";
+import { GlobalInfo } from "./../App";
 
 const AdminSidebar = () => {
-  const [theme, settheme] = useState("dark");
+  const context = useContext(GlobalInfo);
+
+  const { theme, setTheme } = context;
 
   const navigate = useNavigate();
-
-  useLayoutEffect(() => {
-    const themesam = localStorage.getItem("theme");
-    if (theme != null) settheme(themesam);
-  }, []);
 
   const tokenData = useAuth();
 
@@ -189,7 +187,12 @@ const AdminSidebar = () => {
           </aside>
 
           <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14 w-full">
-            <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b  px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6 w-full justify-between">
+            <header
+              className={`sticky top-0 z-30 flex h-14 items-center gap-4 border-b  px-4 sm:static sm:h-auto sm:border-0
+             bg-inherit sm:px-6 w-full justify-between ${
+               theme == "dark" ? "bg-[#242424]" : "bg-inherit"
+             }`}
+            >
               <Sheet>
                 <SheetTrigger asChild>
                   <Button
@@ -334,7 +337,7 @@ const AdminSidebar = () => {
                     <Button
                       className="p-2 bg-inherit text-black dark:text-white hover:border-white dark:hover:border-black"
                       onClick={() => {
-                        settheme("dark");
+                        setTheme("dark");
                         localStorage.setItem("theme", "dark");
                         document.documentElement.classList.remove("light");
                         document.documentElement.classList.add("dark");
@@ -346,7 +349,7 @@ const AdminSidebar = () => {
                     <Button
                       className="p-2 bg-inherit text-black dark:text-white hover:border-white dark:hover:border-black"
                       onClick={() => {
-                        settheme("light");
+                        setTheme("light");
                         localStorage.setItem("theme", "light");
                         document.documentElement.classList.remove("dark");
                         document.documentElement.classList.add("light");

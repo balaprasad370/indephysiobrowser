@@ -187,6 +187,9 @@ const LanguageLevelChapterContent = () => {
         });
 
         // console.log(data);
+        console.log("====================================");
+        console.log("fgrtgrtgertg", data);
+        console.log("====================================");
         updateOrder(data);
       } else {
         // Moving between lists
@@ -237,6 +240,9 @@ const LanguageLevelChapterContent = () => {
           data.push(obj);
         });
 
+        console.log("====================================");
+        console.log("fg", data);
+        console.log("====================================");
         // console.log(data);
         updateOrder(data);
       }
@@ -246,9 +252,7 @@ const LanguageLevelChapterContent = () => {
   };
 
   const updateOrder = async (data) => {
-    console.log("====================================");
-    console.log("fg", data);
-    console.log("====================================");
+
     try {
       const res = await axios({
         method: "post",

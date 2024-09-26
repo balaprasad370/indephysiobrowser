@@ -48,6 +48,8 @@ import NotFound from "./components/pages/NotFound";
 
 export const GlobalInfo = createContext();
 function App() {
+  const [theme, setTheme] = useState("dark");
+
   useEffect(() => {
     try {
       const theme = localStorage.getItem("theme");
@@ -58,9 +60,13 @@ function App() {
 
         document.documentElement.classList.remove("dark");
         document.documentElement.classList.add("light");
+
+        setTheme("light");
       } else {
         document.documentElement.classList.remove("light");
         document.documentElement.classList.add("dark");
+
+        setTheme("dark");
       }
     } catch (error) {
       console.log(error);
@@ -69,7 +75,10 @@ function App() {
 
   const routeChange = initialRoute();
   const [count, setCount] = useState(0);
+
   const contextData = {
+    theme: theme,
+    setTheme: setTheme,
     filesServerUrl: "https://d2c9u2e33z36pz.cloudfront.net/",
     apiEndPoint: "https://server.indephysio.com/",
     liveclassServerUrl: "https://d3kpi6hpyesigd.cloudfront.net/"

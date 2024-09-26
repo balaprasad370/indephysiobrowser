@@ -239,7 +239,7 @@ export default function DataTableDemo() {
 
   return (
     <div className="w-full p-4 text-black dark:text-white">
-      <p className="mb-4 text-2xl font-semibold text-gray-800">
+      <p className="mb-4 text-2xl font-semibold">
         Consultancy fees
       </p>
 

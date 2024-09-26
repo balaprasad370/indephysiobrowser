@@ -26,7 +26,32 @@ const CandidateProfile = () => {
   const [userData, setuserData] = useState({});
   const [userStatus, setuserStatus] = useState({});
 
+  const { theme, setTheme } = context;
+
   const [consultanceFee, setconsultanceFee] = useState(0);
+
+  const pathway = [
+    {
+      pathway: "Superfast",
+      timealloted: "4"
+    },
+    {
+      pathway: "Express",
+      timealloted: "2"
+    },
+    {
+      pathway: "Professional",
+      timealloted: "1"
+    },
+    {
+      pathway: "UG Finals",
+      timealloted: "30"
+    },
+    {
+      pathway: "UG dreamers",
+      timealloted: "20"
+    }
+  ];
 
   const getData = async () => {
     try {
@@ -99,8 +124,15 @@ const CandidateProfile = () => {
 
   return (
     <>
-      <main className="flex-1 p-6">
+      <main className="flex-1 p-6 text-black dark:text-white ">
         <section>
+          <div className="flex flex-col items-start">
+            <p className="text-2xl ">Student Profile</p>
+            <h1 className="text-2xl font-bold capitalize my-4">
+              {userData?.first_name + " " + userData?.last_name}
+            </h1>
+          </div>
+
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -134,7 +166,30 @@ const CandidateProfile = () => {
                     : userData.package}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Commit minimum 4 hours per day
+                  {userData.package != "" && userData.package && (
+                    <span>
+                      {userData.package.toLowerCase() == "superfast" &&
+                        "Commit minimum " +
+                          pathway[0].timealloted +
+                          " hour(s) per day"}
+                      {userData.package.toLowerCase() == "express" &&
+                        "Commit minimum " +
+                          pathway[1].timealloted +
+                          " hour(s) per day"}
+                      {userData.package.toLowerCase() == "professional" &&
+                        "Commit minimum " +
+                          pathway[2].timealloted +
+                          " hour(s) per day"}
+                      {userData.package.toLowerCase() == "ug finals" &&
+                        "Commit minimum " +
+                          pathway[3].timealloted +
+                          " minute(s) per day"}
+                      {userData.package.toLowerCase() == "ug dreamers" &&
+                        "Commit minimum " +
+                          pathway[4].timealloted +
+                          " minute(s) per day"}
+                    </span>
+                  )}
                 </p>
               </CardContent>
             </Card>
@@ -147,11 +202,21 @@ const CandidateProfile = () => {
                   <CardTitle className="text-sm font-medium text-black dark:text-white">
                     Consultancy fee
                   </CardTitle>
-                  <img
-                    src="https://d2c9u2e33z36pz.cloudfront.net/uploads/1724586619referral.webp"
-                    width="24"
-                    height="24"
-                  />
+                  {theme === "dark" ? (
+                    <img
+                      key={theme}
+                      src="https://d2c9u2e33z36pz.cloudfront.net/uploads/1724905230referraldark].png"
+                      width="24"
+                      height="24"
+                    />
+                  ) : (
+                    <img
+                      key={theme}
+                      src="https://d2c9u2e33z36pz.cloudfront.net/uploads/1724586619referral.webp"
+                      width="24"
+                      height="24"
+                    />
+                  )}
                 </CardHeader>
 
                 <CardContent>
@@ -171,11 +236,21 @@ const CandidateProfile = () => {
                   <CardTitle className="text-sm font-medium text-black dark:text-white">
                     Documents
                   </CardTitle>
-                  <img
-                    src="https://d2c9u2e33z36pz.cloudfront.net/uploads/1724586619leaderboard.webp"
-                    width="24"
-                    height="24"
-                  />
+                  {theme === "dark" ? (
+                    <img
+                      key={theme}
+                      src="https://d2c9u2e33z36pz.cloudfront.net/uploads/1724905230leaderlight.png"
+                      width="24"
+                      height="24"
+                    />
+                  ) : (
+                    <img
+                      key={theme}
+                      src="https://d2c9u2e33z36pz.cloudfront.net/uploads/1724586619leaderboard.webp"
+                      width="24"
+                      height="24"
+                    />
+                  )}
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold capitalize">

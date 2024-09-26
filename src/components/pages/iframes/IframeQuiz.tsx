@@ -163,6 +163,7 @@ const Quizdetails = ({ id, disableStatus }) => {
 
   const handleFiles = async (file, data, type) => {
     console.log(data, file);
+    
 
     if (file == null || file == undefined) return;
     try {

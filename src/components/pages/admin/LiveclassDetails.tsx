@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { GlobalInfo } from "./../../../App";
 
@@ -14,6 +14,7 @@ const LiveclassDetails = () => {
   const [schedule_live_class_id, setschedule_live_class_id] = useState(0);
 
   const [selectedRecordings, setSelectedRecordings] = useState([]);
+  const navigate = useNavigate();
 
   const getLiveclassDetails = async () => {
     try {
@@ -54,7 +55,7 @@ const LiveclassDetails = () => {
       } else {
         setschedule_live_class_id(0);
       }
-      console.log("dcvads", res.data);
+      // console.log("dcvads", res.data);
     } catch (error) {
       console.log(error);
     }
@@ -87,6 +88,8 @@ const LiveclassDetails = () => {
           }
         });
         console.log(res.data);
+
+        navigate("/admin/schedule");
       } catch (error) {
         console.log(error);
       }
@@ -94,9 +97,9 @@ const LiveclassDetails = () => {
   };
 
   const handleRecordingSelection = (recording_path) => {
-    console.log("====================================");
-    console.log(selectedRecordings);
-    console.log("====================================");
+    // console.log("====================================");
+    // console.log(selectedRecordings);
+    // console.log("====================================");
 
     if (selectedRecordings.includes(recording_path)) {
       const _recordings = selectedRecordings.filter(
