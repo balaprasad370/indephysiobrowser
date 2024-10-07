@@ -644,17 +644,17 @@ const Schedule = () => {
           selectable={true}
           scrollTime={0}
           events={events}
-          eventContent={(eventInfo) => {
-            return (
-              <div>
-                <b>{eventInfo.timeText}</b>
-                <br />
-                <i>{eventInfo.event.title}</i>
-                <br />
-                <p>{eventInfo.event.durationEditable ? "" : "Admin"}</p>
-              </div>
-            );
-          }}
+          // eventContent={(eventInfo) => {
+          //   return (
+          //     <div>
+          //       <b>{eventInfo.timeText}</b>
+          //       <br />
+          //       <i>{eventInfo.event.title}</i>
+          //       <br />
+          //       <p>{eventInfo.event.durationEditable ? "" : "Admin"}</p>
+          //     </div>
+          //   );
+          // }}
           select={handleDateSelect}
           eventClick={handleEventClick}
           resources={resources}

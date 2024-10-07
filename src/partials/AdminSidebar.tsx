@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState, useContext } from "react";
+import React, { useLayoutEffect, useState, useContext, useEffect } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import nouser from "../assets/nouser.jpg";
 import { GrChapterAdd } from "react-icons/gr";
@@ -57,13 +57,17 @@ import {
 
 import useAuth from "../hooks/useAuth";
 import { ButtonProps, Button } from "./../components/ui/button";
-import { useEffect } from "./../../node_modules/preact/hooks/src/index";
 import { GlobalInfo } from "./../App";
+import axios from "axios";
 
 const AdminSidebar = () => {
   const context = useContext(GlobalInfo);
+  const [token, setToken] = useState<string | null>(
+    localStorage.getItem("token")
+  );
 
   const { theme, setTheme } = context;
+  const [clientDetails, setClientDetails] = useState<any>(null);
 
   const navigate = useNavigate();
 
@@ -71,6 +75,29 @@ const AdminSidebar = () => {
 
   const location = useLocation();
   const pathnames = location.pathname.split("/").filter((x) => x);
+
+  const fetchClientDetails = async () => {
+    try {
+      const response = await axios.get(
+        `${context.apiEndPoint}api/v1/client/details`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      console.log("====================================");
+      console.log(response.data);
+      console.log("====================================");
+      setClientDetails(response.data);
+    } catch (error) {
+      console.error("Error fetching client details:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchClientDetails();
+  }, []);
 
   return (
     <>
@@ -111,20 +138,38 @@ const AdminSidebar = () => {
                 <TooltipContent side="right">Quiz Generator</TooltipContent>
               </Tooltip>
 
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Link
-                    to="/admin/candidates"
-                    className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                  >
-                    <Users className="h-5 w-5" />
-                    <span className="sr-only"> Candidates </span>
-                  </Link>
-                </TooltipTrigger>
+              {clientDetails && clientDetails.is_translator == 0 ? (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link
+                      to="/admin/candidates"
+                      className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                    >
+                      <Users className="h-5 w-5" />
+                      <span className="sr-only"> Candidates </span>
+                    </Link>
+                  </TooltipTrigger>
 
-                <TooltipContent side="right">Candidates</TooltipContent>
-              </Tooltip>
+                  <TooltipContent side="right">Candidates</TooltipContent>
+                </Tooltip>
+              ) : null}
 
+              {clientDetails && clientDetails.is_translator == 1 ? (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link
+                      to="/admin/translator"
+                      className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                    >
+                      <Users className="h-5 w-5" />
+                      <span className="sr-only"> Translator </span>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">Translator</TooltipContent>
+                </Tooltip>
+              ) : null}
+
+              
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Link

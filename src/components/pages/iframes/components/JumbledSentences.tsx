@@ -154,7 +154,7 @@ const DragAndDrop = ({ items, moduleId, questionId, column }) => {
     <div className="w-full">
       <div className="w-full flex justify-end items-center">
         <button
-          className="p-1 bg-teal-600 text-white "
+          className="p-1 bg-teal-600  "
           onClick={() => {
             handleAddquestion();
           }}
@@ -191,7 +191,6 @@ const DragAndDrop = ({ items, moduleId, questionId, column }) => {
                           userSelect: "none",
                           padding: "16px",
                           margin: "0 0 8px 0",
-                          backgroundColor: "#ffffff",
                           border: "1px solid #ddd",
                           borderRadius: "4px",
                           ...provided.draggableProps.style

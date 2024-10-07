@@ -23,6 +23,9 @@ import {
   CaretSortIcon,
   DotsHorizontalIcon
 } from "@radix-ui/react-icons";
+import { HiOutlineDocumentText } from "react-icons/hi2";
+import { GrTransaction } from "react-icons/gr";
+import { AiOutlineTranslation } from "react-icons/ai";
 
 import { Badge } from "../../ui/badge";
 import {
@@ -132,7 +135,7 @@ function Dashboard() {
       accessorKey: "fullname",
       header: () => <div className="text-center">Full name</div>,
       cell: ({ row }) => (
-        <div className="capitalize text-blue-600 min-w-40">
+        <div className="capitalize text-blue-600">
           <Link to={"/admin/candidate/" + row.original.student_id}>
             {row.getValue("fullname")}
           </Link>
@@ -143,7 +146,7 @@ function Dashboard() {
       accessorKey: "username",
       header: ({ column }) => {
         return (
-          <div className="text-center min-w-40">
+          <div className="text-center">
             <Button
               variant="ghost"
               className="text-black dark:text-white text-center"
@@ -165,7 +168,7 @@ function Dashboard() {
       accessorKey: "package",
       header: () => <div className="text-center">Package</div>,
       cell: ({ row }) => (
-        <div className="capitalize min-w-40">{row.getValue("package")}</div>
+        <div className="capitalize ">{row.getValue("package")}</div>
       )
     },
     {
@@ -173,55 +176,84 @@ function Dashboard() {
       header: () => <div className="text-right">Mobile</div>,
       cell: ({ row }) => {
         return (
-          <div className="text-right font-medium min-w-24">{row.getValue("mobile")}</div>
+          <div className="text-right font-medium ">
+            {row.getValue("mobile")}
+          </div>
         );
       }
     },
     {
       id: "actions",
       enableHiding: false,
+      header: () => <div className="text-center">Actions</div>,
       cell: ({ row }) => {
         return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                className="h-8 w-8 p-0 text-black dark:text-white"
-              >
-                <span className="sr-only">Open menu</span>
-                <DotsHorizontalIcon className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="min-w-[10rem]">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() => {
-                  navigate("/admin/candidate/" + row.original.student_id);
-                }}
-              >
-                Visit Profile
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => {
-                  navigate(
-                    "/admin/candidate/transactions/" + row.original.student_id
-                  );
-                }}
-              >
-                Consultancy fees
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => {
-                  navigate(
-                    "/admin/candidate/documents/" + row.original.student_id
-                  );
-                }}
-              >
-                Documents
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          // <DropdownMenu>
+          //   <DropdownMenuTrigger asChild>
+          //     <Button
+          //       variant="ghost"
+          //       className="h-8 w-8 p-0 text-black dark:text-white"
+          //     >
+          //       <span className="sr-only">Open menu</span>
+          //       <DotsHorizontalIcon className="h-4 w-4" />
+          //     </Button>
+          //   </DropdownMenuTrigger>
+          //   <DropdownMenuContent align="end" className="min-w-[10rem]">
+          //     <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          //     <DropdownMenuItem
+          //       onClick={() => {
+          //         navigate("/admin/candidate/" + row.original.student_id);
+          //       }}
+          //     >
+          //       Visit Profile
+          //     </DropdownMenuItem>
+          //     <DropdownMenuSeparator />
+          //     <DropdownMenuItem
+          //       onClick={() => {
+          //         navigate(
+          //           "/admin/candidate/transactions/" + row.original.student_id
+          //         );
+          //       }}
+          //     >
+          //       Consultancy fees
+          //     </DropdownMenuItem>
+          //     <DropdownMenuItem
+          //       onClick={() => {
+          //         navigate(
+          //           "/admin/candidate/documents/" + row.original.student_id
+          //         );
+          //       }}
+          //     >
+          //       Documents
+          //     </DropdownMenuItem>
+          //   </DropdownMenuContent>
+          // </DropdownMenu>
+
+          <div className="flex flex-row gap-2 justify-center items-center">
+            <div className="cursor-pointer bg-slate-200 p-2 rounded-md" onClick={() => {
+              navigate(
+                "/admin/candidate/documents/" + row.original.student_id
+              );
+            }}>
+              <HiOutlineDocumentText size={20} color="black" />
+            </div>
+
+            <div className="cursor-pointer bg-teal-400 p-2 rounded-md" onClick={() => {
+              navigate(
+                "/admin/candidate/transactions/" + row.original.student_id
+              );
+            }}>
+              <GrTransaction size={20} color="white" />
+            </div>
+
+            <div className="cursor-pointer bg-blue-500 p-2 rounded-md" onClick={() => {
+              navigate(
+                "/admin/candidate/translations/" + row.original.student_id
+              );
+            }}>
+              <AiOutlineTranslation size={20}  color="white"/>
+            </div>
+          </div>
         );
       }
     }
@@ -327,7 +359,7 @@ function Dashboard() {
                         </DropdownMenu>
                       </div>
                       <div className="rounded-md border overflow-x-auto max-w-full">
-                        <Table className="max-w-full overflow-x-auto">
+                        <Table className="max-w-full min-w-[900px]">
                           <TableHeader>
                             {table.getHeaderGroups().map((headerGroup) => (
                               <TableRow key={headerGroup.id}>

@@ -45,6 +45,11 @@ import ViewBranding from "./components/pages/branding/ViewBranding";
 import Meet from "./components/pages/admin/Meet";
 import LiveclassDetails from "./components/pages/admin/LiveclassDetails";
 import NotFound from "./components/pages/NotFound";
+import CandidateQuizAnalytics from "./components/pages/admin/analytics/CandidateQuizAnalytics";
+import CandidateAnalytics from "./components/pages/admin/analytics/CandidateAnalytics";
+import Translations from "./components/pages/admin/candidate/Translations";
+import TranslationsDocument from "./components/pages/admin/candidate/TranslationsDocument";
+import Translator from "./components/pages/admin/translator/Translator";
 
 export const GlobalInfo = createContext();
 function App() {
@@ -127,7 +132,16 @@ function App() {
               element={<Transactions />}
             />
             <Route path="candidate/documents/:id" element={<Documents />} />
+            <Route
+              path="candidate/translations/:student_id"
+              element={<Translations />}
+            />
+            <Route
+              path="candidate/translations/:student_id/documents/:document_category_id/:document_id"
+              element={<TranslationsDocument />}
+            />
 
+            <Route path="translator" element={<Translator />} />
             {/* lnagugages  */}
 
             <Route path="language" element={<Navigate to="/" />} />
@@ -169,6 +183,17 @@ function App() {
 
             {/* schedule  */}
             <Route path="schedule" element={<Schedule />} />
+
+            {/* analytics  */}
+
+            <Route
+              path="candidate/analytics/:studentid"
+              element={<CandidateAnalytics />}
+            />
+            <Route
+              path="candidate/quiz/analytics/:student_id"
+              element={<CandidateQuizAnalytics />}
+            />
           </Route>
 
           <Route path="/student" element={<StudentSidebar />}>

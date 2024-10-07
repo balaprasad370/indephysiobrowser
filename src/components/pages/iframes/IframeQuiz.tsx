@@ -56,6 +56,7 @@ const LabelInputContainer = ({
 const Quizdetails = ({ id, disableStatus }) => {
   //   const { id } = useParams();
 
+  const [token, setToken] = useState(localStorage.getItem("token"));
   const context = useContext(GlobalInfo);
   const [quiz, setquiz] = useState([]);
   const [quizMetaData, setquizMetaData] = useState("");
@@ -163,7 +164,6 @@ const Quizdetails = ({ id, disableStatus }) => {
 
   const handleFiles = async (file, data, type) => {
     console.log(data, file);
-    
 
     if (file == null || file == undefined) return;
     try {
@@ -439,11 +439,74 @@ const Quizdetails = ({ id, disableStatus }) => {
     }
   };
 
+  const createModuleSharePromise = () => {
+    return new Promise(async (resolve, reject) => {
+      // Uncomment and adjust this code when ready to implement actual sharing
+      try {
+        const response = await axios({
+          method: "post",
+          url: context.apiEndPoint + "module/share",
+          data: {
+            module_id: id
+          },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        console.log("====================================");
+        console.log("SDcs");
+        console.log("====================================");
+
+        await navigator.clipboard.writeText(response.data.url);
+        resolve("Quiz shared successfully");
+        // if (response.data.status) {
+        //   resolve("Quiz shared successfully");
+        // } else {
+        //   reject("Failed to share quiz");
+        // }
+      } catch (error) {
+        console.log(error);
+        reject("Error sharing quiz");
+      } finally {
+        console.log("====================================");
+        console.log("vdg");
+        console.log("====================================");
+        resolve("Quiz shared successfully");
+      }
+
+      // For now, we'll just resolve the promise after a short delay
+      // setTimeout(() => resolve("Quiz shared successfully"), 1000);
+    });
+  };
+
+  const handleShareQuiz = async () => {
+    console.log("share quiz");
+
+    toast.promise(createModuleSharePromise(), {
+      loading: "Sharing quiz...",
+      success: "Quiz Link copied successfully",
+      error: "Failed to share quiz"
+    });
+  };
+
   return (
     <>
       <Toaster richColors position="top-right" />
 
       <div className="flex items-start flex-col p-4 mx-3 w-full quiz-details">
+        <div className="flex justify-end items-center w-full pr-8">
+          <button
+            className="bg-blue-600 text-white p-2 px-4"
+            onClick={() => {
+              handleShareQuiz();
+            }}
+          >
+            Share Quiz
+          </button>
+        </div>
+
         <div className="flex justify-between items-baseline w-full">
           <div>
             <h1 className="text-black dark:text-white py-4">
