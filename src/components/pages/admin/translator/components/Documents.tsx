@@ -1,4 +1,27 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import {
+  ColumnDef,
+  ColumnFiltersState,
+  SortingState,
+  VisibilityState,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable
+} from "@tanstack/react-table";
+import axios from "axios";
+import moment from "moment";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle
+} from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -7,6 +30,12 @@ import {
   TableHeader,
   TableRow
 } from "@/components/ui/table";
+import {
+  ChevronRightIcon,
+  CaretSortIcon,
+  DotsHorizontalIcon
+} from "@radix-ui/react-icons";
+
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,55 +54,19 @@ import {
   Users2,
   ChevronDownIcon
 } from "lucide-react";
-import {
-  ChevronRightIcon,
-  CaretSortIcon,
-  DotsHorizontalIcon
-} from "@radix-ui/react-icons";
 import { HiOutlineDocumentText } from "react-icons/hi";
 import { GrTransaction } from "react-icons/gr";
 import { AiOutlineTranslation } from "react-icons/ai";
-import { Link, useNavigate } from "react-router-dom";
+import { GlobalInfo } from "./../../../../../App";
 
-import moment from "moment";
-
-import { GlobalInfo } from "./../../../../App";
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable
-} from "@tanstack/react-table";
-import axios from "axios";
-
-import Documents from "./components/Documents";
-import { MdRefresh } from "react-icons/md";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from "@/components/ui/card";
-
-const Translator = () => {
+const TranslatorDocuments = ({
+  renderDocuments,
+  loading,
+  setLoading
+}) => {
   const navigate = useNavigate();
   const context = useContext(GlobalInfo);
   const [token, setToken] = useState(localStorage.getItem("token"));
-
-  const [currentType, setCurrentType] = useState<"students" | "documents">(
-    "documents"
-  );
-
-  const [loading, setLoading] = useState(false);
-  const [renderDocuments, setRenderDocuments] = useState(false);
 
   const [data, setdata] = useState([]);
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -116,27 +109,88 @@ const Translator = () => {
       header: () => <div className="text-center">Full name</div>,
       cell: ({ row }) => (
         <div className="capitalize text-blue-600">
-          <Link to={"/admin/translator/student/" + row.original.student_id}>
+          <Link
+            to={
+              "/admin/candidate/translations/" +
+              row.original.student_id +
+              "/documents/" +
+              row.original.doc_cat_id +
+              "/" +
+              row.original.translation_doc_id
+            }
+          >
             {row.original.first_name} {row.original.last_name}
           </Link>
         </div>
       )
     },
     {
-      accessorKey: "total_paid_amt",
-      header: () => <div className="text-center">Paid Amount in EUR</div>,
+      accessorKey: "document_name",
+      header: ({ column }) => {
+        return <div className="text-center">Document Name</div>;
+      },
       cell: ({ row }) => (
-        <div className="lowercase font-bold">
-          {row.original.total_paid_amt}
+        <Link
+          to={
+            "/admin/candidate/translations/" +
+            row.original.student_id +
+            "/documents/" +
+            row.original.doc_cat_id +
+            "/" +
+            row.original.translation_doc_id
+          }
+        >
+          <div className="lowercase font-bold">
+            {row.original.document_name}
+          </div>
+        </Link>
+      )
+    },
+    {
+      accessorKey: "paid_amount",
+      header: ({ column }) => {
+        return <div className="text-center">Paid Amount</div>;
+      },
+      cell: ({ row }) => (
+        <div className="lowercase font-bold">{row.original.paid_amount}</div>
+      )
+    },
+    {
+      accessorKey: "net_amount",
+      header: () => <div className="text-center">Net Amount </div>,
+      cell: ({ row }) => (
+        <div className="capitalize font-bold">{row.original.net_amount}</div>
+      )
+    },
+    {
+      accessorKey: "status",
+      header: () => <div className="text-center">Payment Status </div>,
+      cell: ({ row }) => (
+        <div
+          className={`capitalize font-bold ${
+            row.original.net_amount - row.original.paid_amount == 0
+              ? "text-green-500"
+              : "text-red-500"
+          }`}
+        >
+          {row.original.net_amount - row.original.paid_amount == 0
+            ? "Paid"
+            : "Pending"}
         </div>
       )
     },
     {
-      accessorKey: "total_net_amt",
-      header: () => <div className="text-center">Net Amount in EUR</div>,
+      accessorKey: "Document Status",
+      header: () => <div className="text-center">Document Status </div>,
       cell: ({ row }) => (
-        <div className="capitalize font-bold">
-          {row.original.total_net_amt}
+        <div
+          className={`capitalize font-bold ${
+            row.original.translation_status == 0
+              ? "text-red-500"
+              : "text-green-500"
+          }`}
+        >
+          {row.original.translation_status == 0 ? "Pending" : "Completed"}
         </div>
       )
     },
@@ -146,8 +200,9 @@ const Translator = () => {
       cell: ({ row }) => {
         return (
           <div className="font-medium ">
-            {moment(row.original.latest_modified_at * 1000)
-              .format("DD-MM-YYYY, HH:mm")}
+            {moment(row.original.modified_at * 1000).format(
+              "DD-MM-YYYY, HH:mm"
+            )}
           </div>
         );
       }
@@ -163,7 +218,12 @@ const Translator = () => {
               className="cursor-pointer bg-blue-500 p-2 rounded-md"
               onClick={() => {
                 navigate(
-                  "/admin/translator/student/" + row.original.student_id
+                  "/admin/candidate/translations/" +
+                    row.original.student_id +
+                    "/documents/" +
+                    row.original.doc_cat_id +
+                    "/" +
+                    row.original.translation_doc_id
                 );
               }}
             >
@@ -194,11 +254,15 @@ const Translator = () => {
     }
   });
 
-  const getStudents = async () => {
+  useEffect(() => {
+    getDocuments();
+  }, [renderDocuments]);
+
+  const getDocuments = async () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `${context.apiEndPoint}admin/translator/students`,
+        `${context.apiEndPoint}admin/translator/documents`,
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -206,6 +270,9 @@ const Translator = () => {
         }
       );
       setdata(response.data);
+      console.log("====================================");
+      console.log(response.data);
+      console.log("====================================");
     } catch (error) {
       console.log(error);
     } finally {
@@ -215,71 +282,16 @@ const Translator = () => {
     }
   };
 
-  useEffect(() => {
-    if (currentType === "students") {
-      getStudents();
-    }
-  }, [currentType, renderDocuments]);
-
   return (
     <>
-      <div className="flex flex-col items-start w-full text-black dark:text-white">
-        <div className="flex  items-start justify-end w-full px-4 py-4">
-          <div className="flex flex-row justify-center items-center gap-2 ">
-            <button
-              onClick={() => setRenderDocuments(!renderDocuments)}
-              disabled={loading}
-              className="border border-gray-500 bg-inherit p-2 rounded-md mx-2"
-            >
-              <MdRefresh
-                size={20}
-                className={`text-teal-500 transition-all duration-300 ${
-                  loading && "animate-spin"
-                }`}
-              />
-            </button>
-          </div>
-
-          <div
-            className="inline-flex rounded-md shadow-sm border border-gray-500"
-            role="group"
-          >
-            <button
-              className={`${
-                currentType === "documents"
-                  ? "bg-teal-500  focus:bg-teal-500 focus:border-none focus:outline-none text-white border-none outline-none rounded-md dark:rounded-none overflow-hidden"
-                  : "text-black  border-none rounded-md dark:rounded-none overflow-hidden"
-              }  px-3 py-1  transition`}
-              onClick={() => setCurrentType("documents")}
-            >
-              Documents
-            </button>
-
-            <button
-              className={`${
-                currentType === "students"
-                  ? "bg-teal-500 focus:bg-teal-500 focus:border-none focus:outline-none text-white border-none outline-none rounded-none"
-                  : "text-black  border-none rounded-md dark:rounded-none overflow-hidden"
-              }  px-3 py-1 transition `}
-              onClick={() => setCurrentType("students")}
-            >
-              Students
-            </button>
-          </div>
-        </div>
-
-        {/* table for students     */}
-
-        <div className="w-full px-4 py-4">
-          {currentType === "students" && (
-            <Card className="w-full px-4 py-4">
-              <CardHeader>
-                <CardTitle>Students</CardTitle>
-                <CardDescription>
-                  List of students assigned to you
-                </CardDescription>
-              </CardHeader>
-              <div className="rounded-md border overflow-x-auto max-w-full px-4">
+      <div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Documents</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="rounded-md border overflow-x-auto max-w-full">
+              <div className="rounded-md border overflow-x-auto max-w-full">
                 <Table className="max-w-full min-w-[900px]">
                   <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
@@ -329,22 +341,12 @@ const Translator = () => {
                   </TableBody>
                 </Table>
               </div>
-            </Card>
-          )}
-
-          {/* table for documents     */}
-
-          {currentType === "documents" && (
-            <Documents
-              renderDocuments={renderDocuments}
-              loading={loading}
-              setLoading={setLoading}
-            />
-          )}
-        </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </>
   );
 };
 
-export default Translator;
+export default TranslatorDocuments;

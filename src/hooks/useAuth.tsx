@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-
+import axios from "axios";
 const Auth = () => {
   const token = localStorage.getItem("token");
   const location = useLocation();
@@ -28,7 +28,8 @@ const Auth = () => {
           currentRoute == "/signup" ||
           currentRoute == "/"
         ) {
-          const routeChange = "/" + decoded.usertype + "dashboard";
+          const routeChange = "/" + decoded.usertype + "/" + "dashboard";
+          // console.log(routeChange);
           window.location.replace(routeChange);
           return;
         }

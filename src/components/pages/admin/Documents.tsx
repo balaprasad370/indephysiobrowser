@@ -232,7 +232,7 @@ const Documents = () => {
 
         <div className="px-2 md:px-10">
           {userData.package == ""
-            ? "No package found sdv"
+            ? "No package found"
             : renderPackageDocuments()}
         </div>
       </div>

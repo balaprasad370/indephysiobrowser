@@ -210,11 +210,8 @@ const CandidateQuizAnalytics = () => {
           <div className="text-blue-500 text-2xl font-semibold">Loading...</div>
         </div>
       ) : quizAnalytics && quizAnalytics.length > 0 ? (
-        quizAnalytics.map((langLevel) => (
-          <div
-            key={langLevel.lang_id}
-            className="w-full mb-6  bg-white rounded-lg"
-          >
+        quizAnalytics.map((langLevel, index) => (
+          <div key={index} className="w-full mb-6  bg-white rounded-lg">
             {/* Language Section */}
             {/* <div className="flex justify-start items-center my-4">
               <span className="text-xl font-semibold">Language:</span>
@@ -224,20 +221,20 @@ const CandidateQuizAnalytics = () => {
             </div> */}
 
             {/* Levels Section */}
-            {langLevel.levels.map((level) => (
+            {langLevel.levels.map((level, levelIndex) => (
               <div
-                key={level.level_id}
+                key={levelIndex}
                 className=" mb-6 p-2 border rounded-lg  text-left"
               >
                 {/* Packages Section */}
                 {level.packages && level.packages.length > 0 ? (
-                  level.packages.map((pkg) => (
-                    <div key={pkg.package_id} className="mb-4 px-4">
+                  level.packages.map((pkg, pkgIndex) => (
+                    <div key={pkgIndex} className="mb-4 px-4">
                       {/* Modules Section */}
                       {pkg.modules && pkg.modules.length > 0 ? (
-                        pkg.modules.map((module) => (
+                        pkg.modules.map((module, moduleIndex) => (
                           <div
-                            key={module.module_id}
+                            key={moduleIndex}
                             className="mb-4 bg-white rounded-lg"
                           >
                             <div className=" mb-2 flex flex-row flex-wrap justify-start items-center gap-2 py-4">
@@ -291,9 +288,9 @@ const CandidateQuizAnalytics = () => {
                                 </thead>
                                 <tbody>
                                   {module.items && module.items.length > 0 ? (
-                                    module.items.map((item) => (
+                                    module.items.map((item,itemIndex) => (
                                       <tr
-                                        key={item.id}
+                                        key={itemIndex}
                                         className="hover:bg-gray-100"
                                       >
                                         <td className="border px-4 py-2 text-center text-md">

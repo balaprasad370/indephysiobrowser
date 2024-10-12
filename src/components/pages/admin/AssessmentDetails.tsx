@@ -4,11 +4,12 @@ import { EditText } from "react-edit-text";
 import { MdModeEditOutline } from "react-icons/md";
 import axios from "axios";
 import { FaUpload, FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { Document, Page, pdfjs } from "react-pdf";
-import "react-pdf/dist/Page/AnnotationLayer.css";
 import { GlobalInfo } from "./../../../App";
-import "react-pdf/dist/Page/TextLayer.css";
 import { Toaster, toast } from "sonner";
+
+import "react-pdf/dist/Page/AnnotationLayer.css";
+import "react-pdf/dist/Page/TextLayer.css";
+import { Document, Page, pdfjs } from "react-pdf";
 
 const AssessmentDetails = () => {
   const { id } = useParams();
@@ -24,6 +25,9 @@ const AssessmentDetails = () => {
   const [numPages, setNumPages] = useState<number>(1);
   const [pageNumber, setPageNumber] = useState<number>(1);
 
+  // This line sets the worker source for pdf.js, which is necessary for rendering PDFs.
+  // The workerSrc is set to the path of the pdf.worker.min.js file, which is part of the pdfjs-dist package.
+  // The new URL() constructor is used to create a URL for the worker script, using import.meta.url to get the base URL of the current module.
   pdfjs.GlobalWorkerOptions.workerSrc = new URL(
     "pdfjs-dist/build/pdf.worker.min.js",
     import.meta.url

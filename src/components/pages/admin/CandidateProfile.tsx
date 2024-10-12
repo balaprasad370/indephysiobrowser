@@ -857,6 +857,7 @@ const CandidateProfile = () => {
           </div>
 
           {/* end resumes  */}
+          
         </section>
 
         {/* <StudentStatus student_id={student_id} /> */}

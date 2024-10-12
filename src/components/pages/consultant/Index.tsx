@@ -76,6 +76,7 @@ import {
 
 import LanguageIndex from "./languages/index";
 import { GlobalInfo } from "./../../../App";
+import { Search } from "lucide-react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -89,18 +90,17 @@ import {
   useReactTable
 } from "@tanstack/react-table";
 
-function Dashboard() {
+function Consultant() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-
+  const [globalFilter, setGlobalFilter] = React.useState("");
   const context = useContext(GlobalInfo);
 
   const navigate = useNavigate();
 
   const [data, setdata] = useState([]);
-  const [globalFilter, setGlobalFilter] = React.useState("");
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
@@ -136,52 +136,127 @@ function Dashboard() {
       accessorKey: "fullname",
       header: () => <div className="text-center">Full name</div>,
       cell: ({ row }) => (
-        <div className="capitalize text-blue-600">
-          <Link to={"/admin/candidate/" + row.original.student_id}>
-            {row.getValue("fullname")}
-          </Link>
+        <div className="capitalize font-bold text-md">
+          {row.getValue("fullname")}
         </div>
       )
     },
     {
-      accessorKey: "username",
-      header: ({ column }) => {
-        return (
-          <div className="text-center">
-            <Button
-              variant="ghost"
-              className="text-black dark:text-white text-center"
-              onClick={() =>
-                column.toggleSorting(column.getIsSorted() === "asc")
-              }
-            >
-              Email
-              <CaretSortIcon className="ml-2 h-4 w-4" />
-            </Button>
-          </div>
-        );
-      },
+      accessorKey: "german_level_placement",
+      header: () => <div className="text-center">German Level</div>,
       cell: ({ row }) => (
-        <div className="lowercase">{row.getValue("username")}</div>
+        <div
+          className={`capitalize ${
+            row.original.german_level_placement == "" ? "text-xs" : "text-md"
+          }`}
+        >
+          {row.original.german_level_placement != ""
+            ? row.original.german_level_placement
+            : "Not provided"}
+        </div>
       )
     },
     {
-      accessorKey: "package",
-      header: () => <div className="text-center">Package</div>,
+      accessorKey: "highest_qualification",
+      header: () => <div className="text-center">Highest qualification</div>,
       cell: ({ row }) => (
-        <div className="capitalize ">{row.getValue("package")}</div>
+        <div
+          className={`capitalize ${
+            row.original.highest_qualification == "" ? "text-xs" : "text-md"
+          }`}
+        >
+          {row.original.highest_qualification != ""
+            ? row.original.highest_qualification
+            : "Not provided"}
+        </div>
       )
     },
     {
-      accessorKey: "mobile",
-      header: () => <div className="text-right">Mobile</div>,
-      cell: ({ row }) => {
-        return (
-          <div className="text-right font-medium ">
-            {row.getValue("mobile")}
-          </div>
-        );
-      }
+      accessorKey: "gender",
+      header: () => <div className="text-center">Gender</div>,
+      cell: ({ row }) => (
+        <div
+          className={`capitalize ${
+            row.original.gender == "" ? "text-xs" : "text-md"
+          }`}
+        >
+          {row.original.gender != "" ? row.original.gender : "Not provided"}
+        </div>
+      )
+    },
+    {
+      accessorKey: "current_status",
+      header: () => <div className="text-center">Current Status</div>,
+      cell: ({ row }) => (
+        <div
+          className={`capitalize ${
+            row.original.current_status == "" ? "text-xs" : "text-md"
+          }`}
+        >
+          {row.original.current_status != ""
+            ? row.original.current_status
+            : "Not provided"}
+        </div>
+      )
+    },
+    {
+      accessorKey: "age",
+      header: () => <div className="text-center">Age</div>,
+      cell: ({ row }) => (
+        <div
+          className={`capitalize ${
+            row.original.age == "" ? "text-xs" : "text-md"
+          }`}
+        >
+          {row.original.age != "" ? row.original.age : "Not provided"}
+        </div>
+      )
+    },
+    {
+      accessorKey: "placement",
+      header: () => <div className="text-center">Placement </div>,
+      cell: ({ row }) => (
+        <div
+          className={`capitalize ${
+            row.original.placement != "" || row.original.placement == "placed"
+              ? "text-md text-green-500 font-bold"
+              : "text-xs"
+          }`}
+        >
+          {row.original.placement != "" ? row.original.placement : "Not placed"}
+        </div>
+      )
+    },
+    {
+      accessorKey: "marital_status",
+      header: () => <div className="text-center">Marital Status</div>,
+      cell: ({ row }) => (
+        <div
+          className={`capitalize ${
+            row.original.marital_status == "" ? "text-xs" : "text-md"
+          }`}
+        >
+          {row.original.marital_status != ""
+            ? row.original.marital_status
+            : "Not provided"}
+        </div>
+      )
+    },
+    {
+      accessorKey: "num_of_children",
+      header: () => <div className="text-center">Number of Children</div>,
+      cell: ({ row }) => (
+        <div
+          className={`capitalize ${
+            row.original.num_of_children == "" ? "text-xs" : "text-md"
+          }`}
+        >
+          {row.original.num_of_children != "" &&
+          row.original.marital_status != "single"
+            ? row.original.num_of_children
+            : "Not provided"}
+        </div>
+      )
     },
     {
       id: "actions",
@@ -189,70 +264,14 @@ function Dashboard() {
       header: () => <div className="text-center">Actions</div>,
       cell: ({ row }) => {
         return (
-          // <DropdownMenu>
-          //   <DropdownMenuTrigger asChild>
-          //     <Button
-          //       variant="ghost"
-          //       className="h-8 w-8 p-0 text-black dark:text-white"
-          //     >
-          //       <span className="sr-only">Open menu</span>
-          //       <DotsHorizontalIcon className="h-4 w-4" />
-          //     </Button>
-          //   </DropdownMenuTrigger>
-          //   <DropdownMenuContent align="end" className="min-w-[10rem]">
-          //     <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          //     <DropdownMenuItem
-          //       onClick={() => {
-          //         navigate("/admin/candidate/" + row.original.student_id);
-          //       }}
-          //     >
-          //       Visit Profile
-          //     </DropdownMenuItem>
-          //     <DropdownMenuSeparator />
-          //     <DropdownMenuItem
-          //       onClick={() => {
-          //         navigate(
-          //           "/admin/candidate/transactions/" + row.original.student_id
-          //         );
-          //       }}
-          //     >
-          //       Consultancy fees
-          //     </DropdownMenuItem>
-          //     <DropdownMenuItem
-          //       onClick={() => {
-          //         navigate(
-          //           "/admin/candidate/documents/" + row.original.student_id
-          //         );
-          //       }}
-          //     >
-          //       Documents
-          //     </DropdownMenuItem>
-          //   </DropdownMenuContent>
-          // </DropdownMenu>
-
           <div className="flex flex-row gap-2 justify-center items-center">
-            <div className="cursor-pointer bg-slate-200 p-2 rounded-md" onClick={() => {
-              navigate(
-                "/admin/candidate/documents/" + row.original.student_id
-              );
-            }}>
-              <HiOutlineDocumentText size={20} color="black" />
-            </div>
-
-            <div className="cursor-pointer bg-teal-400 p-2 rounded-md" onClick={() => {
-              navigate(
-                "/admin/candidate/transactions/" + row.original.student_id
-              );
-            }}>
-              <GrTransaction size={20} color="white" />
-            </div>
-
-            <div className="cursor-pointer bg-blue-500 p-2 rounded-md" onClick={() => {
-              navigate(
-                "/admin/candidate/translations/" + row.original.student_id
-              );
-            }}>
-              <AiOutlineTranslation size={20}  color="white"/>
+            <div
+              className="cursor-pointer bg-teal-600 text-white p-2 rounded-md"
+              onClick={() => {
+                navigate("/admin/candidate/resumes/" + row.original.student_id);
+              }}
+            >
+              View Resume
             </div>
           </div>
         );
@@ -265,11 +284,11 @@ function Dashboard() {
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
+    onGlobalFilterChange: setGlobalFilter,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    onGlobalFilterChange: setGlobalFilter,
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     state: {
@@ -290,6 +309,7 @@ function Dashboard() {
       method: "post",
       url: context.apiEndPoint + "students/all"
     });
+    console.log(res.data);
     setdata(res.data);
   };
 
@@ -300,10 +320,9 @@ function Dashboard() {
           <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
             <Tabs defaultValue="all" className="w-full overflow-x-auto">
               <div className="flex items-center">
-                <TabsList>
+                {/* <TabsList>
                   <TabsTrigger value="all">All</TabsTrigger>
-                  <TabsTrigger value="active">Active</TabsTrigger>
-                </TabsList>
+                </TabsList> */}
               </div>
               <TabsContent value="all">
                 <Card
@@ -321,7 +340,7 @@ function Dashboard() {
                       <div className="flex flex-col sm:flex-row items-center py-4">
                         <div className="relative w-full mb-2 sm:mb-0 sm:mr-2">
                           <input
-                            placeholder="Filter by names, email, mobile, packages ..."
+                            placeholder="Filter by names, levels, qualifications, etc..."
                             value={globalFilter}
                             onChange={(event) =>
                               setGlobalFilter(event.target.value)
@@ -447,4 +466,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default Consultant;

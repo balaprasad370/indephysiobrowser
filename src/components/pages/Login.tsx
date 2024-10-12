@@ -114,39 +114,22 @@ const Login = () => {
 
   return (
     <>
-      <div className="flex items-center justify-center flex-col min-h-screen ">
+      <div className="flex items-center justify-center flex-col min-h-screen text-black dark:text-white">
         <Toaster richColors position="top-right" />
         <div className="w-[480px] signup-form px-10 py-10">
           <div className="py-2 flex flex-row items-center justify-between">
             <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
               Login
             </h2>
-            <Link to="/" className="text-blue-600">
-              Home
-            </Link>
-          </div>
-
-          <LabelInputContainer className="flex flex-row items-center justify-between">
-            <Label htmlFor="firstname">Login as </Label>
-            <Select
-              className="text-black bg-white"
-              onValueChange={(value) => {
-                setusertype(value);
+            <button
+              className="bg-slate-200 dark:bg-slate-800  p-2 px-4"
+              onClick={() => {
+                navigate("/");
               }}
             >
-              <SelectTrigger className="w-[180px] text-black bg-white">
-                <SelectValue placeholder="Admin" />
-              </SelectTrigger>
-              <SelectContent className="text-black bg-white">
-                <SelectItem value="admin" className="hover:bg-slate-200">
-                  Admin
-                </SelectItem>
-                <SelectItem value="referral" className="hover:bg-slate-200">
-                  Referral
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </LabelInputContainer>
+              Home
+            </button>
+          </div>
 
           <LabelInputContainer>
             <Label htmlFor="firstname">User name </Label>
@@ -182,7 +165,7 @@ const Login = () => {
 
           {/* button */}
           <button
-            className="bg-gradient-to-br relative my-4 group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+            className="bg-gradient-to-br relative my-4 group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
             type="submit"
             onClick={() => {
               handleLogin();

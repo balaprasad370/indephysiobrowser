@@ -11,6 +11,7 @@ import Chat from "./Chat";
 import { io } from "socket.io-client";
 import { Document, Page, pdfjs } from "react-pdf";
 import useAuth from "@/hooks/useAuth";
+import PriceDealTranslation from "./PriceDealTranslation";
 import {
   Sheet,
   SheetContent,
@@ -41,7 +42,10 @@ const TranslationsDocument = () => {
   useEffect(() => {
     const socket11 = io(context.apiEndPoint);
     setSocket(socket11);
-    socket11.emit("joinGroupChat", "indephysio" + document_id + student_id + "room");
+    socket11.emit(
+      "joinGroupChat",
+      "indephysio" + document_id + student_id + "room"
+    );
 
     socket11.on("message", (message) => {
       console.log("message:", message);
@@ -207,13 +211,13 @@ const TranslationsDocument = () => {
 
   return (
     <div className="container mx-auto p-4 text-black dark:text-white">
-      <div className="flex px-2 lg:px-10 justify-between items-center">
+      <div className="flex px-2 lg:px-10 justify-between items-center ">
         <div>
           <h1 className="text-2xl font-bold mb-4"> Document Details</h1>
         </div>
         <div>
           <button
-            className="bg-transparent border border-teal-600  px-3 py-2 rounded-md"
+            className="bg-transparent border border-red-600  text-red-600 font-bold px-3 py-2 rounded-md mb-4"
             onClick={() => {
               navigate(-1);
             }}
@@ -310,7 +314,7 @@ const TranslationsDocument = () => {
         <div className="w-full h-full">
           <div className="border border-gray-300 rounded-md p-4 h-full flex flex-col gap-4">
             <div className="flex flex-col gap-2 overflow-y-auto max-h-[35rem]">
-              {alldocuments.length > 0 &&
+              {alldocuments.length > 0 ? (
                 alldocuments.map((document, index) => (
                   <div key={index}>
                     <div className="text-blue-600 bg-gray-200 p-2 rounded-md text-start flex justify-between items-center ">
@@ -342,7 +346,12 @@ const TranslationsDocument = () => {
                       </div>
                     </div>
                   </div>
-                ))}
+                ))
+              ) : (
+                <div className="text-center font-bold text-black dark:text-white text-2xl mt-10 ">
+                  No documents found
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -350,13 +359,24 @@ const TranslationsDocument = () => {
 
       <div>
         <Sheet key={side} open={open} onOpenChange={setOpen}>
-          <SheetContent side={side}>
+          <SheetContent side={side} className="min-h-[30rem]">
             <SheetHeader>
-              <SheetTitle className="text-2xl font-bold">Title</SheetTitle>
-              <SheetDescription>Descriptiof</SheetDescription>
+              <SheetTitle className="text-2xl font-bold">
+                {documentDetails?.document_name}
+              </SheetTitle>
+              <SheetDescription>
+                {documentDetails?.document_description}
+              </SheetDescription>
             </SheetHeader>
 
-            <div>djfvgsuyfvbjsd msnd jhdfv bj</div>
+            <div>
+              <PriceDealTranslation
+                open={open}
+                setOpen={setOpen}
+                document_id={document_id}
+                student_id={student_id}
+              />
+            </div>
           </SheetContent>
         </Sheet>
       </div>

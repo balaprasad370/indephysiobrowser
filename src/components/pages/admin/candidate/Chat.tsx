@@ -27,7 +27,10 @@ const Chat = ({ student_id, document_id }) => {
   useEffect(() => {
     const socket11 = io(context.apiEndPoint);
     setSocket(socket11);
-    socket11.emit("joinGroupChat", "indephysio" + document_id + student_id + "room");
+    socket11.emit(
+      "joinGroupChat",
+      "indephysio" + document_id + student_id + "room"
+    );
 
     socket11.on("message", (message) => {
       // console.log("message:", message);
@@ -68,7 +71,7 @@ const Chat = ({ student_id, document_id }) => {
         student_id: student_id,
         client_id: client_id,
         is_student: 0,
-        message: currentMessage,
+        message: maskSensitiveInfo(currentMessage),
         is_file: 0,
         filepath: "",
         message_timestamp: Date.now().toString().slice(0, -3),
@@ -107,6 +110,24 @@ const Chat = ({ student_id, document_id }) => {
     }
   };
 
+  function maskSensitiveInfo(text) {
+    // Regular expression for URLs
+    const urlPattern = /https?:\/\/[^\s]+/gi;
+
+    // Regular expression for email addresses
+    const emailPattern =
+      /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/gi;
+
+    // Regular expression for phone numbers (generic pattern)
+    const phonePattern = /\b\d{8,15}\b/g; // Adjust this pattern based on specific phone number formats
+
+    // Replace URLs, emails, and phone numbers with ********
+    return text
+      .replace(urlPattern, "********")
+      .replace(emailPattern, "********")
+      .replace(phonePattern, "********");
+  }
+
   const scrollToBottom = () => {
     const chatContainer = document.getElementById("chat-container");
     if (chatContainer) {
@@ -124,14 +145,22 @@ const Chat = ({ student_id, document_id }) => {
           <div
             key={index}
             className={`p-2 rounded-md ${
+              message.is_request_order == 1 ? "bg-sky-200 !text-black" : ""
+            } ${
               message.is_student === 0 && message.client_id === client_id
-                ? "bg-cyan-600 text-white self-end"
-                : "bg-gray-200 self-start"
+                ? "bg-cyan-600 text-white self-end max-w-[80%]"
+                : "bg-gray-200 self-start max-w-[80%]"
             }`}
           >
             {message.is_file === 0 ? (
-              <div className="flex flex-col gap-2">
-                <p className={message.is_student === 0 ? "" : "text-black"}>
+              <div
+                className={`flex flex-col gap-2 `}
+              >
+                <p
+                  className={`${
+                    message.is_student === 0 ? "" : "text-black"
+                  }`}
+                >
                   <strong>
                     {message.client_id == client_id && message.is_student === 0
                       ? ""
@@ -143,6 +172,8 @@ const Chat = ({ student_id, document_id }) => {
                 </p>
                 <span
                   className={`text-xs ${
+                    message.is_request_order == 1 ? "!text-black" : ""
+                  } ${
                     message.client_id == client_id && message.is_student === 0
                       ? "text-slate-300"
                       : "text-gray-500"
@@ -209,7 +240,8 @@ const Chat = ({ student_id, document_id }) => {
           }}
         />
         <button
-          className="bg-blue-600 text-white p-2 rounded-md"
+          disabled={currentMessage.length === 0}
+          className="bg-blue-600 text-white p-2 rounded-md disabled:opacity-50"
           onClick={handleSendMessage}
         >
           <IoSend size={24} />

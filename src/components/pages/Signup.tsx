@@ -122,7 +122,7 @@ const Signup = () => {
         }, 6000);
       }
     } catch (error) {
-        console.log(error);
+      console.log(error);
 
       toast.error(
         `Something went wrong Contact Us <a href='mailto:support@physioplusnetwork.com'>support@physioplusnetwork.com</a>`
@@ -132,7 +132,7 @@ const Signup = () => {
 
   return (
     <>
-      <div className="flex items-center justify-center flex-col min-h-screen">
+      <div className="flex items-center justify-center flex-col min-h-screen text-black dark:text-white">
         <Toaster richColors position="top-right" />
         <div className="w-[480px] signup-form px-10 py-10">
           <div className="py-2 flex flex-row items-center justify-between">
@@ -140,18 +140,15 @@ const Signup = () => {
               Signup
             </h2>
             <button
-              className="bg-black"
+              className="bg-slate-200 dark:bg-slate-800  p-2 px-4"
               onClick={() => {
                 navigate("/");
-              }}
-              style={{
-                color: "#99c3ff"
               }}
             >
               Home
             </button>
           </div>
-          <LabelInputContainer className="flex flex-row items-center justify-between">
+          {/* <LabelInputContainer className="flex flex-row items-center justify-between">
             <Label htmlFor="firstname">Signup as </Label>
             <Select
               className="text-black bg-white"
@@ -168,7 +165,7 @@ const Signup = () => {
                 </SelectItem>
               </SelectContent>
             </Select>
-          </LabelInputContainer>
+          </LabelInputContainer> */}
 
           <div className="flex flex-row">
             <LabelInputContainer className="pr-1">
@@ -265,7 +262,7 @@ const Signup = () => {
 
           {/* button */}
           <button
-            className=" bg-gradient-to-br relative my-4 group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+            className=" bg-gradient-to-br my-4 relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
             type="submit"
             onClick={() => {
               handleSubmit();

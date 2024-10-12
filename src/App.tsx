@@ -50,10 +50,18 @@ import CandidateAnalytics from "./components/pages/admin/analytics/CandidateAnal
 import Translations from "./components/pages/admin/candidate/Translations";
 import TranslationsDocument from "./components/pages/admin/candidate/TranslationsDocument";
 import Translator from "./components/pages/admin/translator/Translator";
+import StudentsDocuments from "./components/pages/admin/translator/StudentsDocuments";
+import { ClientProvider } from "./hooks/Clientcontext";
+import Consultant from "./components/pages/consultant/Index";
+import Resumes from './components/pages/admin/candidate/Resumes';
 
 export const GlobalInfo = createContext();
+
 function App() {
   const [theme, setTheme] = useState("dark");
+  const [token, setToken] = useState<string | null>(
+    localStorage.getItem("token")
+  );
 
   useEffect(() => {
     try {
@@ -80,133 +88,173 @@ function App() {
 
   const routeChange = initialRoute();
   const [count, setCount] = useState(0);
+  const [clientDetails, setClientDetails] = useState<any>(null);
+  const apiEndPoint = "https://server.indephysio.com/";
+  // const fetchClientDetails = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       `${apiEndPoint}api/v1/client/details`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`
+  //         }
+  //       }
+  //     );
+  //     console.log('====================================');
+  //     console.log("fgtg");
+  //     console.log('====================================');
+  //     setClientDetails(response.data);
+  //   } catch (error) {
+  //     console.error("Error fetching client details:", error);
+  //   }
+  // };
 
   const contextData = {
     theme: theme,
     setTheme: setTheme,
     filesServerUrl: "https://d2c9u2e33z36pz.cloudfront.net/",
-    apiEndPoint: "https://server.indephysio.com/",
+    apiEndPoint: apiEndPoint,
     liveclassServerUrl: "https://d3kpi6hpyesigd.cloudfront.net/"
+    // clientDetails: clientDetails,
     // massimo
     // filesServerUrl: "https://d3nbnikvasv2ex.cloudfront.net/",
     // apiEndPoint: "https://server.massimo.global/"
   };
 
+  // useEffect(() => {
+  //   fetchClientDetails();
+  // }, []);
+
   return (
     <GlobalInfo.Provider value={contextData}>
-      <div className="bg-light dark:bg-neutral-800 min-h-screen h-full">
-        <Routes location={routeChange}>
-          <Route path="/" element={<Home />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/login" index element={<Login />} />
+      <ClientProvider>
+        <div className="bg-light dark:bg-neutral-800 min-h-screen h-full">
+          <Routes location={routeChange}>
+            <Route path="/" element={<Home />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/login" index element={<Login />} />
 
-          <Route path="/admin" element={<AdminSidebar />}>
-            <Route index path="dashboard" element={<Admindashboard />} />
-            <Route path="branding" element={<Branding />} />
-            <Route path="branding/new" element={<AddBranding />} />
-            <Route path="branding/view/:brand_id" element={<ViewBranding />} />
-            <Route path="chapters" element={<Chapters />} />
-            <Route path="candidates" element={<Candidates />} />
-            <Route path="quiz" element={<Quiz />} />
-            <Route path="quiz/sub/:id" element={<Subquizzes />} />
-            <Route path="quiz/:id" element={<Quizdetails />} />
-            <Route path="quiz/generate" element={<QuizGenerator />} />
-            <Route path="students" element={<Students />} />
-            <Route path="settings" element={<Settings />} />
-            <Route
-              path="meet/join/:room_name/:schedule_id"
-              element={<Meet />}
-            />
-            <Route
-              path="schedule/liveclass/:room_name/:date/:schedule_id"
-              element={<LiveclassDetails />}
-            />
-            <Route path="assessment">
-              <Route index element={<Assessment />} />
-              <Route path="sub/:id" element={<Subassessments />} />
-              <Route path="details/:id" element={<AssessmentDetails />} />
+            <Route path="/admin" element={<AdminSidebar />}>
+              <Route index path="dashboard" element={<Admindashboard />} />
+              <Route path="branding" element={<Branding />} />
+              <Route path="branding/new" element={<AddBranding />} />
+              <Route
+                path="branding/view/:brand_id"
+                element={<ViewBranding />}
+              />
+              <Route path="chapters" element={<Chapters />} />
+              <Route path="candidates" element={<Candidates />} />
+              <Route path="quiz" element={<Quiz />} />
+              <Route path="quiz/sub/:id" element={<Subquizzes />} />
+              <Route path="quiz/:id" element={<Quizdetails />} />
+              <Route path="quiz/generate" element={<QuizGenerator />} />
+              <Route path="students" element={<Students />} />
+              <Route path="settings" element={<Settings />} />
+              <Route
+                path="meet/join/:room_name/:schedule_id"
+                element={<Meet />}
+              />
+              <Route
+                path="schedule/liveclass/:room_name/:date/:schedule_id"
+                element={<LiveclassDetails />}
+              />
+              <Route path="assessment">
+                <Route index element={<Assessment />} />
+                <Route path="sub/:id" element={<Subassessments />} />
+                <Route path="details/:id" element={<AssessmentDetails />} />
+              </Route>
+              <Route path="candidate/:id" element={<CandidateProfile />} />
+              <Route path="candidate/resumes/:student_id" element={<Resumes />} />
+              <Route
+                path="candidate/transactions/:id"
+                element={<Transactions />}
+              />
+              <Route path="candidate/documents/:id" element={<Documents />} />
+              <Route
+                path="candidate/translations/:student_id"
+                element={<Translations />}
+              />
+              <Route
+                path="candidate/translations/:student_id/documents/:document_category_id/:document_id"
+                element={<TranslationsDocument />}
+              />
+
+              <Route path="translator" element={<Translator />} />
+              <Route
+                path="translator/student/:student_id"
+                element={<StudentsDocuments />}
+              />
+              {/* lnagugages  */}
+
+              <Route path="language" element={<Navigate to="/" />} />
+              <Route
+                exact
+                path="language/:lang_code"
+                element={<LanguageLevel />}
+              />
+
+              <Route
+                path="language/:lang_code/level"
+                element={<Navigate to="/admin/language/" />}
+              />
+              <Route
+                path="language/:lang_code/level/:lang_level"
+                element={<LanguageLevelPackage />}
+              />
+
+              {/* packages  */}
+              <Route
+                path="language/:lang_code/level/:lang_level/package"
+                element={<LanguageLevelContent />}
+              />
+              <Route
+                path="language/:lang_code/level/:lang_level/package/:package_id"
+                element={<LanguageLevelContent />}
+              />
+              {/* packages  */}
+
+              <Route
+                path="language/:lang_code/level/:lang_level/package/:package_id/chapter"
+                element={<LanguageLevelContent />}
+              />
+              <Route
+                path="language/:lang_code/level/:lang_level/package/:package_id/chapter/:chapter_id"
+                element={<LanguageLevelChapterContent />}
+              />
+              {/* languages  */}
+
+              {/* schedule  */}
+              <Route path="schedule" element={<Schedule />} />
+
+              {/* consultants pages  */}
+              <Route path="consultant" element={<Consultant />} />
+
+              {/* consultants pages  */}
+
+              {/* analytics  */}
+
+              <Route
+                path="candidate/analytics/:studentid"
+                element={<CandidateAnalytics />}
+              />
+              <Route
+                path="candidate/quiz/analytics/:student_id"
+                element={<CandidateQuizAnalytics />}
+              />
             </Route>
-            <Route path="candidate/:id" element={<CandidateProfile />} />
-            <Route
-              path="candidate/transactions/:id"
-              element={<Transactions />}
-            />
-            <Route path="candidate/documents/:id" element={<Documents />} />
-            <Route
-              path="candidate/translations/:student_id"
-              element={<Translations />}
-            />
-            <Route
-              path="candidate/translations/:student_id/documents/:document_category_id/:document_id"
-              element={<TranslationsDocument />}
-            />
 
-            <Route path="translator" element={<Translator />} />
-            {/* lnagugages  */}
+            <Route path="/student" element={<StudentSidebar />}>
+              <Route index path="dashboard" element={<Studentdashboard />} />
+            </Route>
 
-            <Route path="language" element={<Navigate to="/" />} />
-            <Route
-              exact
-              path="language/:lang_code"
-              element={<LanguageLevel />}
-            />
+            <Route path="/referral" element={<ReferralSidebar />}>
+              <Route path="dashboard" element={<Referraldashboard />} />
+            </Route>
 
-            <Route
-              path="language/:lang_code/level"
-              element={<Navigate to="/admin/language/" />}
-            />
-            <Route
-              path="language/:lang_code/level/:lang_level"
-              element={<LanguageLevelPackage />}
-            />
-
-            {/* packages  */}
-            <Route
-              path="language/:lang_code/level/:lang_level/package"
-              element={<LanguageLevelContent />}
-            />
-            <Route
-              path="language/:lang_code/level/:lang_level/package/:package_id"
-              element={<LanguageLevelContent />}
-            />
-            {/* packages  */}
-
-            <Route
-              path="language/:lang_code/level/:lang_level/package/:package_id/chapter"
-              element={<LanguageLevelContent />}
-            />
-            <Route
-              path="language/:lang_code/level/:lang_level/package/:package_id/chapter/:chapter_id"
-              element={<LanguageLevelChapterContent />}
-            />
-            {/* languages  */}
-
-            {/* schedule  */}
-            <Route path="schedule" element={<Schedule />} />
-
-            {/* analytics  */}
-
-            <Route
-              path="candidate/analytics/:studentid"
-              element={<CandidateAnalytics />}
-            />
-            <Route
-              path="candidate/quiz/analytics/:student_id"
-              element={<CandidateQuizAnalytics />}
-            />
-          </Route>
-
-          <Route path="/student" element={<StudentSidebar />}>
-            <Route index path="dashboard" element={<Studentdashboard />} />
-          </Route>
-
-          <Route path="/referral" element={<ReferralSidebar />}>
-            <Route path="dashboard" element={<Referraldashboard />} />
-          </Route>
-
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </div>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </div>
+      </ClientProvider>
     </GlobalInfo.Provider>
   );
 }
