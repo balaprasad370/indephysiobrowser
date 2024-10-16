@@ -59,11 +59,7 @@ import { GrTransaction } from "react-icons/gr";
 import { AiOutlineTranslation } from "react-icons/ai";
 import { GlobalInfo } from "./../../../../../App";
 
-const TranslatorDocuments = ({
-  renderDocuments,
-  loading,
-  setLoading
-}) => {
+const TranslatorDocuments = ({ renderDocuments, loading, setLoading }) => {
   const navigate = useNavigate();
   const context = useContext(GlobalInfo);
   const [token, setToken] = useState(localStorage.getItem("token"));
@@ -108,19 +104,8 @@ const TranslatorDocuments = ({
       accessorKey: "fullname",
       header: () => <div className="text-center">Full name</div>,
       cell: ({ row }) => (
-        <div className="capitalize text-blue-600">
-          <Link
-            to={
-              "/admin/candidate/translations/" +
-              row.original.student_id +
-              "/documents/" +
-              row.original.doc_cat_id +
-              "/" +
-              row.original.translation_doc_id
-            }
-          >
-            {row.original.first_name} {row.original.last_name}
-          </Link>
+        <div className="capitalize text-center ">
+          {row.original.first_name} {row.original.last_name}
         </div>
       )
     },
@@ -140,10 +125,28 @@ const TranslatorDocuments = ({
             row.original.translation_doc_id
           }
         >
-          <div className="lowercase font-bold">
+          <div className="lowercase text-center font-bold text-blue-600">
             {row.original.document_name}
           </div>
         </Link>
+      )
+    },
+    {
+      accessorKey: "num_pages",
+      header: () => <div className="text-center">Number of Pages </div>,
+      cell: ({ row }) => (
+        <div className="capitalize text-center font-bold">
+          {row.original.num_pages}
+        </div>
+      )
+    },
+    {
+      accessorKey: "net_amount",
+      header: () => <div className="text-center">Net Amount </div>,
+      cell: ({ row }) => (
+        <div className="capitalize text-center font-bold">
+          {row.original.net_amount}
+        </div>
       )
     },
     {
@@ -152,22 +155,33 @@ const TranslatorDocuments = ({
         return <div className="text-center">Paid Amount</div>;
       },
       cell: ({ row }) => (
-        <div className="lowercase font-bold">{row.original.paid_amount}</div>
+        <div className="lowercase text-center font-bold">
+          {row.original.paid_amount}
+        </div>
       )
     },
+
     {
-      accessorKey: "net_amount",
-      header: () => <div className="text-center">Net Amount </div>,
+      accessorKey: "is_payment_approved",
+      header: () => <div className="text-center">Payment Approved status</div>,
       cell: ({ row }) => (
-        <div className="capitalize font-bold">{row.original.net_amount}</div>
+        <div
+          className={`capitalize text-center font-bold ${
+            row.original.is_payment_approved == 1
+              ? "text-green-500"
+              : "text-red-500"
+          }`}
+        >
+          {row.original.is_payment_approved == 1 ? "Approved" : "Pending"}
+        </div>
       )
     },
     {
       accessorKey: "status",
-      header: () => <div className="text-center">Payment Status </div>,
+      header: () => <div className="text-center">Payment received status</div>,
       cell: ({ row }) => (
         <div
-          className={`capitalize font-bold ${
+          className={`capitalize text-center font-bold ${
             row.original.net_amount - row.original.paid_amount == 0
               ? "text-green-500"
               : "text-red-500"
@@ -179,12 +193,15 @@ const TranslatorDocuments = ({
         </div>
       )
     },
+
     {
-      accessorKey: "Document Status",
-      header: () => <div className="text-center">Document Status </div>,
+      accessorKey: "Document Translation Status",
+      header: () => (
+        <div className="text-center">Document Translation Status </div>
+      ),
       cell: ({ row }) => (
         <div
-          className={`capitalize font-bold ${
+          className={`capitalize text-center font-bold ${
             row.original.translation_status == 0
               ? "text-red-500"
               : "text-green-500"
@@ -199,7 +216,7 @@ const TranslatorDocuments = ({
       header: () => <div className="text-center">Last Updated at </div>,
       cell: ({ row }) => {
         return (
-          <div className="font-medium ">
+          <div className="font-medium text-center">
             {moment(row.original.modified_at * 1000).format(
               "DD-MM-YYYY, HH:mm"
             )}
@@ -213,7 +230,7 @@ const TranslatorDocuments = ({
       header: () => <div className="text-center">Actions</div>,
       cell: ({ row }) => {
         return (
-          <div className="flex flex-row gap-2 justify-center items-center">
+          <div className="flex flex-row gap-2 justify-center items-center text-white font-semibold">
             <div
               className="cursor-pointer bg-blue-500 p-2 rounded-md"
               onClick={() => {
@@ -227,7 +244,8 @@ const TranslatorDocuments = ({
                 );
               }}
             >
-              <AiOutlineTranslation size={20} color="white" />
+              {/* <AiOutlineTranslation size={20} color="white" /> */}
+              Open
             </div>
           </div>
         );
@@ -270,9 +288,6 @@ const TranslatorDocuments = ({
         }
       );
       setdata(response.data);
-      console.log("====================================");
-      console.log(response.data);
-      console.log("====================================");
     } catch (error) {
       console.log(error);
     } finally {
@@ -286,8 +301,11 @@ const TranslatorDocuments = ({
     <>
       <div>
         <Card>
-          <CardHeader>
+          <CardHeader className="text-center">
             <CardTitle>Documents</CardTitle>
+            <CardDescription>
+              List of all documents requested by clients
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="rounded-md border overflow-x-auto max-w-full">

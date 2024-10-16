@@ -37,7 +37,7 @@ const GridCard = ({
             className
           )}
         >
-          <div className="relative flex flex-1 w-full h-full min-h-[6rem] max-h-[10rem] rounded-xl bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100 flex items-center justify-center text-neutral-600 dark:text-neutral-200 overflow-hidden">
+          <div className={cn("relative flex flex-1 w-full h-full min-h-[10rem] max-h-[10rem] rounded-xl bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100 flex items-center justify-center text-neutral-600 dark:text-neutral-200 overflow-hidden", image != null ? "bg-transparent" : "")}  >
             {image != null && (
               <div>
                 <img src={image} />

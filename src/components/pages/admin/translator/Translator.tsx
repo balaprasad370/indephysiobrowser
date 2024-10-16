@@ -115,7 +115,7 @@ const Translator = () => {
       accessorKey: "fullname",
       header: () => <div className="text-center">Full name</div>,
       cell: ({ row }) => (
-        <div className="capitalize text-blue-600">
+        <div className="capitalize text-center text-blue-600">
           <Link to={"/admin/translator/student/" + row.original.student_id}>
             {row.original.first_name} {row.original.last_name}
           </Link>
@@ -126,7 +126,7 @@ const Translator = () => {
       accessorKey: "total_paid_amt",
       header: () => <div className="text-center">Paid Amount in EUR</div>,
       cell: ({ row }) => (
-        <div className="lowercase font-bold">
+        <div className="lowercase text-center font-bold">
           {row.original.total_paid_amt}
         </div>
       )
@@ -135,7 +135,7 @@ const Translator = () => {
       accessorKey: "total_net_amt",
       header: () => <div className="text-center">Net Amount in EUR</div>,
       cell: ({ row }) => (
-        <div className="capitalize font-bold">
+        <div className="capitalize text-center font-bold">
           {row.original.total_net_amt}
         </div>
       )
@@ -145,7 +145,7 @@ const Translator = () => {
       header: () => <div className="text-center">Last Updated at </div>,
       cell: ({ row }) => {
         return (
-          <div className="font-medium ">
+          <div className="font-medium text-center">
             {moment(row.original.latest_modified_at * 1000)
               .format("DD-MM-YYYY, HH:mm")}
           </div>
@@ -273,7 +273,7 @@ const Translator = () => {
         <div className="w-full px-4 py-4">
           {currentType === "students" && (
             <Card className="w-full px-4 py-4">
-              <CardHeader>
+              <CardHeader className="text-center">
                 <CardTitle>Students</CardTitle>
                 <CardDescription>
                   List of students assigned to you

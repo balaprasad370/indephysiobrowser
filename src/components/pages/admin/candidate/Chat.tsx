@@ -9,9 +9,14 @@ import { IoSend } from "react-icons/io5";
 import useAuth from "../../../../hooks/useAuth";
 import moment from "moment";
 import { io } from "socket.io-client";
-import { IconExternalLink } from "@tabler/icons-react";
+import {
+  IconExternalLink,
+  IconFolder,
+  IconFolderOpen,
+  IconPaperclip
+} from "@tabler/icons-react";
 
-const Chat = ({ student_id, document_id }) => {
+const Chat = ({ student_id, document_id, setShowFiles, showFiles }) => {
   const [token, setToken] = useState(localStorage.getItem("token"));
 
   const tokenData = useAuth();
@@ -135,59 +140,72 @@ const Chat = ({ student_id, document_id }) => {
     }
   };
 
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+
+    const formData = new FormData();
+    formData.append("file", file);
+    const response = await axios.post(
+      `${context.apiEndPoint}upload/image`,
+      formData
+    );
+    console.log(response.data);
+    updateFilePath(response.data.filepath, file.name);
+    setCurrentMessage("");
+    scrollToBottom();
+  };
+
+  const updateFilePath = async (filepath: string, filename: string) => {
+    const newMessage = {
+      translation_doc_id: document_id,
+      student_id: student_id,
+      client_id: tokenData.client_id,
+      is_student: 0,
+      message: filename,
+      is_file: 1,
+      filepath: filepath,
+      message_timestamp: Date.now().toString().slice(0, -3),
+      admin_first_name: tokenData.first_name,
+      admin_last_name: tokenData.last_name,
+      student_first_name: null,
+      student_last_name: null
+    };
+
+    socket.emit("messageToGroupChatDoc", {
+      roomName: "indephysio" + document_id + student_id + "room",
+      message: newMessage
+    });
+  };
+
   return (
     <div className="border border-gray-300 rounded-md p-4 h-full flex flex-col gap-4">
       <div
         className="flex flex-col gap-2 overflow-y-auto max-h-[35rem] scrollbar-hide"
         id="chat-container"
       >
-        {messages.map((message, index) => (
-          <div
-            key={index}
-            className={`p-2 rounded-md ${
-              message.is_request_order == 1 ? "bg-sky-200 !text-black" : ""
-            } ${
-              message.is_student === 0 && message.client_id === client_id
-                ? "bg-cyan-600 text-white self-end max-w-[80%]"
-                : "bg-gray-200 self-start max-w-[80%]"
-            }`}
-          >
-            {message.is_file === 0 ? (
-              <div
-                className={`flex flex-col gap-2 `}
-              >
-                <p
-                  className={`${
-                    message.is_student === 0 ? "" : "text-black"
-                  }`}
-                >
-                  <strong>
-                    {message.client_id == client_id && message.is_student === 0
-                      ? ""
-                      : message.is_student === 0
-                      ? `${message.admin_first_name} ${message.admin_last_name} :`
-                      : `${message.student_first_name} ${message.student_last_name} :`}
-                  </strong>
-                  {message.message}
-                </p>
-                <span
-                  className={`text-xs ${
-                    message.is_request_order == 1 ? "!text-black" : ""
-                  } ${
-                    message.client_id == client_id && message.is_student === 0
-                      ? "text-slate-300"
-                      : "text-gray-500"
-                  }`}
-                >
-                  {moment(parseInt(message.message_timestamp) * 1000).format(
-                    "hh:mm:ss a , DD MMM, YYYY"
-                  )}
-                </span>
-              </div>
-            ) : (
-              <div className="flex flex-col gap-2">
-                <div className="p-2 rounded-md">
-                  <p className={message.is_student === 0 ? "" : "text-black"}>
+        {messages.length === 0 ? (
+          <div className="flex items-center justify-center h-full">
+            <span className="text-gray-500">No messages yet</span>
+          </div>
+        ) : (
+          messages.map((message, index) => (
+            <div
+              key={index}
+              className={`p-2 rounded-md ${
+                message.is_request_order == 1 ? "bg-sky-200 !text-black" : ""
+              } ${
+                message.is_student === 0 && message.client_id === client_id
+                  ? "bg-cyan-600 text-white self-end max-w-[80%]"
+                  : "bg-gray-200 self-start max-w-[80%]"
+              }`}
+            >
+              {message.is_file === 0 ? (
+                <div className={`flex flex-col gap-2 `}>
+                  <p
+                    className={`break-words ${
+                      message.is_student === 0 ? "" : "text-black"
+                    }`}
+                  >
                     <strong>
                       {message.client_id == client_id &&
                       message.is_student === 0
@@ -196,37 +214,93 @@ const Chat = ({ student_id, document_id }) => {
                         ? `${message.admin_first_name} ${message.admin_last_name} :`
                         : `${message.student_first_name} ${message.student_last_name} :`}
                     </strong>
-
                     {message.message}
                   </p>
-
-                  <div
-                    className="text-xs mt-2 text-white flex items-center justify-center gap-1 bg-teal-500 p-2 rounded-md cursor-pointer"
-                    onClick={() => {
-                      window.open(
-                        context.filesServerUrl + message.filepath,
-                        "_blank"
-                      );
-                    }}
+                  <span
+                    className={`text-xs ${
+                      message.is_request_order == 1 ? "!text-black" : ""
+                    } ${
+                      message.client_id == client_id && message.is_student === 0
+                        ? "text-slate-300"
+                        : "text-gray-500"
+                    }`}
                   >
-                    <IconExternalLink size={16} />
-                    Open
-                  </div>
+                    {moment(parseInt(message.message_timestamp) * 1000).format(
+                      "hh:mm:ss a , DD MMM, YYYY"
+                    )}
+                  </span>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-2">
+                  <div className="p-2 rounded-md">
+                    <p
+                      className={`break-words ${
+                        message.is_student === 0 ? "" : "text-black"
+                      }`}
+                    >
+                      <strong>
+                        {message.client_id == client_id &&
+                        message.is_student === 0
+                          ? ""
+                          : message.is_student === 0
+                          ? `${message.admin_first_name} ${message.admin_last_name} :`
+                          : `${message.student_first_name} ${message.student_last_name} :`}
+                      </strong>
 
-                  <div className="flex items-center justify-end gap-2">
-                    <span className="text-xs ">
-                      {moment(
-                        parseInt(message.message_timestamp) * 1000
-                      ).format("hh:mm:ss a , DD MMM, YYYY")}
-                    </span>
+                      {message.message}
+                    </p>
+
+                    <div
+                      className="text-xs mt-2 text-white flex items-center justify-center gap-1 bg-teal-500 p-2 rounded-md cursor-pointer"
+                      onClick={() => {
+                        window.open(
+                          context.filesServerUrl + message.filepath,
+                          "_blank"
+                        );
+                      }}
+                    >
+                      <IconExternalLink size={16} />
+                      Open
+                    </div>
+
+                    <div className="flex items-center justify-end gap-2">
+                      <span className="text-xs ">
+                        {moment(
+                          parseInt(message.message_timestamp) * 1000
+                        ).format("hh:mm:ss a , DD MMM, YYYY")}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
-          </div>
-        ))}
+              )}
+            </div>
+          ))
+        )}
       </div>
       <div className="mt-auto flex items-center gap-2">
+        <button
+          className={`border border-teal-600 text-teal-600 p-2 rounded-md ${
+            showFiles ? "bg-teal-600 text-white" : ""
+          }`}
+          onClick={() => setShowFiles(!showFiles)}
+        >
+          {showFiles ? <IconFolderOpen size={24} /> : <IconFolder size={24} />}
+        </button>
+
+        <label
+          htmlFor="uploadattachment"
+          className="border border-teal-600 text-teal-600 hover:bg-teal-600 hover:text-white transition-all duration-300 p-2 rounded-md cursor-pointer flex items-center gap-2 focus:outline-teal-600 focus:border-teal-600 focus:bg-teal-600 focus:text-white transition-all duration-300"
+        >
+          <IconPaperclip size={24} />
+        </label>
+
+        <input
+          type="file"
+          id="uploadattachment"
+          className="hidden "
+          onChange={handleFileChange}
+        />
+
         <input
           type="text"
           className="w-full text-black border border-gray-300 rounded-md p-2"

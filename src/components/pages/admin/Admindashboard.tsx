@@ -9,6 +9,7 @@ import LanguageIndex from "./languages/index";
 import useAuth from "@/hooks/useAuth";
 import { ClientContext } from "@/hooks/Clientcontext";
 import Consultant from "./../consultant/components/ConsultantFrames";
+import Translator from './translator/Translator';
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -34,6 +35,15 @@ function Dashboard() {
               clientDetails.is_translator == 0 && (
                 <div className="flex flex-col">
                   <Consultant />
+                </div>
+              )}
+            {clientDetails.is_translator == 1 &&
+              clientDetails.is_super_admin == 0 &&
+              clientDetails.is_tutor == 0 &&
+              clientDetails.is_financial == 0 &&
+              clientDetails.is_consultant == 0 && (
+                <div className="flex flex-col">
+                  <Translator />
                 </div>
               )}
           </div>

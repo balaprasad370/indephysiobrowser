@@ -59,7 +59,7 @@ const Translations = () => {
     setSubdocumentLoading(true);
     try {
       const response = await axios.get(
-        `${context.apiEndPoint}admin/student/translations/subdocuments/${student_id}/${selectedData.doc_cat_id}`,
+        `${context.apiEndPoint}admin/v1/student/translations/subdocuments/${student_id}/${selectedData.doc_cat_id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -107,7 +107,7 @@ const Translations = () => {
                     }}
                   >
                     <GridCard
-                      className="w-full min-h-[18rem] min-w-[18rem]"
+                      className="w-full min-h-[17rem] min-w-[18rem]"
                       title={translation.document_category_name}
                       description={translation.document_category_description}
                       image={translation.document_category_image}
@@ -151,14 +151,26 @@ const Translations = () => {
                               onClick={() => {
                                 console.log(subdocument);
                                 navigate(
-                                  `/admin/candidate/translations/${student_id}/documents/${selectedTranslation.doc_cat_id}/${subdocument.translation_doc_id}`
+                                  `/admin/candidate/translations/${student_id}/documents/${selectedTranslation.doc_cat_id}/${subdocument.trans_doc_id}`
                                 );
                               }}
                             >
                               <GridCard
                                 className="w-full min-h-[10rem] min-w-[18rem]"
                                 title={subdocument.document_name}
-                                description={subdocument.document_description}
+                                description={
+                                  <div className="text-sm">
+                                    {subdocument?.student_id ? (
+                                      <div className="text-teal-600 font-bold dark:text-white">
+                                        Uploaded
+                                      </div>
+                                    ) : (
+                                      <div className="text-red-600 font-bold dark:text-white">
+                                        Not Uploaded
+                                      </div>
+                                    )}
+                                  </div>
+                                }
                                 image={subdocument.document_image}
                                 editable={false}
                                 deletable={false}

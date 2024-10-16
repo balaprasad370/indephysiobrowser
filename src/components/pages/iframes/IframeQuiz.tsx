@@ -93,6 +93,7 @@ const Quizdetails = ({ id, disableStatus }) => {
       console.log(error);
     }
   };
+  
   const fetchQuizDetails = async (id) => {
     try {
       const response = await axios({

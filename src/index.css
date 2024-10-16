@@ -24,6 +24,10 @@ a {
   text-decoration: inherit;
 }
 
+p{
+  word-break: break-word;
+}
+
 .sidebar a {
   color: white;
 }
