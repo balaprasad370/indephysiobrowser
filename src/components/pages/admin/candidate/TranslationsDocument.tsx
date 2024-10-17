@@ -203,6 +203,7 @@ const TranslationsDocument = () => {
     );
     console.log(response.data);
     setUrl(response.data.filepath);
+    setIsChecked(true);
     updateFilePathTranslated(response.data.filepath, file.name);
   };
 
@@ -269,6 +270,28 @@ const TranslationsDocument = () => {
           }
         }
       );
+
+      const newMessage = {
+        translation_doc_id: document_id,
+        student_id: student_id,
+        client_id: tokenData.client_id,
+        is_student: 0,
+        message: filename,
+        is_file: 1,
+        filepath: filepath,
+        message_timestamp: Date.now().toString().slice(0, -3),
+        admin_first_name: tokenData.first_name,
+        admin_last_name: tokenData.last_name,
+        student_first_name: null,
+        student_last_name: null
+      };
+
+      socket.emit("messageToGroupChatDoc", {
+        roomName: "indephysio" + document_id + student_id + "room",
+        message: newMessage
+      });
+      getAlldocuments();
+
       console.log(response.data);
     } catch (error) {
       console.log(error);

@@ -54,6 +54,7 @@ import StudentsDocuments from "./components/pages/admin/translator/StudentsDocum
 import { ClientProvider } from "./hooks/Clientcontext";
 import Consultant from "./components/pages/consultant/Index";
 import Resumes from './components/pages/admin/candidate/Resumes';
+import Financial from './components/pages/financials/Index';
 
 export const GlobalInfo = createContext();
 
@@ -230,6 +231,11 @@ function App() {
               <Route path="consultant" element={<Consultant />} />
 
               {/* consultants pages  */}
+
+              {/* financial pages  */}
+              <Route path="financial" element={<Financial />} />
+
+              {/* financial pages  */}
 
               {/* analytics  */}
 

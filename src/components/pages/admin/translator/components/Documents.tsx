@@ -182,14 +182,10 @@ const TranslatorDocuments = ({ renderDocuments, loading, setLoading }) => {
       cell: ({ row }) => (
         <div
           className={`capitalize text-center font-bold ${
-            row.original.net_amount - row.original.paid_amount == 0
-              ? "text-green-500"
-              : "text-red-500"
+            row.original.payment_status == 1 ? "text-green-500" : "text-red-500"
           }`}
         >
-          {row.original.net_amount - row.original.paid_amount == 0
-            ? "Paid"
-            : "Pending"}
+          {row.original.payment_status == 1 ? "Paid" : "Pending"}
         </div>
       )
     },

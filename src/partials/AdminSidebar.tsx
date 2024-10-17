@@ -18,6 +18,7 @@ import { RiAiGenerate } from "react-icons/ri";
 import { BsFillMegaphoneFill } from "react-icons/bs";
 import { BsTranslate } from "react-icons/bs";
 import { FaUserTie } from "react-icons/fa";
+import { FaRupeeSign } from "react-icons/fa";
 import {
   File,
   Home,
@@ -204,6 +205,24 @@ const AdminSidebar = () => {
                       </Link>
                     </TooltipTrigger>
                     <TooltipContent side="right">Consultant</TooltipContent>
+                  </Tooltip>
+                ) : null}
+
+                {/* Consultant nav end  */}
+
+                {/* Consultant nav start  */}
+                {clientDetails.is_financial == 1 ? (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Link
+                        to="/admin/financial"
+                        className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                      >
+                        <FaRupeeSign className="h-5 w-5" />
+                        <span className="sr-only"> Financial </span>
+                      </Link>
+                    </TooltipTrigger>
+                    <TooltipContent side="right">Financial</TooltipContent>
                   </Tooltip>
                 ) : null}
 
